@@ -1,0 +1,264 @@
+<div class="container">
+  <!--------------------------- 功能 --------------------------->
+  <aside class="sidebar">
+    <button
+      routerLink="/question-settings"
+      style="background-color: rgb(127, 116, 116); color: white"
+    >
+      設定問卷
+    </button>
+    <button (click)="submitToCheck()">確認問卷</button>
+    <button (click)="ban()">發布問卷</button>
+    <button (click)="ban()">問卷回饋</button>
+  </aside>
+
+  <!--------------------------- 問卷基本資訊 --------------------------->
+  <main class="content">
+    <div class="question-settings">
+      <h2>新增問卷</h2>
+      <div style="display: flex; gap: 10px">
+        <label for="name">問卷名稱：</label>
+        <input class="name" type="text" [(ngModel)]="name" />
+      </div>
+
+      <div style="display: flex; gap: 10px">
+        <label for="description">問卷說明：</label>
+        <textarea
+          [(ngModel)]="description"
+          style="height: 50px; resize: vertical"
+        ></textarea>
+      </div>
+
+      <div class="date" style="display: flex; gap: 10px">
+        <label for="date">開始時間：</label>
+        <input
+          type="date"
+          [min]="defaultDate"
+          [(ngModel)]="startDate"
+          (ngModelChange)="checkEndDate($event)"
+          style="width: 149.8px"
+        />
+        <!-- ngModelChange 偵測到 ngModel(開始日期) 改變後，便會觸發指定方法checkEndDate(startDate: string)。
+         其中 $event 會自動帶入新的日期值，然後根據值來判斷下一步的結束日期不能小於開始日期。
+         -->
+
+        <label for="date">結束時間：</label>
+        <input
+          type="date"
+          [min]="startDate"
+          [(ngModel)]="endDate"
+          style="width: 149.8px"
+        />
+      </div>
+
+      <!--------------------------- 問題設定區 --------------------------->
+      <h2>設定問題</h2>
+      <div style="display: flex; gap: 10px">
+        <label for="questionName">問題名稱：</label>
+        <input type="text" [(ngModel)]="title" />
+      </div>
+
+      <div style="display: flex; gap: 10px">
+        <label for="questionType">問題類型：</label>
+        <select [(ngModel)]="type">
+          <option value="S">單選</option>
+          <option value="M">多選</option>
+          <option value="T">簡答</option>
+        </select>
+
+        <div class="necessary">
+          <input
+            type="checkbox"
+            name="necessary"
+            [(ngModel)]="necessary"
+            style="width: 16px"
+          />
+          <label for="necessary" style="font-size: 15px; margin-bottom: 3px"
+            >必填</label
+          >
+        </div>
+      </div>
+
+      <!-- 單選選項 -->
+      @if(type === 'S'){
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin-right: 30px;
+        "
+      >
+        @for (option of options; track $index) {
+        <div style="display: flex; align-items: center; gap: 10px">
+          <input type="radio" style="width: 14px" disabled="disabled" />
+          <input
+            type="text"
+            [(ngModel)]="option.answer"
+            placeholder="輸入選項"
+            style="width: 200px"
+          />
+          <button class="button-delete" (click)="removeOption($index)">
+            刪除
+          </button>
+        </div>
+        }
+        <button class="button-add" (click)="addOption()">新增選項</button>
+      </div>
+      }
+
+      <!-- 多選選項 -->
+      @if(type === 'M'){
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin-right: 30px;
+        "
+      >
+        @for(option of options; track $index){
+        <div style="display: flex; align-items: center; gap: 10px">
+          <input type="checkbox" style="width: 14px" disabled="disabled" />
+          <input
+            type="text"
+            [(ngModel)]="option.answer"
+            placeholder="輸入選項"
+            style="width: 200px"
+          />
+          <button class="button-delete" (click)="removeOption($index)">
+            刪除
+          </button>
+        </div>
+        }
+        <button class="button-add" (click)="addOption()">新增選項</button>
+      </div>
+      }
+
+      <!-- 簡答輸入框 -->
+      @if(type === 'T'){
+      <!-- <input type="text" [(ngModel)]="textAnswer" placeholder="輸入簡答文字" /> -->
+      }
+
+      <!-- 新增/編輯按鈕 -->
+      <button
+        (click)="addQuestion()"
+        style="
+          margin: 0 0 20px 90px;
+          width: 405px;
+          height: 30px;
+          background-color: white;
+        "
+      >
+        {{ isEditing ? "編輯問題" : "新增問題" }}
+      </button>
+    </div>
+
+    <!-- 點選 delete icon 複數刪除 -->
+    <div>
+      <!-- <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+        rel="stylesheet"
+      /> -->
+      <button class="icon-delete" (click)="deleteQuestions()">🗑️</button>
+      <!-- <span class="material-symbols-outlined"> delete </span> -->
+    </div>
+
+    <!--------------------------- 問題表格預覽區 --------------------------->
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="questionArray">
+        <!-- 選項欄位 -->
+        <ng-container matColumnDef="checkbox">
+          <th mat-header-cell *matHeaderCellDef style="width: 60px">選項</th>
+          <td mat-cell *matCellDef="let question">
+            <input
+              class="checkbox1"
+              type="checkbox"
+              [(ngModel)]="question.checkbox"
+            />
+          </td>
+        </ng-container>
+
+        <!-- 編號欄位 -->
+        <ng-container matColumnDef="questionId">
+          <th mat-header-cell *matHeaderCellDef style="width: 80px">編號</th>
+          <td mat-cell *matCellDef="let question">{{ question.questionId }}</td>
+        </ng-container>
+
+        <!-- 名稱欄位 -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>問題</th>
+          <td mat-cell *matCellDef="let question">{{ question.title }}</td>
+        </ng-container>
+
+        <!-- 類型欄位 -->
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef style="width: 80px">類型</th>
+          <td mat-cell *matCellDef="let question">
+            <ng-container [ngSwitch]="question.type">
+              <span *ngSwitchCase="'S'">單選</span>
+              <span *ngSwitchCase="'M'">多選</span>
+              <span *ngSwitchCase="'T'">簡答 </span>
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <!-- 必填判斷欄位 -->
+        <ng-container matColumnDef="necessary">
+          <th mat-header-cell *matHeaderCellDef style="width: 70px">必填</th>
+          <td mat-cell *matCellDef="let question">
+            {{ question.necessary ? "　✓" : "" }}
+          </td>
+        </ng-container>
+
+        <!-- 選項欄位 -->
+        <ng-container matColumnDef="options">
+          <th mat-header-cell *matHeaderCellDef>選項</th>
+          <td mat-cell *matCellDef="let question">
+            @for(item of question.options; track $index){
+            @if(question.options.length-1 != $index){
+            {{ item.answer + "、" }}
+            } @else {
+            {{ item.answer }}
+            } }
+          </td>
+        </ng-container>
+
+        <!-- 操作欄位 -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef style="width: 120px">操作</th>
+          <td mat-cell *matCellDef="let question">
+            <div class="buttonDeleteEdit">
+              <button
+                class="button-delete"
+                color="warn"
+                style="margin-right: 10px"
+                (click)="deleteQuestion(question.questionId)"
+              >
+                刪除
+              </button>
+              <button
+                class="button-edit"
+                color="warn"
+                (click)="editQuestion(question.questionId)"
+              >
+                編輯
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- 表格標題列 -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+        <!-- 表格資料列 -->
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+
+    <!-- 下一步 -->
+    <div class="step">
+      <button (click)="submitToCheck()">預覽問卷</button>
+    </div>
+  </main>
+</div>

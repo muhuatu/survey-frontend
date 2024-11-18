@@ -1,0 +1,143 @@
+  <div class="container">
+    <!--------------------- 左側 --------------------->
+    <aside class="sidebar">
+      <button routerLink="/question-settings">設定問卷</button>
+      <button
+        routerLink="/check"
+        style="background-color: rgb(127, 116, 116); color: white"
+      >
+        確認問卷
+      </button>
+      <button routerLink="/publish">發布問卷</button>
+      <button routerLink="/response-list">問卷回饋</button>
+    </aside>
+
+    <!--------------------- 右側 --------------------->
+    <main class="content">
+      <div class="survey-preview">
+        <!-- 問卷資料 -->
+        <div class="surveyInfo">
+          <h2 style="margin: 10px 0 0 0">{{ questData.name }}</h2>
+          <span style="width: 500px;">{{ questData.description }}</span>
+          <span style="font-size: 14px"
+            >開始時間：{{ questData.startDate }}　|　結束時間：{{ questData.endDate }}</span
+          >
+        </div>
+
+        <!-- 基本資料 -->
+        <div class="personInfo">
+          <div>
+            <label>名稱</label>
+            <span style="color: red; font-size: 12px">*</span>
+            <input
+              style="width: 200px; margin-left: 10px"
+              placeholder="請輸入名稱"
+              [(ngModel)]="userName"
+            />
+          </div>
+          <div>
+            <label>電話</label>
+            <span style="color: red; font-size: 12px; margin: 0">*</span>
+            <input
+              style="width: 200px; margin-left: 10px"
+              placeholder="請輸入電話"
+              [(ngModel)]="userPhone"
+            />
+          </div>
+          <div>
+            <label>信箱</label>
+            <input
+              type="email"
+              style="width: 200px; margin-left: 16px"
+              placeholder="請輸入信箱"
+              [(ngModel)]="userEmail"
+            />
+          </div>
+          <div>
+            <label>年齡</label>
+            <input
+              style="width: 200px; margin-left: 16px"
+              placeholder="請輸入年齡"
+              [(ngModel)]="userAge"
+            />
+          </div>
+        </div>
+
+        <!-- 問題 -->
+        <div
+          *ngFor="let question of questData.questionArray; let i = index"
+          class="question"
+        >
+          <div>
+            <span style="font-size: 18px; font-weight: bold"
+              >問題{{ i + 1 }}：{{ question.title }}</span
+            >
+            <!-- 類型 -->
+            @if(question.type=='S'){
+            <span style="color: rgb(127, 116, 116)">（單選）</span>
+            }@else if (question.type=='M') {
+            <span style="color: rgb(127, 116, 116)">（多選）</span>
+            }@else {
+            <span style="color: rgb(127, 116, 116)">（簡答）</span>
+            }
+            <!-- 必填 -->
+            @if (question.necessary) {
+            <span style="color: red">＊必填</span>
+            }
+          </div>
+
+          <!-- 問題類型 -->
+          <ng-container [ngSwitch]="question.type">
+            <!--  position: relative 或 z-index 來調整其位置優先度 -->
+            <!-- *ngSwitchCase 的值是要輸入表達式，而非一般文字
+                  所以當要使用字串作為判斷的依據時，兩旁邊要加上引號 *ngSwitchCase="'S'" -->
+
+            <!-- 單選題 -->
+            <div *ngSwitchCase="'S'">
+              <label
+                style="position: relative; z-index: 1"
+                *ngFor="let item of question.options; let j = index"
+              >
+                <input
+                  type="radio"
+                  name="{{ question.questionId }}"
+                  value="{{ item.answer }}"
+                />
+                {{ item.answer }}
+              </label>
+            </div>
+
+            <!-- 多選題 -->
+            <div *ngSwitchCase="'M'">
+              <label
+                *ngFor="let item of question.options; let j = index"
+                style="position: relative; z-index: 1"
+              >
+                <input
+                  type="checkbox"
+                />
+                {{ item.answer }}
+              </label>
+            </div>
+
+            <!-- 簡答題 -->
+            <textarea
+              class="shortAnswer"
+              *ngSwitchCase="'T'"
+              type="text"
+              placeholder="請輸入答案"
+              style="width: 400px; height: 80px;resize: vertical;"
+            >
+            </textarea>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- 上一步＆下一步 -->
+      <div class="step">
+        <button (click)="toQuestionSettings()">編輯</button>
+        <button (click)="toQuestionSettings()">儲存</button>
+        <button (click)="toPublish()">發布</button>
+      </div>
+    </main>
+  </div>

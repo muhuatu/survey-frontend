@@ -1,0 +1,24 @@
+<div class="container">
+
+  <!--------------------- 左側 --------------------->
+  <aside class="sidebar">
+    <button (click)="ban()">設定問卷</button>
+    <button (click)="ban()">確認問卷</button>
+    <button
+      routerLink="/publish"
+      style="background-color: rgb(127, 116, 116); color: white"
+    >
+    發布問卷
+    </button>
+    <button routerLink="/response-list">問卷回饋</button>
+  </aside>
+
+  <!--------------------- 右側 --------------------->
+  <main class="content">
+    <div class="publishContainer">
+      <h2>問卷已成功發布！</h2>
+      <span>連結如下</span>
+      <input type="text">
+    </div>
+  </main>
+</div>

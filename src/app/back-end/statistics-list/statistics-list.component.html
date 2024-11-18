@@ -1,0 +1,8 @@
+@for (quest of questData.quest; track $index) {
+  <app-chart
+    class="chartCSS"
+    [dataId]="quest.id"
+    [questData]="quest"
+    >
+  </app-chart>
+}

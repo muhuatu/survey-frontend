@@ -1,0 +1,141 @@
+<div class="search">
+  <div class="name" style="display: flex; gap: 10px">
+    <label for="surveyName">問卷名稱：</label>
+    <input
+      type="text"
+      id="surveyName"
+      [(ngModel)]="surveyName"
+      (keyup)="changeData($event)"
+      placeholder="請輸入問卷名稱"
+      style="width: 295px; height: 22px"
+    />
+  </div>
+
+  <div class="date" style="display: flex; gap: 10px">
+    <label for="date">統計時間：</label>
+    <input
+      style="width: 100px"
+      type="date"
+      id="startDate"
+      [(ngModel)]="startDate"
+      (ngModelChange)="checkEndDate($event)"
+    />
+    到
+    <input
+      style="width: 100px"
+      type="date"
+      id="endDate"
+      [(ngModel)]="endDate"
+      [min]="startDate"
+    />
+    <button (click)="search()" style="width: 50px">搜尋</button>
+  </div>
+</div>
+
+@if(isAdmin){
+<link
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+  rel="stylesheet"
+/>
+<div class="icon">
+  <button
+    (click)="deleteQuestions()"
+    style="background: none; border: none; padding: 0"
+  >
+    <span class="material-symbols-outlined"> delete </span>
+  </button>
+  <button
+    (click)="toQuestionSetting()"
+    style="background: none; border: none; padding: 0"
+  >
+    <span class="material-symbols-outlined"> add </span>
+  </button>
+</div>
+}
+
+<!------------------- 以下是表格 ------------------->
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+    <!-- checkbox Column 這裡用if判斷是否為Admin -->
+    @if(isAdmin){
+    <ng-container matColumnDef="checkbox">
+      <th mat-header-cell *matHeaderCellDef style="width: 80px">選項</th>
+      <td mat-cell *matCellDef="let element">
+        <input
+          class="checkBox"
+          type="checkbox"
+          [(ngModel)]="element.checkbox"
+        />
+      </td>
+    </ng-container>
+    }
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef style="width: 70px">編號</th>
+      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>名稱</th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        (click)="toFillIn(element)"
+        [ngClass]="{ urlCss: element.statusCode == 'IN_PROGRESS' }"
+      >
+        {{ element.name }}
+      </td>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef style="width: 100px">狀態</th>
+      <td mat-cell *matCellDef="let element">{{ element.status }}</td>
+    </ng-container>
+
+    <!-- StartDate Column -->
+    <ng-container matColumnDef="startDate">
+      <th mat-header-cell *matHeaderCellDef style="width: 140px">開始時間</th>
+      <td mat-cell *matCellDef="let element">{{ element.startDate }}</td>
+    </ng-container>
+
+    <!-- EndDate Column -->
+    <ng-container matColumnDef="endDate">
+      <th mat-header-cell *matHeaderCellDef style="width: 140px">結束時間</th>
+      <td mat-cell *matCellDef="let element">{{ element.endDate }}</td>
+    </ng-container>
+
+    <!-- URL Column -->
+    <ng-container matColumnDef="url">
+      <th mat-header-cell *matHeaderCellDef style="width: 70px">連結</th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        (click)="toChart(element)"
+        [ngClass]="{ urlCss: element.statusCode == 'END' }"
+      >
+        前往
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      class="trRow"
+      [hidden]="!isAdmin && row.statusCode === 'NOT_PUBLISHED'"
+    ></tr>
+  </table>
+
+  <!-- 分頁選擇器：可選5,10,20筆顯示 -->
+  <mat-paginator
+    class="paginator-container"
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+    aria-label="Select page of periodic elements"
+  >
+  </mat-paginator>
+</div>

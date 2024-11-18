@@ -1,0 +1,48 @@
+.top-banner {
+  width: 100vw;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 25px; // 文字間距
+
+  background-color: rgba(241, 241, 241, 0.9);
+  box-shadow: 0px 0.1px 2px rgba(32, 32, 32, 0.2); // 添加陰影
+}
+
+a {
+  color: rgb(100,100,100);
+  font-size: 18px;
+  font-weight: 550;
+  cursor: pointer;
+
+  &:hover {
+    color: rgba(178, 34, 34, 0.8);
+  }
+  &:active {
+    color: rgba(178, 34, 34, 0.8);
+    /* 點擊時變得更深的顏色 */
+    transform: scale(0.98);
+    /* 縮小按鈕 */
+  }
+}
+
+
+// Loading
+mat-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+// 滿版的樣式，會覆蓋整個網站，讓使用者在 Loading 時不能操作
+.loading {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+  z-index: 2;
+  backdrop-filter: blur(1px); // 模糊
+}

@@ -1,0 +1,153 @@
+<div class="container">
+  <aside class="sidebar">
+    <!-- 左側功能表 -->
+    <button
+      routerLink="/fill-in"
+      style="background-color: rgb(127, 116, 116); color: white"
+    >
+      填寫問卷
+    </button>
+    <button (click)="submitToPreview()">預覽問卷</button>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+
+    <!---------------------  問卷區  --------------------->
+    <div class="survey">
+      <!-- 問卷資料 -->
+      <div class="surveyInfo">
+        <h2 style="margin: 0; letter-spacing: 2px">
+          {{ survey.name }}
+        </h2>
+        <span style="font-size: 15px">{{ survey.description }}</span>
+        <span style="font-size: 14px; color: rgb(178, 34, 34, 0.8)"
+          >開始時間：{{ survey.startDate }}　|　結束時間：{{
+            survey.endDate
+          }}</span
+        >
+      </div>
+
+      <!-- 基本資料 -->
+      <div class="personInfo">
+        <div>
+          <label>名稱</label>
+          <span style="color: red; font-size: 12px">*</span>
+          <input
+            style="width: 200px; margin-left: 10px"
+            placeholder="請輸入名稱"
+            [(ngModel)]="userName"
+          />
+        </div>
+        <div>
+          <label>電話</label>
+          <span style="color: red; font-size: 12px; margin: 0">*</span>
+          <input
+            style="width: 200px; margin-left: 10px"
+            placeholder="請輸入電話"
+            [(ngModel)]="userPhone"
+          />
+        </div>
+        <div>
+          <label>信箱</label>
+          <input
+            type="email"
+            style="width: 200px; margin-left: 16px"
+            placeholder="請輸入信箱"
+            [(ngModel)]="userEmail"
+          />
+        </div>
+        <div>
+          <label>年齡</label>
+          <input
+            style="width: 200px; margin-left: 16px"
+            placeholder="請輸入年齡"
+            [(ngModel)]="userAge"
+          />
+        </div>
+      </div>
+
+      <!-- 問題 -->
+      <div
+        *ngFor="let surveyItem of newQuestionArray; let i = index"
+        class="question"
+      >
+        <div>
+          <span style="font-size: 18px; font-weight: 500"
+            >問題{{ i + 1 }}：{{ surveyItem.title }}</span
+          >
+          <!-- 類型 -->
+          @if(surveyItem.type=='S'){
+          <span style="color: rgb(127, 116, 116)">（單選）</span>
+          }@else if (surveyItem.type=='M') {
+          <span style="color: rgb(127, 116, 116)">（多選）</span>
+          }@else {
+          <span style="color: rgb(127, 116, 116)">（簡答）</span>
+          }
+          <!-- 必填 -->
+          @if (surveyItem.necessary) {
+          <span style="color: red">＊必填</span>
+          }
+        </div>
+
+        <!-- 問題類型 -->
+        <ng-container [ngSwitch]="surveyItem.type">
+          <!--  position: relative 或 z-index 來調整其位置優先度 -->
+          <!-- *ngSwitchCase 的值是要輸入表達式，而非一般文字
+                所以當要使用字串作為判斷的依據時，兩旁邊要加上引號 *ngSwitchCase="'S'" -->
+
+          <!-- 單選題 -->
+          <div *ngSwitchCase="'S'">
+            <label
+              style="position: relative; z-index: 1"
+              *ngFor="let option of surveyItem.options; let j = index"
+            >
+              <input
+                type="radio"
+                name="{{ surveyItem.questionId }}"
+                value="{{ option.code }}"
+                [(ngModel)]="surveyItem.radioAnswer"
+              />
+              {{ option.optionName }}
+            </label>
+          </div>
+
+          <!-- 多選題 -->
+          <div *ngSwitchCase="'M'">
+            <label
+              *ngFor="let option of surveyItem.options; let j = index"
+              style="position: relative; z-index: 1"
+            >
+              <input
+                type="checkbox"
+                [name]="'question' + i + 'option' + j"
+                [(ngModel)]="option.boxBoolean"
+              />
+              {{ option.optionName }}
+            </label>
+          </div>
+
+          <!-- 簡答題 -->
+          <textarea
+            class="shortAnswer"
+            *ngSwitchCase="'T'"
+            type="text"
+            placeholder="請輸入答案"
+            [(ngModel)]="surveyItem.answer"
+            style="
+              width: 400px;
+              height: 80px;
+              resize: vertical;
+              font-size: 14px;
+            "
+          >
+          </textarea>
+        </ng-container>
+      </div>
+      <!-- 下一步 -->
+      <div class="step">
+        <button (click)="submitToPreview()">送出</button>
+      </div>
+    </div>
+  </main>
+</div>

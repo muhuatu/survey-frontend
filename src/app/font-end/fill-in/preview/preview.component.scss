@@ -1,0 +1,104 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  color: rgb(100, 100, 100);
+  gap: 20px;
+}
+
+// ------------------------ 功能表 ------------------------ //
+.sidebar {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  overflow-y: auto;
+  margin-top: 20px;
+}
+
+.content {
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+}
+
+button {
+  height: 35px;
+  width: 100px;
+  font-size: 16px;
+  color: rgb(100, 100, 100);
+  border: 1px solid #bababa;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(127, 116, 116, 0.1);
+  }
+
+  &:active {
+    background-color: rgba(127, 116, 116, 0.1);
+    transform: scale(0.9);
+  }
+}
+
+// ------------------------ 右側問卷預覽 ------------------------ //
+.survey {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.surveyInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin: 10px 0;
+}
+
+.personInfo {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid #bababa;
+  border-radius: 8px;
+  //box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.question {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  margin-bottom: 15px;
+
+  textarea {
+    color: rgb(100, 100, 100); // 字體顏色
+    border: 1px solid #bababa;
+    border-radius: 5px;
+    width: 400px;
+    height: 80px;
+    font-family: 'Noto Sans TC Medium';
+  }
+}
+
+.step {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 15px;
+  margin: -10px 0 30px 0;
+}

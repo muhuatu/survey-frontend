@@ -1,0 +1,111 @@
+.search {
+  display: flex;
+  flex-direction: column;
+  margin: 30px auto;
+  gap: 10px;
+  width: 450px;
+  color: rgb(100, 100, 100);
+}
+
+input,
+button {
+  border-radius: 5px;
+  border: 1px solid #bababa;
+  color: rgb(100, 100, 100);
+}
+
+button:hover {
+  background-color: rgba(127, 116, 116, 0.1);
+}
+
+button:active {
+  background-color: rgba(127, 116, 116, 0.1);
+  /* 點擊時變得更深的顏色 */
+  transform: scale(0.98);
+  /* 縮小按鈕 */
+}
+
+.icon {
+  margin: 0 0 0 240px;
+  .material-symbols-outlined {
+    cursor: pointer;
+    margin-right: 10px;
+    transform: scale(1);
+  }
+}
+
+// -------------------- 以下是表格 -------------------- //
+
+::ng-deep .mat-elevation-z8 {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: none;
+  /* 移除陰影 */
+  width: 65%;
+  margin: 0 auto;
+}
+
+::ng-deep .mat-mdc-table {
+  border-collapse: collapse;
+  /* 單元格邊框重疊顯示為單線 */
+}
+
+::ng-deep .mat-elevation-z8 tr:nth-child(even) {
+  background-color: #e9e9e9;
+  /* 偶數行的背景色 */
+}
+
+::ng-deep .mat-elevation-z8 tr {
+  //一行
+  height: 40px;
+  /* 調整每格高度 */
+}
+
+::ng-deep .mat-elevation-z8 td,
+// 資料單元格
+::ng-deep .mat-elevation-z8 th {
+  // 標題單元格
+  font-family: 'Noto Sans TC';
+  font-weight: 450;
+  color: rgb(100, 100, 100);
+  border: 1px solid #bababa !important;
+  font-size: 15px;
+}
+
+// 標題
+::ng-deep .mat-elevation-z8 th {
+  background-color: rgb(127, 116, 116) !important;
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+}
+
+// 選擇方框
+.checkBox {
+  border-radius: 3px;
+  border: 1px solid #bababa;
+  box-sizing: border-box;
+  transform: scale(1.2);
+}
+
+.urlCss {
+  color: rgb(100, 100, 100);
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover,
+  &:active {
+    color: rgba(100, 100, 100, 0.7);
+  }
+}
+
+// 分頁區
+.paginator-container {
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
+  /* 可調整距離 */
+  margin-bottom: 20px;
+  padding: 10px 0;
+}

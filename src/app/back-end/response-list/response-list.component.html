@@ -1,0 +1,65 @@
+<div class="container">
+  <!--------------------- 左側 --------------------->
+  <aside class="sidebar">
+    <button (click)="ban()">設定問卷</button>
+    <button (click)="ban()">確認問卷</button>
+    <button routerLink="/publish">發布問卷</button>
+    <button
+      routerLink="/response-list"
+      style="background-color: rgb(127, 116, 116); color: white"
+    >
+      問卷回饋
+    </button>
+  </aside>
+
+  <!--------------------- 右側 --------------------->
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource">
+        <!-- Position Column -->
+        <ng-container matColumnDef="replyID">
+          <th mat-header-cell *matHeaderCellDef style="width: 50px">編號</th>
+          <td mat-cell *matCellDef="let element">{{ element.replyID }}</td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef style="width: 100px">姓名</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
+        <!-- Date Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef style="width: 70px">
+            填寫時間
+          </th>
+          <td mat-cell *matCellDef="let element">{{ element.date }}</td>
+        </ng-container>
+
+        <!-- URL Column -->
+        <ng-container matColumnDef="url">
+          <th mat-header-cell *matHeaderCellDef style="width: 80px">
+            觀看回覆
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <a [href]="element.url">前往</a>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="trRow"
+        ></tr>
+      </table>
+
+      <!-- 分頁選擇器：可選5,10,20筆顯示 -->
+      <mat-paginator
+        class="paginator-container"
+        [pageSizeOptions]="[5, 10, 20]"
+        showFirstLastButtons
+        aria-label="Select page of periodic elements"
+      >
+      </mat-paginator>
+    </div>
+</div>
