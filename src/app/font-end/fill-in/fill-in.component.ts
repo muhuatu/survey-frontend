@@ -78,7 +78,8 @@ export class FillInComponent {
   // 必填判斷
   checkNecessary(): boolean {
     const emailReg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    const phoneRge = /09[0-9]{8}/;
+    const phoneRge = /^09[0-9]{8}$/;
+    // 若要剛好是 10 位數，要加開頭（^）和結尾（$）限制，不然輸入 11 位數也給過= =
 
     // 1. 基本資料
     if (!(this.userName && this.userPhone)) {
@@ -151,65 +152,131 @@ export class FillInComponent {
     }
   }
   //--------------- 問卷內容 ---------------
+
   survey = {
-    // 問卷
-    name: '進擊的巨人角色偏好調查',
+    name: '下午茶蛋糕團購登記',
     description:
-      '您好！這是一份針對《進擊的巨人》角色偏好的調查問卷，旨在了解粉絲對角色的喜愛程度與劇情相關的看法。無論您是艾倫的支持者，還是調查兵團的忠實粉絲，這份問卷將幫助我們了解您最喜歡的角色、最喜愛的劇情片段以及對結局的看法。請花幾分鐘時間填寫問卷，讓我們共同探索巨人世界的精彩！',
-    startDate: '2026/08/05',
-    endDate: '2026/10/05',
-    // 問題
+      '本次團購品項有櫻桃派、楓糖麥片、提拉米蘇。團購時間至 2090/01/31 23:59 截止，請把握機會！' +
+      '訂單總金額未滿 $490 需另加 $60 運費。送出訂單後，如需更改內容，請以電話聯繫。',
+    startDate: '2090/01/01',
+    endDate: '2090/01/31',
     questionArray: [
       {
         questionId: 1,
-        title: '您最喜歡的《進擊的巨人》角色是誰？', // 標題
-        type: 'S', // 類型：單選
-        necessary: true, // 必填
+        title: '櫻桃派',
+        type: 'S', // 單選
+        necessary: false, // 非必填
         options: [
-          { optionName: '艾倫·耶格爾', code: 'A' },
-          { optionName: '三笠·阿克曼', code: 'B' },
-          { optionName: '阿爾敏·阿諾德', code: 'C' },
-          { optionName: '里維·阿克曼', code: 'D' },
+          { optionName: '1 份 280 元', code: 'A' },
+          { optionName: '2 份 560 元', code: 'B' },
+          { optionName: '3 份 840 元', code: 'C' },
+          { optionName: '4 份 1,120 元', code: 'D' },
         ],
       },
       {
         questionId: 2,
-        title: '您最喜愛的劇情片段是？',
-        type: 'M', // 多選
-        necessary: false,
+        title: '楓糖麥片',
+        type: 'S', // 單選
+        necessary: false, // 非必填
         options: [
-          { optionName: '牆內世界揭露的真相', code: 'A' },
-          { optionName: '艾倫首次化身巨人', code: 'B' },
-          { optionName: '調查兵團的最終戰役', code: 'C' },
-          { optionName: '艾倫與調查兵團的對立', code: 'D' },
+          { optionName: '1 份 200 元', code: 'A' },
+          { optionName: '2 份 400 元', code: 'B' },
+          { optionName: '3 份 600 元', code: 'C' },
+          { optionName: '4 份 800 元', code: 'D' },
         ],
       },
       {
         questionId: 3,
-        title: '您認為結局是否符合您的期待？',
+        title: '提拉米蘇',
         type: 'S', // 單選
-        necessary: true,
+        necessary: false, // 非必填
         options: [
-          { optionName: '非常滿意', code: 'A' },
-          { optionName: '還可以接受', code: 'B' },
-          { optionName: '不太滿意', code: 'C' },
-          { optionName: '完全不滿意', code: 'D' },
+          { optionName: '1 吋 40 元', code: 'A' },
+          { optionName: '2 吋 80 元', code: 'B' },
+          { optionName: '3 吋 120 元', code: 'C' },
+          { optionName: '4 吋 160 元', code: 'D' },
         ],
       },
       {
         questionId: 4,
-        title: '您最希望看到哪位角色的外傳故事？',
-        type: 'T', // 簡答
+        title:
+          '您希望以後新增哪些零食品項？',
+        type: 'M',
         necessary: false,
-        options: [],
+        options: [
+          { optionName: '巧克力餅乾', code: 'A' },
+          { optionName: '蔓越莓乾', code: 'B' },
+          { optionName: '布丁', code: 'C' },
+          { optionName: '洋芋片', code: 'D' },
+        ],
       },
       {
         questionId: 5,
-        title: '您對《進擊的巨人》有什麼其他想法或建議？',
-        type: 'T', // 簡答
-        necessary: false,
-        options: [],
+        title: '是否同意提交後不可修改？',
+        type: 'S', // 單選
+        necessary: true, // 非必填
+        options: [{ optionName: '同意', code: 'A' }],
       },
     ],
   };
+
+  // survey = {
+  //   name: '《三體》書籍讀者問卷調查',
+  //   description:
+  //     '您好！這是一份針對《三體》已讀讀者的問卷，旨在了解讀者對書中內容及科學概念的深入看法。請花幾分鐘時間填寫問卷，感謝您的參與！',
+  //   startDate: '2024/11/19',
+  //   endDate: '2025/01/19',
+  //   questionArray: [
+  //     {
+  //       questionId: 1,
+  //       title: '《三體》中的「面壁計劃」是什麼？',
+  //       type: 'S', // 單選
+  //       necessary: true, // 必填
+  //       options: [
+  //         { optionName: '一個保護地球免受外星入侵的計劃', code: 'A' },
+  //         { optionName: '一個探索外太空的新計劃', code: 'B' },
+  //         { optionName: '一個解決地球能源危機的計劃', code: 'C' },
+  //         { optionName: '一個與外星文明進行外交的計劃', code: 'D' },
+  //       ],
+  //     },
+  //     {
+  //       questionId: 2,
+  //       title: '您認為《三體》中最能體現人性弱點的情節有哪些？',
+  //       type: 'M', // 多選
+  //       necessary: false, // 非必填
+  //       options: [
+  //         { optionName: '紅岸工程的秘密', code: 'A' },
+  //         { optionName: '「歌者」對地球的攻擊', code: 'B' },
+  //         { optionName: '面壁者的背叛', code: 'C' },
+  //         { optionName: '黑暗森林法則的應用', code: 'D' },
+  //       ],
+  //     },
+  //     {
+  //       questionId: 3,
+  //       title: '請簡述您對黑暗森林理論的理解。',
+  //       type: 'T', // 簡答
+  //       necessary: true, // 必填
+  //       options: [],
+  //     },
+  //     {
+  //       questionId: 4,
+  //       title: '在《三體》中，您認為哪個角色最具代表性，為什麼？',
+  //       type: 'M', // 多選
+  //       necessary: false, // 非必填
+  //       options: [
+  //         { optionName: '羅輯', code: 'A' },
+  //         { optionName: '葉文潔', code: 'B' },
+  //         { optionName: '汪淼', code: 'C' },
+  //         { optionName: '章北海', code: 'D' },
+  //       ],
+  //     },
+  //     {
+  //       questionId: 5,
+  //       title: '您對《三體》中的三體文明有什麼看法或建議？請簡述。',
+  //       type: 'T', // 簡答
+  //       necessary: false, // 非必填
+  //       options: [],
+  //     },
+  //   ],
+  // };
 }

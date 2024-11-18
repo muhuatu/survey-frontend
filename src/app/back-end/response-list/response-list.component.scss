@@ -74,10 +74,8 @@ button {
 
 // td 資料單元格、 th 標題單元格
 ::ng-deep .mat-elevation-z8 td,
-
 ::ng-deep .mat-elevation-z8 th {
-
-  font-family: 思源等寬;
+  font-family: 'Noto Sans TC Medium';
   color: rgb(100, 100, 100);
   border: 1px solid #bababa !important;
   font-size: 15px;

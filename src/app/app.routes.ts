@@ -10,9 +10,14 @@ import { ChartComponent } from './back-end/statistics-list/chart/chart.component
 import { SubmitComponent } from './font-end/fill-in/preview/submit/submit.component';
 import { StatisticsListComponent } from './back-end/statistics-list/statistics-list.component';
 import { LoginComponent } from './back-end/login/login.component';
+import { SidenavTestComponent } from './sidenav-test/sidenav-test.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
+  {
+    path: 'sidenav-test',
+    component: SidenavTestComponent,
+  },
   {
     path: 'home',
     component: HomeComponent,

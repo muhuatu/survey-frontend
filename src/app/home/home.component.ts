@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { DateService } from '../@service/date-service';
 import { UserService } from '../@service/user-service';
 import { MatIconModule } from '@angular/material/icon';
+import { QuestService } from '../@service/quest-service';
 
 @Component({
   selector: 'app-home',
@@ -26,7 +27,8 @@ export class HomeComponent implements AfterViewInit {
   constructor(
     private router: Router,
     private dateService: DateService,
-    private userService: UserService
+    private userService: UserService,
+    private questService: QuestService,
   ) {}
 
   surveyName = '';
@@ -99,6 +101,7 @@ export class HomeComponent implements AfterViewInit {
 
   // 新增問卷路徑：用在 + 的 icon 上
   toQuestionSetting() {
+    this.questService.questData = null;
     this.router.navigate(['/question-settings']);
   }
 
@@ -146,7 +149,7 @@ const ELEMENT_DATA: SurveyList[] = [
   {
     checkbox: false,
     id: 1,
-    name: '進擊的巨人角色偏好調查',
+    name: '下午茶蛋糕團購登記',
     statusCode: 'IN_PROGRESS',
     status: '進行中',
     startDate: '2024-11-05',

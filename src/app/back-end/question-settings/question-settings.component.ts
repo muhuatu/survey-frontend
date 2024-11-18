@@ -119,70 +119,76 @@ export class QuestionSettingsComponent {
     this.options.splice(index, 1); // 刪除 index 後一個元素，例如索引0就是刪除第1個元素
   }
 
-  // 增加問題
-  addQuestion() {
-    // 1. 檢查必填：如果有任何一個欄位是空的，則會返回
+  // 檢查問題必填
+  checkQuestionNecessary(): boolean {
     if (!this.title || !this.type) {
       alert('⚠️ 請填寫問題名稱與類型');
-      return;
+      return false;
     }
     if (
       (this.type === 'S' || this.type === 'M') &&
       (!this.options || this.options.length === 0)
     ) {
       alert('✍️ 單選或複選必須輸入選項');
-      return;
+      return false;
     }
     if (this.type === 'M' && this.options.length < 2) {
       // 如果是多選，選項必須兩個以上。
       alert('✍️ 多選題選項必須填入兩個以上');
-      return;
+      return false;
     }
     for (const item of this.options) {
       if (!item.answer) {
         alert('✍️ 選項不可為空白');
-        return;
+        return false;
       }
     }
+    return true;
+  }
 
-    // 2. 創建新問題對象
-    const newQuestion: Question = {
-      checkbox: false,
-      questionId: this.isEditing ? this.editId! : this.nextID++, // 由旗標變數判斷用哪個id
-      // 後面加 ! 是告訴 TS 這個變數一定不會是 null 或 undefined
-      title: this.title,
-      type: this.type,
-      necessary: this.necessary,
-      options: this.options,
-    };
+  // 增加問題
+  addQuestion() {
+    // 1. 檢查必填：如果有任何一個欄位是空的，則會返回
+    if (this.checkQuestionNecessary()) {
+      // 2. 創建新問題對象
+      const newQuestion: Question = {
+        checkbox: false,
+        questionId: this.isEditing ? this.editId! : this.nextID++, // 由旗標變數判斷用哪個id
+        // 後面加 ! 是告訴 TS 這個變數一定不會是 null 或 undefined
+        title: this.title,
+        type: this.type,
+        necessary: this.necessary,
+        options: this.options,
+      };
 
-    // 3. 更新問題列表
-    if (this.isEditing) {
-      // 3-1. 找出問題的索引，編輯時，將新問題陣列賦值給該索引的問題
-      const index = this.questionArray.findIndex(
-        (q) => q.questionId === newQuestion.questionId
-      );
-      this.questionArray[index] = newQuestion;
-    } else {
-      // 3-2. 新增時，直接在陣列後加上新問題
-      this.questionArray = [...this.questionArray, newQuestion];
+      // 3. 更新問題列表
+      if (this.isEditing) {
+        // 3-1. 找出問題的索引，編輯時，將新問題陣列賦值給該索引的問題
+        const index = this.questionArray.findIndex(
+          (q) => q.questionId === newQuestion.questionId
+        );
+        this.questionArray[index] = newQuestion;
+      } else {
+        // 3-2. 新增時，直接在陣列後加上新問題
+        this.questionArray = [...this.questionArray, newQuestion];
+      }
+
+      // 4. 點選新增後，清空輸入框
+      this.title = '';
+      this.type = '';
+      this.necessary = false;
+      this.options = [];
+
+      // 5. 重新排序
+      this.reorderQuestions();
+
+      // 6. 重置狀態
+      this.isEditing = false;
+      this.editId = null;
+
+      // 7. 在更新問題後重新賦值 questions 陣列(沒加的話表格不會更新)
+      this.questionArray = [...this.questionArray];
     }
-
-    // 4. 點選新增後，清空輸入框
-    this.title = '';
-    this.type = '';
-    this.necessary = false;
-    this.options = [];
-
-    // 5. 重新排序
-    this.reorderQuestions();
-
-    // 6. 重置狀態
-    this.isEditing = false;
-    this.editId = null;
-
-    // 7. 在更新問題後重新賦值 questions 陣列(沒加的話表格不會更新)
-    this.questionArray = [...this.questionArray];
   }
 
   // 編輯問題

@@ -57,13 +57,13 @@ export class ResponseListComponent {
 const ELEMENT_DATA: Response[] = [
   {
     replyID: 1,
-    name: 'ちい',
+    name: 'ちいかわ',
     date: '2024/11/16 20:11',
     url: '/preview',
   },
   {
     replyID: 2,
-    name: 'はち',
+    name: 'ハチワレ',
     date: '2024/11/16 20:11',
     url: '/preview',
   },
@@ -75,20 +75,34 @@ const ELEMENT_DATA: Response[] = [
   },
   {
     replyID: 4,
-    name: 'あい',
+    name: 'モモンガ',
     date: '2024/11/16 20:11',
     url: '/preview',
   },
   {
     replyID: 5,
-    name: 'ルビ',
+    name: 'くりまんじゅう',
     date: '2024/11/16 20:11',
     url: '/preview',
   },
   {
     replyID: 6,
-    name: 'アクア',
+    name: '鎧さん',
+    date: '2024/11/16 20:11',
+    url: '/preview',
+  },
+  {
+    replyID: 7,
+    name: 'シーサー',
+    date: '2024/11/16 20:11',
+    url: '/preview',
+  },
+  {
+    replyID: 8,
+    name: 'あの子',
     date: '2024/11/16 20:11',
     url: '/preview',
   },
 ];
+
+

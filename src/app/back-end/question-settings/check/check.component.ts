@@ -8,6 +8,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { QuestService } from '../../../@service/quest-service';
+import { UserService } from '../../../@service/user-service';
 
 @Component({
   selector: 'app-check',
@@ -26,8 +27,11 @@ import { QuestService } from '../../../@service/quest-service';
   styleUrl: './check.component.scss',
 })
 export class CheckComponent {
-
-  constructor(private router: Router, private questService: QuestService) {}
+  constructor(
+    private router: Router,
+    private questService: QuestService,
+    private userService: UserService,
+  ) {}
 
   // 宣告變數
   questData!: any;
@@ -49,9 +53,15 @@ export class CheckComponent {
     this.router.navigate(['/publish']);
   }
 
-  toSave(){
+  toSave() {
+    alert('問卷已儲存，將跳轉至首頁。');
     this.questService.questStatus = 'NOT_PUBLISHED';
+    this.userService.isAdmin = true;
     this.router.navigate(['/home']);
   }
 
+  ban() {
+    alert('⚠️ 請注意：問卷設定尚未完成，無法訪問此連結。');
+    return;
+  }
 }

@@ -1,38 +1,34 @@
 <div class="chart-container">
-
   @if(questData.type != 'T'){
   <!-- id 可自由取名 -->
   <div class="canvas">
-    <canvas id="{{dataId}}"></canvas>
+    <canvas id="{{ dataId }}"></canvas>
   </div>
   }
 
-  <div>
-
-    <div style="font-weight: bold;">
-      題目{{questData.id}}：{{questData.name}}
+  <div style="padding-top: 10px">
+    <div style="font-family: 微軟正黑體 ;color: rgb(100, 100, 100, 0.9);font-weight:900;font-size: 18px;">
+      題目{{ questData.id }}：{{ questData.name }}
     </div>
 
     <!-- 判斷不是文字題就顯示選項跟數量 -->
-    @if (questData.type != 'T') {
-    @for (label of questData.labels; track $index) {
-    <p style="padding: 0 15px;">
+    @if (questData.type != 'T') { @for (label of questData.labels; track $index)
+    {
+    <p style="padding: 0 15px">
       {{ questData.labels[$index] }}
-      <span style="float: right;">{{ questData.data[$index] }}</span>
+      <span style="float: right">{{ questData.data[$index] }}</span>
     </p>
-    }
-    }
+    } }
 
     <!-- 判斷是文字提就顯示文字 -->
     @else {
     <div class="type">
-      <ol style="margin-left: 22px;">
+      <ol style="margin-left: 22px">
         @for (data of questData.data; track $index) {
-        <li class="typeT">{{data}}</li>
+        <li class="typeT">{{ data }}</li>
         }
       </ol>
     </div>
     }
-
   </div>
 </div>

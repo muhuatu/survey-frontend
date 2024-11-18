@@ -99,7 +99,7 @@
           <!-- 單選題 -->
           <div *ngSwitchCase="'S'">
             <label
-              style="position: relative; z-index: 1"
+              style="position: relative; z-index: 1;"
               *ngFor="let option of surveyItem.options; let j = index"
             >
               <input
@@ -107,8 +107,9 @@
                 name="{{ surveyItem.questionId }}"
                 value="{{ option.code }}"
                 [(ngModel)]="surveyItem.radioAnswer"
-              />
+                style="margin-bottom: 10px;"/>
               {{ option.optionName }}
+              <br>
             </label>
           </div>
 
@@ -122,8 +123,10 @@
                 type="checkbox"
                 [name]="'question' + i + 'option' + j"
                 [(ngModel)]="option.boxBoolean"
+                style="margin-bottom: 10px;"
               />
               {{ option.optionName }}
+              <br>
             </label>
           </div>
 
