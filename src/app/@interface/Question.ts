@@ -19,7 +19,7 @@ export interface Survey {
 // 回饋表
 export interface Response {
   replyID: number;
-  name: string;
+  replyName: string;
   date: any;
   url: string;
 }

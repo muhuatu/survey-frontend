@@ -38,37 +38,36 @@ button:active {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  box-shadow: none; // 移除陰影!!!!!!!!!!!!
+  box-shadow: none; // 移除陰影
   width: 65%;
   margin: 0 auto;
 }
 
 ::ng-deep .mat-mdc-table {
-  border-collapse: collapse;  // 單元格邊框重疊顯示為單線
+  border-collapse: collapse; // 單元格邊框重疊顯示為單線
 }
 
 ::ng-deep .mat-elevation-z8 tr:nth-child(even) {
-  background-color: #e9e9e9; // 偶數行背景色
+  background-color: #f3f3f3;
 }
 
 // 一行
 ::ng-deep .mat-elevation-z8 tr {
   height: 40px;
 }
-
 // td 資料單元格 & th 標題單元格
 ::ng-deep .mat-elevation-z8 td,
 ::ng-deep .mat-elevation-z8 th {
   font-family: 'Noto Sans TC';
   font-weight: 450;
   color: rgb(100, 100, 100);
-  border: 1px solid #bababa !important;
+  border: 0px solid #bababa !important;
   font-size: 15px;
 }
 
 // 標題
 ::ng-deep .mat-elevation-z8 th {
-  background-color: rgb(127, 116, 116) !important;
+  background-color: rgba(127, 116, 116, 0.8) !important;
   color: rgb(255, 255, 255);
   font-weight: 600;
 }
@@ -97,7 +96,7 @@ button:active {
   background-color: transparent;
   display: flex;
   justify-content: center;
-  margin-top: 5px; // 可調整與表格ㄉ距離
+  margin-top: 5px;
   margin-bottom: 20px;
   padding: 10px 0;
 }

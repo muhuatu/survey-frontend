@@ -44,6 +44,12 @@ button {
   }
 }
 
+input {
+  border-radius: 5px;
+  border: 1px solid #bababa;
+  color: rgb(100, 100, 100);
+}
+
 // ------------------------ 表格 ------------------------ //
 
 ::ng-deep .mat-elevation-z8 {
@@ -54,7 +60,7 @@ button {
   justify-content: center;
   width: 100%;
   max-width: 600px;
-  margin-top: 30px;
+  margin-top: 0px;
 }
 
 ::ng-deep .mat-mdc-table {
@@ -62,7 +68,7 @@ button {
 }
 
 ::ng-deep .mat-elevation-z8 tr:nth-child(even) {
-  background-color: #E9E9E9;
+  background-color: #f3f3f3;
   /* 偶數行的背景色 */
 }
 
@@ -77,12 +83,12 @@ button {
 ::ng-deep .mat-elevation-z8 th {
   font-family: 'Noto Sans TC Medium';
   color: rgb(100, 100, 100);
-  border: 1px solid #bababa !important;
+  border: 0px solid #bababa !important;
   font-size: 15px;
 }
 
 ::ng-deep .mat-elevation-z8 th {
-  background-color: rgb(127, 116, 116) !important;
+  background-color: rgb(127, 116, 116, 0.8) !important;
   color: rgb(255, 255, 255);
   font-weight: bold;
 }

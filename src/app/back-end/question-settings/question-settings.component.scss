@@ -101,7 +101,6 @@ select {
   justify-content: center;
   box-shadow: none; // 移除陰影
   width: 100%;
-
 }
 
 ::ng-deep .mat-mdc-table {
@@ -109,7 +108,7 @@ select {
 }
 
 ::ng-deep .mat-elevation-z8 tr:nth-child(even) {
-  background-color: #e9e9e9; // 偶數行的背景色
+  background-color: #f3f3f3; // 偶數行的背景色
 }
 
 ::ng-deep .mat-elevation-z8 tr {
@@ -119,14 +118,14 @@ select {
 ::ng-deep .mat-elevation-z8 td,
 ::ng-deep .mat-elevation-z8 th {
   color: rgb(100, 100, 100);
-  border: 1px solid #bababa !important;
+  border: 0px solid #bababa !important;
   padding: 0 0 0 8px;
   text-align: left !important;
   font-family: 'Noto Sans TC Medium' !important;
 }
 
 ::ng-deep .mat-elevation-z8 th {
-  background-color: rgb(127, 116, 116) !important;
+  background-color: rgb(127, 116, 116, 0.8) !important;
   color: rgb(255, 255, 255);
   font-size: 14px;
   font-weight: bold;

@@ -83,17 +83,17 @@ export class FillInComponent {
 
     // 1. 基本資料
     if (!(this.userName && this.userPhone)) {
-      alert('請填寫個人資訊');
+      alert('✍️ 請填寫個人資訊');
       return false;
     }
 
     if (!phoneRge.test(this.userPhone)) {
-      alert('手機格式不正確，須為 09 開頭且總共 10 碼');
+      alert('⚠️ 手機格式不正確，須為 09 開頭且總共 10 碼');
       return false;
     }
 
     if (this.userEmail && !emailReg.test(this.userEmail)) {
-      alert('信箱格式不正確');
+      alert('⚠️ 信箱格式不正確');
       return false;
     }
 
@@ -103,12 +103,12 @@ export class FillInComponent {
       if (survey.necessary) {
         // 3-1. 簡答 (answer)
         if (survey.type === 'T' && !survey.answer) {
-          alert('請確認簡答題必填皆有填寫');
+          alert('✍️ 請確認簡答題必填皆有填寫');
           return false;
         }
         // 3-2. 單選 (radioAnswer)
         if (survey.type === 'S' && !survey.radioAnswer) {
-          alert('請確認單選題必填皆有填寫');
+          alert('✍️ 請確認單選題必填皆有填寫');
           return false;
         }
         // 3-3. 多選 (checkbox)
@@ -120,7 +120,7 @@ export class FillInComponent {
             }
           }
           if (!check) {
-            alert('請確認多選題必填皆有填寫');
+            alert('✍️ 請確認多選題必填皆有填寫');
             return false;
           }
         }

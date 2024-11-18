@@ -30,7 +30,7 @@ export class ResponseListComponent {
   constructor(private router: Router, private dateService: DateService) {}
 
   dataSource = new MatTableDataSource<Response>(ELEMENT_DATA);
-  displayedColumns: string[] = ['replyID', 'name', 'date', 'url'];
+  displayedColumns: string[] = ['replyID', 'replyName', 'date', 'url'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   // 資料排序
@@ -52,57 +52,68 @@ export class ResponseListComponent {
     alert('問卷已發布，無法進入此連結');
     return;
   }
+
+  name = '';
+
+  // 模糊搜尋
+  changeData(event: Event) {
+    let tidyData: Response[] = [];
+    ELEMENT_DATA.forEach((res) => {
+      if (res.replyName.indexOf((event.target as HTMLInputElement).value) != -1) {
+        tidyData.push(res);
+      }
+    });
+    this.dataSource.data = tidyData;
+  }
 }
 
 const ELEMENT_DATA: Response[] = [
   {
     replyID: 1,
-    name: 'ちいかわ',
+    replyName: 'ちいかわ',
     date: '2024/11/16 20:11',
     url: '/preview',
   },
   {
     replyID: 2,
-    name: 'ハチワレ',
+    replyName: 'ハチワレ',
     date: '2024/11/16 20:11',
     url: '/preview',
   },
   {
     replyID: 3,
-    name: 'うさぎ',
+    replyName: 'うさぎ',
     date: '2024/11/16 20:11',
     url: '/preview',
   },
   {
     replyID: 4,
-    name: 'モモンガ',
+    replyName: 'モモンガ',
     date: '2024/11/16 20:11',
     url: '/preview',
   },
   {
     replyID: 5,
-    name: 'くりまんじゅう',
+    replyName: 'くりまんじゅう',
     date: '2024/11/16 20:11',
     url: '/preview',
   },
   {
     replyID: 6,
-    name: '鎧さん',
+    replyName: '鎧さん',
     date: '2024/11/16 20:11',
     url: '/preview',
   },
   {
     replyID: 7,
-    name: 'シーサー',
+    replyName: 'シーサー',
     date: '2024/11/16 20:11',
     url: '/preview',
   },
   {
     replyID: 8,
-    name: 'あの子',
+    replyName: 'あの子',
     date: '2024/11/16 20:11',
     url: '/preview',
   },
 ];
-
-
