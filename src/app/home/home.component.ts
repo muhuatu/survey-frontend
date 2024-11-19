@@ -9,6 +9,11 @@ import { DateService } from '../@service/date-service';
 import { UserService } from '../@service/user-service';
 import { MatIconModule } from '@angular/material/icon';
 import { QuestService } from '../@service/quest-service';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +24,11 @@ import { QuestService } from '../@service/quest-service';
     MatPaginatorModule,
     CommonModule,
     MatIconModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatListModule,
+    MatButtonModule,
+    MatIcon,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -67,8 +77,8 @@ export class HomeComponent implements AfterViewInit {
 
     // 動態呈現
     this.displayedColumns = this.isAdmin
-      ? ['checkbox', 'id', 'name', 'status', 'startDate', 'endDate', 'url']
-      : ['id', 'name', 'status', 'startDate', 'endDate', 'url'];
+      ? ['checkbox', 'id', 'name', 'status', 'startDate', 'endDate','url']
+      : ['id', 'name', 'status', 'startDate', 'endDate'];
   }
 
   // 判斷值變更(生命週期)

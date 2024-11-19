@@ -1,148 +1,174 @@
-<div class="search">
-  <div class="name" style="display: flex; gap: 10px">
-    <label for="surveyName">問卷名稱：</label>
-    <input
-      type="text"
-      id="surveyName"
-      [(ngModel)]="surveyName"
-      (keyup)="changeData($event)"
-      placeholder="請輸入問卷名稱"
-      style="width: 295px; height: 22px"
-    />
-  </div>
+<mat-sidenav-container class="sidenav-container">
 
-  <div class="date" style="display: flex; gap: 10px">
-    <label for="date">統計時間：</label>
-    <input
-      style="width: 100px"
-      type="date"
-      id="startDate"
-      [(ngModel)]="startDate"
-      (ngModelChange)="checkEndDate($event)"
-    />
-    到
-    <input
-      style="width: 100px"
-      type="date"
-      id="endDate"
-      [(ngModel)]="endDate"
-      [min]="startDate"
-    />
-    <button (click)="search()" style="width: 50px">搜尋</button>
-  </div>
-</div>
+  <mat-sidenav #sidenav mode="side" opened class="side">
+    <mat-toolbar class="toolbar">選單</mat-toolbar>
+    <mat-nav-list class="side-list">
+      <a mat-list-item href="/home">首頁</a>
+      <a mat-list-item href="/login">問卷設定</a>
+      <a mat-list-item href="#">統計圖表</a>
+      <a mat-list-item href="#">聯絡我們</a>
+    </mat-nav-list>
+  </mat-sidenav>
 
-@if(isAdmin){
-<link
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-  rel="stylesheet"
-/>
-<div class="icon">
-  <button
-    (click)="deleteQuestions()"
-    style="background: none; border: none; padding: 0"
-  >
-    <span class="material-symbols-outlined"> delete </span>
-  </button>
-  <button
-    (click)="toQuestionSetting()"
-    style="background: none; border: none; padding: 0"
-  >
-    <span class="material-symbols-outlined"> add </span>
-  </button>
-</div>
-}
-
-<!------------------- 以下是表格 ------------------->
-
-<div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource">
-    <!-- checkbox Column 這裡用if判斷是否為Admin -->
-    @if(isAdmin){
-    <ng-container matColumnDef="checkbox">
-      <th mat-header-cell *matHeaderCellDef style="width: 80px">選項</th>
-      <td mat-cell *matCellDef="let element">
+<mat-sidenav-content>
+  <mat-toolbar>
+    <button mat-icon-button (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>我的問卷</span>
+  </mat-toolbar>
+  <div class="content">
+    <div class="search">
+      <div class="name" style="display: flex; gap: 10px">
+        <label for="surveyName">問卷名稱：</label>
         <input
-          class="checkBox"
-          type="checkbox"
-          [(ngModel)]="element.checkbox"
+          type="text"
+          id="surveyName"
+          [(ngModel)]="surveyName"
+          (keyup)="changeData($event)"
+          placeholder="請輸入問卷名稱"
+          style="width: 295px; height: 22px"
         />
-      </td>
-    </ng-container>
+      </div>
+    
+      <div class="date" style="display: flex; gap: 10px">
+        <label for="date">統計時間：</label>
+        <input
+          style="width: 100px"
+          type="date"
+          id="startDate"
+          [(ngModel)]="startDate"
+          (ngModelChange)="checkEndDate($event)"
+        />
+        到
+        <input
+          style="width: 100px"
+          type="date"
+          id="endDate"
+          [(ngModel)]="endDate"
+          [min]="startDate"
+        />
+        <button (click)="search()" style="width: 50px">搜尋</button>
+      </div>
+    </div>
+    
+    @if(isAdmin){
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <div class="icon">
+      <button
+        (click)="deleteQuestions()"
+        style="background: none; border: none; padding: 0"
+      >
+        <span class="material-symbols-outlined"> delete </span>
+      </button>
+      <button
+        (click)="toQuestionSetting()"
+        style="background: none; border: none; padding: 0"
+      >
+        <span class="material-symbols-outlined"> add </span>
+      </button>
+    </div>
     }
-
-    <!-- ID Column -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef style="width: 70px">編號</th>
-      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-    </ng-container>
-
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>名稱</th>
-      <td
-        mat-cell
-        *matCellDef="let element"
-        (click)="toEditOrFillIn(element)"
-        [ngClass]="{
-          urlCss:
-            element.statusCode == 'IN_PROGRESS' ||
-            element.statusCode == 'NOT_PUBLISHED'
-        }"
+    
+    <!------------------- 以下是表格 ------------------->
+    
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource">
+        <!-- checkbox Column 這裡用if判斷是否為Admin -->
+        @if(isAdmin){
+        <ng-container matColumnDef="checkbox">
+          <th mat-header-cell *matHeaderCellDef style="width: 80px">選項</th>
+          <td mat-cell *matCellDef="let element">
+            <input
+              class="checkBox"
+              type="checkbox"
+              [(ngModel)]="element.checkbox"
+            />
+          </td>
+        </ng-container>
+        }
+    
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef style="width: 70px">編號</th>
+          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+        </ng-container>
+    
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>名稱</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            (click)="toEditOrFillIn(element)"
+            [ngClass]="{
+              urlCss:
+                element.statusCode == 'IN_PROGRESS' ||
+                element.statusCode == 'NOT_PUBLISHED'
+            }"
+          >
+            {{ element.name }}
+          </td>
+        </ng-container>
+    
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef style="width: 100px">狀態</th>
+          <td mat-cell *matCellDef="let element">{{ element.status }}</td>
+        </ng-container>
+    
+        <!-- StartDate Column -->
+        <ng-container matColumnDef="startDate">
+          <th mat-header-cell *matHeaderCellDef style="width: 140px">開始時間</th>
+          <td mat-cell *matCellDef="let element">{{ element.startDate }}</td>
+        </ng-container>
+    
+        <!-- EndDate Column -->
+        <ng-container matColumnDef="endDate">
+          <th mat-header-cell *matHeaderCellDef style="width: 140px">結束時間</th>
+          <td mat-cell *matCellDef="let element">{{ element.endDate }}</td>
+        </ng-container>
+    
+        <!-- URL Column -->
+        @if(isAdmin){
+        <ng-container matColumnDef="url">
+          <th mat-header-cell *matHeaderCellDef style="width: 70px">結果</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            (click)="toChart(element)"
+            [ngClass]="{
+              urlCss:
+                element.statusCode == 'END' || element.statusCode == 'IN_PROGRESS'
+            }"
+          >
+            前往
+          </td>
+        </ng-container>
+        }
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="trRow"
+          [hidden]="!isAdmin && row.statusCode === 'NOT_PUBLISHED'"
+        ></tr>
+      </table>
+    
+      <!-- 分頁選擇器：可選5,10,20筆顯示 -->
+      <mat-paginator
+        class="paginator-container"
+        [pageSizeOptions]="[5, 10, 20]"
+        showFirstLastButtons
+        aria-label="Select page of periodic elements"
       >
-        {{ element.name }}
-      </td>
-    </ng-container>
-
-    <!-- Status Column -->
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef style="width: 100px">狀態</th>
-      <td mat-cell *matCellDef="let element">{{ element.status }}</td>
-    </ng-container>
-
-    <!-- StartDate Column -->
-    <ng-container matColumnDef="startDate">
-      <th mat-header-cell *matHeaderCellDef style="width: 140px">開始時間</th>
-      <td mat-cell *matCellDef="let element">{{ element.startDate }}</td>
-    </ng-container>
-
-    <!-- EndDate Column -->
-    <ng-container matColumnDef="endDate">
-      <th mat-header-cell *matHeaderCellDef style="width: 140px">結束時間</th>
-      <td mat-cell *matCellDef="let element">{{ element.endDate }}</td>
-    </ng-container>
-
-    <!-- URL Column -->
-    <ng-container matColumnDef="url">
-      <th mat-header-cell *matHeaderCellDef style="width: 70px">結果</th>
-      <td
-        mat-cell
-        *matCellDef="let element"
-        (click)="toChart(element)"
-        [ngClass]="{
-          urlCss:
-            element.statusCode == 'END' || element.statusCode == 'IN_PROGRESS'
-        }"
-      >
-        前往
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr
-      mat-row
-      *matRowDef="let row; columns: displayedColumns"
-      class="trRow"
-      [hidden]="!isAdmin && row.statusCode === 'NOT_PUBLISHED'"
-    ></tr>
-  </table>
-
-  <!-- 分頁選擇器：可選5,10,20筆顯示 -->
-  <mat-paginator
-    class="paginator-container"
-    [pageSizeOptions]="[5, 10, 20]"
-    showFirstLastButtons
-    aria-label="Select page of periodic elements"
-  >
-  </mat-paginator>
-</div>
+      </mat-paginator>
+    </div>
+    
+  </div>
+</mat-sidenav-content>
+</mat-sidenav-container>

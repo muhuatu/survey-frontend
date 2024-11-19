@@ -59,30 +59,12 @@
 .shortAnswer, .personInfo input {
   width: 300px;
   height: 25px;
-  border: 1px solid #bababa;
+  border: 1px solid #eaeaea;
   border-radius: 5px;
 }
 
 .question {
   gap: 15px;
-}
-
-button {
-  color: rgb(100, 100, 100); // 字體顏色
-  border: 1px solid #bababa;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: rgba(127, 116, 116, 0.1);
-  }
-
-  &:active {
-    background-color: rgba(127, 116, 116, 0.1);
-    /* 點擊時變得更深的顏色 */
-    transform: scale(0.9);
-    /* 縮小按鈕 */
-  }
 }
 
 .step {

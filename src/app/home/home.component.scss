@@ -1,3 +1,25 @@
+.sidenav-container{
+  height: 100vh;
+}
+
+.mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.side{
+  max-width: 180px;
+  .side-list{
+    padding-left: 10px;
+  }
+  .toolbar, .icon{
+    margin-left: 10px;
+  }
+}
+
+// ---------------------------------------------------- //
+
 .search {
   display: flex;
   flex-direction: column;
@@ -7,28 +29,22 @@
   color: rgb(100, 100, 100);
 }
 
-input,
-button {
+input {
   border-radius: 5px;
-  border: 1px solid #bababa;
+  border: 1px solid #eaeaea;
   color: rgb(100, 100, 100);
 }
 
-button:hover {
-  background-color: rgba(127, 116, 116, 0.1);
-}
-
-button:active {
-  background-color: rgba(127, 116, 116, 0.1);
-  transform: scale(0.98);
-}
-
 .icon {
-  margin: 0 0 0 240px;
+  margin: 0 0 10px 240px;
   .material-symbols-outlined {
     cursor: pointer;
     margin-right: 10px;
     transform: scale(1);
+    background-color: rgb(156, 193, 203);
+    border-radius: 20px;
+    padding: 3px;
+    color: white;
   }
 }
 
@@ -47,27 +63,28 @@ button:active {
   border-collapse: collapse; // 單元格邊框重疊顯示為單線
 }
 
-::ng-deep .mat-elevation-z8 tr:nth-child(even) {
-  background-color: #f3f3f3;
-}
+// ::ng-deep .mat-elevation-z8 tr:nth-child(even) {
+//   background-color: #ffffff;
+// }
 
 // 一行
 ::ng-deep .mat-elevation-z8 tr {
   height: 40px;
 }
+
 // td 資料單元格 & th 標題單元格
 ::ng-deep .mat-elevation-z8 td,
 ::ng-deep .mat-elevation-z8 th {
-  font-family: 'Noto Sans TC';
-  font-weight: 450;
+  //font-family: 'Noto Sans TC';
+  font-weight: 500;
   color: rgb(100, 100, 100);
-  border: 0px solid #bababa !important;
+  border: 1px solid #eaeaea !important;
   font-size: 15px;
 }
 
 // 標題
 ::ng-deep .mat-elevation-z8 th {
-  background-color: rgba(127, 116, 116, 0.8) !important;
+  background-color: rgb(156, 193, 203) !important;
   color: rgb(255, 255, 255);
   font-weight: 600;
 }
@@ -75,7 +92,7 @@ button:active {
 // 選擇方框
 .checkBox {
   border-radius: 3px;
-  border: 1px solid #bababa;
+  border: 1px solid #eaeaea;
   box-sizing: border-box;
   transform: scale(1.2);
 }

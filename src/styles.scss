@@ -1,5 +1,5 @@
 body {
-  background-color:  rgba(255, 255, 255); //rgba(255, 255, 255, 0.6)
+  background-color:  rgb(250, 249, 253);
   //background-image: url('https://framerusercontent.com/images/1bZ0QatwEYYSEqJIYCz3XsbhaUg.png');
   margin: 0;
   padding: 0;
@@ -12,5 +12,25 @@ body {
 }
 
 html, body { height: 100%; }
+
+button{
+  background-color: white;
+  border: none;
+  border-radius: 5px;
+  color: rgb(100, 100, 100);
+  font-family: 'Noto Sans TC Medium';
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgb(156, 193, 203);
+    color: white;
+  }
+
+  &:active {
+    background-color: rgba(156, 193, 203);
+    transform: scale(0.99);
+    color: white;
+  }
+}
 
 

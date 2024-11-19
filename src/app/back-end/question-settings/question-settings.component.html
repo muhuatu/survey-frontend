@@ -3,7 +3,7 @@
   <aside class="sidebar">
     <button
       routerLink="/question-settings"
-      style="background-color: rgb(127, 116, 116); color: white"
+      style="background-color: rgb(156, 193, 203); color: white"
     >
       設定問卷
     </button>
@@ -143,10 +143,9 @@
       <button
         (click)="addQuestion()"
         style="
-          margin: 0 0 20px 90px;
+          margin: 0 0 0px 90px;
           width: 405px;
           height: 30px;
-          background-color: white;
         "
       >
         {{ isEditing ? "編輯問題" : "新增問題" }}
@@ -154,13 +153,13 @@
     </div>
 
     <!-- 點選 delete icon 複數刪除 -->
-    <div>
-      <!-- <link
+    <div class="icon-delete">
+      <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
         rel="stylesheet"
-      /> -->
-      <button class="icon-delete" (click)="deleteQuestions()">🗑️</button>
-      <!-- <span class="material-symbols-outlined"> delete </span> -->
+      />
+      <span class="material-symbols-outlined" (click)="deleteQuestions()"> delete </span>
+      <!-- <button class="icon-delete" (click)="deleteQuestions()">🗑️</button> -->
     </div>
 
     <!--------------------------- 問題表格預覽區 --------------------------->

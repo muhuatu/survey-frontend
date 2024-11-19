@@ -60,6 +60,7 @@ export class AppComponent {
 
   logOut() {
     this.userService.isAdmin = false;
+    window.location.reload(); // 重新整理，不然就要把首頁分成兩個組件
     this.router.navigate(['/home']);
   }
 }

@@ -3,7 +3,7 @@
     <!-- 左側功能表 -->
     <button
       routerLink="/fill-in"
-      style="background-color: rgb(127, 116, 116); color: white"
+      style="background-color: rgb(156, 193, 203); color: white"
     >
       填寫問卷
     </button>
@@ -78,11 +78,11 @@
           >
           <!-- 類型 -->
           @if(surveyItem.type=='S'){
-          <span style="color: rgb(127, 116, 116)">（單選）</span>
+          <span style="color: rgb(156, 193, 203)">（單選）</span>
           }@else if (surveyItem.type=='M') {
-          <span style="color: rgb(127, 116, 116)">（多選）</span>
+          <span style="color: rgb(156, 193, 203)">（多選）</span>
           }@else {
-          <span style="color: rgb(127, 116, 116)">（簡答）</span>
+          <span style="color: rgb(156, 193, 203)">（簡答）</span>
           }
           <!-- 必填 -->
           @if (surveyItem.necessary) {

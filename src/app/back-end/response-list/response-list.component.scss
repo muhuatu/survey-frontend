@@ -27,24 +27,9 @@
   font-size: 16px;
 }
 
-button {
-  color: rgb(100, 100, 100);
-  border: 1px solid #bababa;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: rgba(127, 116, 116, 0.1);
-  }
-  &:active {
-    background-color: rgba(127, 116, 116, 0.1);
-    transform: scale(0.9);
-  }
-}
-
 input {
   border-radius: 5px;
-  border: 1px solid #bababa;
+  border: 1px solid #eaeaea;
   color: rgb(100, 100, 100);
 }
 
@@ -65,9 +50,9 @@ input {
   border-collapse: collapse; // 單元格邊框重疊顯示為單線
 }
 
-::ng-deep .mat-elevation-z8 tr:nth-child(even) {
-  background-color: #f3f3f3;
-}
+// ::ng-deep .mat-elevation-z8 tr:nth-child(even) {
+//   background-color: #f3f3f3;
+// }
 
 // tr 一行
 ::ng-deep .mat-elevation-z8 tr {
@@ -79,12 +64,12 @@ input {
 ::ng-deep .mat-elevation-z8 th {
   font-family: 'Noto Sans TC Medium';
   color: rgb(100, 100, 100);
-  border: 0px solid #bababa !important;
+  border: 1px solid #eaeaea !important;
   font-size: 15px;
 }
 
 ::ng-deep .mat-elevation-z8 th {
-  background-color: rgb(127, 116, 116, 0.8) !important;
+  background-color: rgb(156, 193, 203) !important;
   color: rgb(255, 255, 255);
   font-weight: bold;
 }

@@ -1,16 +1,19 @@
-
-
 <div class="chart-container">
-
   @if(questData.type != 'T'){
-  <!-- id 可自由取名 -->
+  <!-- id 可自由取名，此為統計圖本身，大小由height: 300px控制 -->
   <div class="canvas">
-    <canvas id="{{ dataId }}"></canvas>
+    <canvas id="{{ dataId }}" style="height: 300px"></canvas>
   </div>
   }
 
   <div style="padding-top: 10px">
-    <div style="font-family: 微軟正黑體 ;color: rgb(100, 100, 100, 0.9);font-weight:900;font-size: 18px;">
+    <div
+      style="
+        color: rgb(100, 100, 100, 0.9);
+        font-weight: 200;
+        font-size: 18px;
+      "
+    >
       題目{{ questData.id }}：{{ questData.name }}
     </div>
 
