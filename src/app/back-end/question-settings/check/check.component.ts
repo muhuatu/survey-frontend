@@ -59,9 +59,4 @@ export class CheckComponent {
     this.userService.isAdmin = true;
     this.router.navigate(['/home']);
   }
-
-  ban() {
-    alert('⚠️ 請注意：問卷設定尚未完成，無法訪問此連結。');
-    return;
-  }
 }

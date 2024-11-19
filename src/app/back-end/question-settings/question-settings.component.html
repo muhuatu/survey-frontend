@@ -9,7 +9,6 @@
     </button>
     <button (click)="submitToCheck()">確認問卷</button>
     <button (click)="ban()">發布問卷</button>
-    <button (click)="ban()">問卷回饋</button>
   </aside>
 
   <!--------------------------- 問卷基本資訊 --------------------------->
@@ -217,9 +216,9 @@
           <td mat-cell *matCellDef="let question">
             @for(item of question.options; track $index){
             @if(question.options.length-1 != $index){
-            {{ item.answer + "、" }}
+            {{item.answer + "、"}}
             } @else {
-            {{ item.answer }}
+            {{item.answer}}
             } }
           </td>
         </ng-container>

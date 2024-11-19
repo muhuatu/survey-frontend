@@ -153,130 +153,118 @@ export class FillInComponent {
   }
   //--------------- 問卷內容 ---------------
 
-  survey = {
-    name: '下午茶蛋糕團購登記',
-    description:
-      '本次團購品項有櫻桃派、楓糖麥片、提拉米蘇。團購時間至 2090/01/31 23:59 截止，請把握機會！' +
-      '訂單總金額未滿 $490 需另加 $60 運費。送出訂單後，如需更改內容，請以電話聯繫。',
-    startDate: '2090/01/01',
-    endDate: '2090/01/31',
-    questionArray: [
-      {
-        questionId: 1,
-        title: '櫻桃派',
-        type: 'S', // 單選
-        necessary: false, // 非必填
-        options: [
-          { optionName: '1 份 280 元', code: 'A' },
-          { optionName: '2 份 560 元', code: 'B' },
-          { optionName: '3 份 840 元', code: 'C' },
-          { optionName: '4 份 1,120 元', code: 'D' },
-        ],
-      },
-      {
-        questionId: 2,
-        title: '楓糖麥片',
-        type: 'S', // 單選
-        necessary: false, // 非必填
-        options: [
-          { optionName: '1 份 200 元', code: 'A' },
-          { optionName: '2 份 400 元', code: 'B' },
-          { optionName: '3 份 600 元', code: 'C' },
-          { optionName: '4 份 800 元', code: 'D' },
-        ],
-      },
-      {
-        questionId: 3,
-        title: '提拉米蘇',
-        type: 'S', // 單選
-        necessary: false, // 非必填
-        options: [
-          { optionName: '1 吋 40 元', code: 'A' },
-          { optionName: '2 吋 80 元', code: 'B' },
-          { optionName: '3 吋 120 元', code: 'C' },
-          { optionName: '4 吋 160 元', code: 'D' },
-        ],
-      },
-      {
-        questionId: 4,
-        title:
-          '您希望以後新增哪些零食品項？',
-        type: 'M',
-        necessary: false,
-        options: [
-          { optionName: '巧克力餅乾', code: 'A' },
-          { optionName: '蔓越莓乾', code: 'B' },
-          { optionName: '布丁', code: 'C' },
-          { optionName: '洋芋片', code: 'D' },
-        ],
-      },
-      {
-        questionId: 5,
-        title: '是否同意提交後不可修改？',
-        type: 'S', // 單選
-        necessary: true, // 非必填
-        options: [{ optionName: '同意', code: 'A' }],
-      },
-    ],
-  };
-
   // survey = {
-  //   name: '《三體》書籍讀者問卷調查',
+  //   name: '下午茶蛋糕團購登記',
   //   description:
-  //     '您好！這是一份針對《三體》已讀讀者的問卷，旨在了解讀者對書中內容及科學概念的深入看法。請花幾分鐘時間填寫問卷，感謝您的參與！',
-  //   startDate: '2024/11/19',
-  //   endDate: '2025/01/19',
+  //     '本次團購品項有櫻桃派、楓糖麥片、提拉米蘇。團購時間至 2090/01/31 23:59 截止，請把握機會！' +
+  //     '訂單總金額未滿 $490 需另加 $60 運費。送出訂單後，如需更改內容，請以電話聯繫。',
+  //   startDate: '2090/01/01',
+  //   endDate: '2090/01/31',
   //   questionArray: [
   //     {
   //       questionId: 1,
-  //       title: '《三體》中的「面壁計劃」是什麼？',
+  //       title: '櫻桃派',
   //       type: 'S', // 單選
-  //       necessary: true, // 必填
+  //       necessary: false,
   //       options: [
-  //         { optionName: '一個保護地球免受外星入侵的計劃', code: 'A' },
-  //         { optionName: '一個探索外太空的新計劃', code: 'B' },
-  //         { optionName: '一個解決地球能源危機的計劃', code: 'C' },
-  //         { optionName: '一個與外星文明進行外交的計劃', code: 'D' },
+  //         { optionName: '1 份 280 元', code: 'A' },
+  //         { optionName: '2 份 560 元', code: 'B' },
+  //         { optionName: '3 份 840 元', code: 'C' },
+  //         { optionName: '4 份 1,120 元', code: 'D' },
   //       ],
   //     },
   //     {
   //       questionId: 2,
-  //       title: '您認為《三體》中最能體現人性弱點的情節有哪些？',
-  //       type: 'M', // 多選
-  //       necessary: false, // 非必填
+  //       title: '楓糖麥片',
+  //       type: 'S', // 單選
+  //       necessary: false,
   //       options: [
-  //         { optionName: '紅岸工程的秘密', code: 'A' },
-  //         { optionName: '「歌者」對地球的攻擊', code: 'B' },
-  //         { optionName: '面壁者的背叛', code: 'C' },
-  //         { optionName: '黑暗森林法則的應用', code: 'D' },
+  //         { optionName: '1 份 200 元', code: 'A' },
+  //         { optionName: '2 份 400 元', code: 'B' },
+  //         { optionName: '3 份 600 元', code: 'C' },
+  //         { optionName: '4 份 800 元', code: 'D' },
   //       ],
   //     },
   //     {
   //       questionId: 3,
-  //       title: '請簡述您對黑暗森林理論的理解。',
-  //       type: 'T', // 簡答
-  //       necessary: true, // 必填
-  //       options: [],
+  //       title: '提拉米蘇',
+  //       type: 'S', // 單選
+  //       necessary: false,
+  //       options: [
+  //         { optionName: '1 吋 40 元', code: 'A' },
+  //         { optionName: '2 吋 80 元', code: 'B' },
+  //         { optionName: '3 吋 120 元', code: 'C' },
+  //         { optionName: '4 吋 160 元', code: 'D' },
+  //       ],
   //     },
   //     {
   //       questionId: 4,
-  //       title: '在《三體》中，您認為哪個角色最具代表性，為什麼？',
-  //       type: 'M', // 多選
-  //       necessary: false, // 非必填
+  //       title:
+  //         '您希望以後新增哪些零食品項？',
+  //       type: 'M',
+  //       necessary: false,
   //       options: [
-  //         { optionName: '羅輯', code: 'A' },
-  //         { optionName: '葉文潔', code: 'B' },
-  //         { optionName: '汪淼', code: 'C' },
-  //         { optionName: '章北海', code: 'D' },
+  //         { optionName: '巧克力餅乾', code: 'A' },
+  //         { optionName: '蔓越莓乾', code: 'B' },
+  //         { optionName: '布丁', code: 'C' },
+  //         { optionName: '洋芋片', code: 'D' },
   //       ],
   //     },
   //     {
   //       questionId: 5,
-  //       title: '您對《三體》中的三體文明有什麼看法或建議？請簡述。',
-  //       type: 'T', // 簡答
-  //       necessary: false, // 非必填
-  //       options: [],
+  //       title: '是否同意提交後不可修改？',
+  //       type: 'S', // 單選
+  //       necessary: true,
+  //       options: [{ optionName: '同意', code: 'A' }],
   //     },
   //   ],
   // };
+
+  survey = {
+    name: '《三體》書籍讀者問卷調查',
+    description:
+      '您好！非常感謝您抽出寶貴的時間來參與這份專門針對《三體》這本書的讀者問卷調查。我們希望能夠通過這份問卷，深入了解您對書中內容及科學概念的見解與看法，無論是對情節設計、角色刻畫，還是對其中探討的科學理論和哲學思考。我們珍視您的每一個意見，這將有助於我們更好地理解讀者的需求和期望。請您花幾分鐘時間完成問卷，再次感謝您的熱心參與與支持！希望您在回答問卷的過程中也能回顧起閱讀《三體》時的美好經歷和深刻思索。',
+    startDate: '2024/11/19',
+    endDate: '2025/01/19',
+    questionArray: [
+      {
+        questionId: 1,
+        title: '《三體》中的「面壁計劃」是什麼？',
+        type: 'S', // 單選
+        necessary: true, // 必填
+        options: [
+          { optionName: '一個保護地球免受外星入侵的計劃', code: 'A' },
+          { optionName: '一個探索外太空的新計劃', code: 'B' },
+          { optionName: '一個解決地球能源危機的計劃', code: 'C' },
+          { optionName: '一個與外星文明進行外交的計劃', code: 'D' },
+        ],
+      },
+      {
+        questionId: 2,
+        title: '您認為《三體》中最能體現人性弱點的情節有哪些？',
+        type: 'M', // 多選
+        necessary: false,
+        options: [
+          { optionName: '紅岸工程的秘密', code: 'A' },
+          { optionName: '「歌者」對地球的攻擊', code: 'B' },
+          { optionName: '面壁者的背叛', code: 'C' },
+          { optionName: '黑暗森林法則的應用', code: 'D' },
+        ],
+      },
+      {
+        questionId: 3,
+        title: '請簡述您對黑暗森林理論的理解。',
+        type: 'T', // 簡答
+        necessary: false,
+        options: [],
+      },
+      {
+        questionId: 4,
+        title: '本問卷將會作為圖書館研究調查使用',
+        type: 'S',
+        necessary: true,
+        options: [{ optionName: '我同意', code: 'A' }],
+      },
+    ],
+  };
 }

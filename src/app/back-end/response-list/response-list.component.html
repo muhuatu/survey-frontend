@@ -1,14 +1,12 @@
 <div class="container">
   <!--------------------- 功能表 --------------------->
   <aside class="sidebar">
-    <button (click)="ban()">設定問卷</button>
-    <button (click)="ban()">確認問卷</button>
-    <button routerLink="/publish">發布問卷</button>
+    <button routerLink="/statistics-list">問卷統計</button>
     <button
       routerLink="/response-list"
       style="background-color: rgb(127, 116, 116); color: white"
     >
-      問卷回饋
+      問卷回覆
     </button>
   </aside>
 
@@ -20,7 +18,7 @@
       [(ngModel)]="name"
       (keyup)="changeData($event)"
       placeholder="請輸入姓名"
-      style="width: 295px; height: 22px;"
+      style="width: 295px; height: 22px"
     />
   </div>
 

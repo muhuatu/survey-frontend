@@ -1,3 +1,13 @@
+<aside class="sidebar">
+  <button
+    routerLink="/statistics-list"
+    style="background-color: rgb(127, 116, 116); color: white"
+  >
+    問卷統計
+  </button>
+  <button routerLink="/response-list">問卷回覆</button>
+</aside>
+
 @for (quest of questData.quest; track $index) {
   <app-chart
     class="chartCSS"

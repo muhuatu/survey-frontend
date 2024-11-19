@@ -38,9 +38,7 @@ button {
   }
   &:active {
     background-color: rgba(127, 116, 116, 0.1);
-    /* 點擊時變得更深的顏色 */
     transform: scale(0.9);
-    /* 縮小按鈕 */
   }
 }
 
@@ -69,13 +67,11 @@ input {
 
 ::ng-deep .mat-elevation-z8 tr:nth-child(even) {
   background-color: #f3f3f3;
-  /* 偶數行的背景色 */
 }
 
 // tr 一行
 ::ng-deep .mat-elevation-z8 tr {
   height: 40px;
-  /* 調整每格高度 */
 }
 
 // td 資料單元格、 th 標題單元格
@@ -108,7 +104,6 @@ a {
   display: flex;
   justify-content: center;
   margin-top: 5px;
-  /* 可調整距離 */
   margin-bottom: 20px;
   padding: 10px 0;
 }

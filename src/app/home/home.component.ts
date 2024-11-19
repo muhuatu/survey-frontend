@@ -24,11 +24,12 @@ import { QuestService } from '../@service/quest-service';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements AfterViewInit {
+
   constructor(
     private router: Router,
     private dateService: DateService,
     private userService: UserService,
-    private questService: QuestService,
+    private questService: QuestService
   ) {}
 
   surveyName = '';
@@ -80,13 +81,13 @@ export class HomeComponent implements AfterViewInit {
   search() {}
 
   // 模糊搜尋
-  changeData(event: Event){
+  changeData(event: Event) {
     let tidyData: SurveyList[] = [];
-    ELEMENT_DATA.forEach((res)=>{
-      if(res.name.indexOf((event.target as HTMLInputElement).value) != -1){
+    ELEMENT_DATA.forEach((res) => {
+      if (res.name.indexOf((event.target as HTMLInputElement).value) != -1) {
         tidyData.push(res);
       }
-    })
+    });
     this.dataSource.data = tidyData;
   }
 
@@ -107,14 +108,23 @@ export class HomeComponent implements AfterViewInit {
 
   // 路徑：統計圖
   toChart(element: any) {
-    if (element.statusCode == 'END') {
-      this.router.navigate(['/statistics-list']);
+    if (element.statusCode == 'END' || element.statusCode == 'IN_PROGRESS') {
+      this.router.navigate(['/response-list']);
     }
   }
 
   // 路徑：填寫頁面
   toFillIn(element: any) {
     if (element.statusCode == 'IN_PROGRESS') {
+      this.router.navigate(['/fill-in']);
+    }
+  }
+
+  // 路徑：編輯問卷（後端接資料）
+  toEditOrFillIn(element: any) {
+    if (element.statusCode == 'NOT_PUBLISHED') {
+      this.router.navigate(['/question-settings']);
+    } else if (element.statusCode == 'IN_PROGRESS') {
       this.router.navigate(['/fill-in']);
     }
   }
@@ -149,7 +159,7 @@ const ELEMENT_DATA: SurveyList[] = [
   {
     checkbox: false,
     id: 1,
-    name: '下午茶蛋糕團購登記',
+    name: '《三體》書籍讀者問卷調查',
     statusCode: 'IN_PROGRESS',
     status: '進行中',
     startDate: '2024-11-05',
@@ -158,7 +168,7 @@ const ELEMENT_DATA: SurveyList[] = [
   },
   {
     checkbox: false,
-    id: 2,
+    id: 11,
     name: '你最常吃的速食餐點？',
     statusCode: 'IN_PROGRESS',
     status: '進行中',
@@ -168,7 +178,7 @@ const ELEMENT_DATA: SurveyList[] = [
   },
   {
     checkbox: false,
-    id: 3,
+    id: 7,
     name: '你對異國料理的喜好如何？',
     statusCode: 'END',
     status: '已結束',
@@ -178,7 +188,7 @@ const ELEMENT_DATA: SurveyList[] = [
   },
   {
     checkbox: false,
-    id: 4,
+    id: 5,
     name: '你最喜歡的甜點是什麼？',
     statusCode: 'END',
     status: '已結束',
@@ -188,7 +198,7 @@ const ELEMENT_DATA: SurveyList[] = [
   },
   {
     checkbox: false,
-    id: 5,
+    id: 4,
     name: '有什麼飲品讓你感覺幸福？',
     statusCode: 'NOT_PUBLISHED',
     status: '尚未發布',
@@ -208,7 +218,7 @@ const ELEMENT_DATA: SurveyList[] = [
   },
   {
     checkbox: false,
-    id: 7,
+    id: 3,
     name: '你最推薦的早餐是什麼？',
     statusCode: 'IN_PROGRESS',
     status: '進行中',
@@ -248,7 +258,7 @@ const ELEMENT_DATA: SurveyList[] = [
   },
   {
     checkbox: false,
-    id: 11,
+    id: 2,
     name: '你平時下廚的頻率如何？',
     statusCode: 'NOT_STARTED',
     status: '尚未開始',
@@ -277,4 +287,3 @@ const ELEMENT_DATA: SurveyList[] = [
     url: '13',
   },
 ];
-
