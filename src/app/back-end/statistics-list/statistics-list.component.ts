@@ -14,10 +14,6 @@ export class StatisticsListComponent {
 
   ngOnInit(): void {}
 
-  // toHome() {
-  //   this.router.navigate(['/home']);
-  // }
-
   questData = {
     questName: '《三體》書籍讀者問卷調查結果',
     sDate: '2024/11/06',

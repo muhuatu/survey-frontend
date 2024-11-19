@@ -184,15 +184,32 @@
           <td mat-cell *matCellDef="let question">{{ question.questionId }}</td>
         </ng-container>
 
-        <!-- 名稱欄位 -->
+        <!-- 問題欄位 -->
         <ng-container matColumnDef="title">
           <th mat-header-cell *matHeaderCellDef>問題</th>
           <td mat-cell *matCellDef="let question">{{ question.title }}</td>
         </ng-container>
 
+        <!-- 選項欄位 -->
+        <ng-container matColumnDef="options">
+          <th mat-header-cell *matHeaderCellDef>選項</th>
+          <td mat-cell *matCellDef="let question">
+            @for(item of question.options; track $index){ 選項{{
+              $index + 1
+            }}：{{ item.answer }}
+            <br />
+            }
+            <!-- @if(question.options.length-1 != $index){
+            {{item.answer + "、"}}
+            } @else {
+            {{item.answer}}
+            } } -->
+          </td>
+        </ng-container>
+
         <!-- 類型欄位 -->
         <ng-container matColumnDef="type">
-          <th mat-header-cell *matHeaderCellDef style="width: 80px">類型</th>
+          <th mat-header-cell *matHeaderCellDef style="width: 70px">類型</th>
           <td mat-cell *matCellDef="let question">
             <ng-container [ngSwitch]="question.type">
               <span *ngSwitchCase="'S'">單選</span>
@@ -207,19 +224,6 @@
           <th mat-header-cell *matHeaderCellDef style="width: 70px">必填</th>
           <td mat-cell *matCellDef="let question">
             {{ question.necessary ? "　✓" : "" }}
-          </td>
-        </ng-container>
-
-        <!-- 選項欄位 -->
-        <ng-container matColumnDef="options">
-          <th mat-header-cell *matHeaderCellDef>選項</th>
-          <td mat-cell *matCellDef="let question">
-            @for(item of question.options; track $index){
-            @if(question.options.length-1 != $index){
-            {{item.answer + "、"}}
-            } @else {
-            {{item.answer}}
-            } }
           </td>
         </ng-container>
 

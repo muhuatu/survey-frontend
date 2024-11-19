@@ -30,7 +30,7 @@
 
 .content {
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
   text-align: center;
 }
 
@@ -41,7 +41,6 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 800px;
   gap: 10px;
 }
 
@@ -70,9 +69,7 @@ button {
 
   &:active {
     background-color: rgba(127, 116, 116, 0.1);
-    /* 點擊時變得更深的顏色 */
     transform: scale(0.99);
-    /* 縮小按鈕 */
   }
 }
 
@@ -112,14 +109,14 @@ select {
 }
 
 ::ng-deep .mat-elevation-z8 tr {
-  height: 40px; // 調整每格高度
+  height: 50px; // 調整每格高度
 }
 
 ::ng-deep .mat-elevation-z8 td,
 ::ng-deep .mat-elevation-z8 th {
   color: rgb(100, 100, 100);
   border: 0px solid #bababa !important;
-  padding: 0 0 0 8px;
+  padding: 8px 0 8px 8px;
   text-align: left !important;
   font-family: 'Noto Sans TC Medium' !important;
 }
@@ -162,7 +159,7 @@ select {
   //width: 100%;
   background: none;
   border: none;
-  margin: 0 750px 5px 5px;
+  margin: 0 850px 5px 5px;
   font-size: 20px;
 
   .material-symbols-outlined {
