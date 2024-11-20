@@ -7,11 +7,18 @@ import { Router, RouterModule } from '@angular/router';
 import { UserService } from './@service/user-service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from './dialog/dialog.component';
+import { SidenavTestComponent } from './sidenav-test/sidenav-test.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule, FormsModule, MatProgressSpinnerModule, CommonModule],
+  imports: [
+    RouterModule,
+    FormsModule,
+    MatProgressSpinnerModule,
+    CommonModule,
+    SidenavTestComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
@@ -27,7 +34,7 @@ export class AppComponent {
   animal!: string;
   name!: string;
 
-  // 頁面一打開就執行
+  // 在頁面渲染前執行以下程式碼
   ngOnInit(): void {
     this.isAdmin = this.userService.isAdmin;
     this.loading$ = this.loadingService.loading$;
@@ -36,18 +43,7 @@ export class AppComponent {
   // 判斷值變更(生命週期)
   ngDoCheck(): void {
     this.isAdmin = this.userService.isAdmin;
-  }
-
-  // 將 Dialog 注入 MatDialog
-  readonly dialog = inject(MatDialog);
-
-  showDialog() {
-    const dialogRef = this.dialog.open(DialogComponent, {
-      data: { name: 'name', animal: 'title' },
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
-    });
+    //console.log('App ngOnInit : 管理者(true)、使用者(false)：' + this.isAdmin);
   }
 
   toHome() {
@@ -58,9 +54,17 @@ export class AppComponent {
     this.router.navigate(['/login']);
   }
 
-  logOut() {
-    this.userService.isAdmin = false;
-    window.location.reload(); // 重新整理，不然就要把首頁分成兩個組件
-    this.router.navigate(['/home']);
-  }
+  // 將 Dialog 注入 MatDialog
+  // readonly dialog = inject(MatDialog);
+
+  // showDialog() {
+  //   const dialogRef = this.dialog.open(DialogComponent, {
+  //     data: { name: 'name', animal: 'title' },
+  //   });
+  //   dialogRef.afterClosed().subscribe((result) => {
+  //     console.log(result);
+  //   });
+  // }
+
+
 }

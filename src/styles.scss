@@ -13,12 +13,12 @@ body {
 
 html, body { height: 100%; }
 
-button{
-  background-color: white;
+button {
+  background-color: rgb(241, 241, 241);
   border: none;
   border-radius: 5px;
   color: rgb(100, 100, 100);
-  font-family: 'Noto Sans TC Medium';
+  //font-family: 'Noto Sans TC Medium';
   cursor: pointer;
 
   &:hover {

@@ -119,7 +119,7 @@ export class QuestionSettingsComponent {
     this.options.splice(index, 1); // 刪除 index 後一個元素，例如索引0就是刪除第1個元素
   }
 
-  // 檢查問題必填
+  // 檢查問題必填 -> 考慮改 dialog ? by 11/20
   checkQuestionNecessary(): boolean {
     if (!this.title || !this.type) {
       alert('⚠️ 請填寫問題名稱與類型');
@@ -146,7 +146,7 @@ export class QuestionSettingsComponent {
     return true;
   }
 
-  // 增加問題
+  // 增加問題 與 編輯問題 共用
   addQuestion() {
     // 1. 檢查必填：如果有任何一個欄位是空的，則會返回
     if (this.checkQuestionNecessary()) {
@@ -179,14 +179,14 @@ export class QuestionSettingsComponent {
       this.necessary = false;
       this.options = [];
 
-      // 5. 重新排序
+      // 5. 編號重新排序
       this.reorderQuestions();
 
       // 6. 重置狀態
       this.isEditing = false;
       this.editId = null;
 
-      // 7. 在更新問題後重新賦值 questions 陣列(沒加的話表格不會更新)
+      // 7. 在更新問題後重新賦值 questions 陣列(沒加的話表格不會更新ㄛ)
       this.questionArray = [...this.questionArray];
     }
   }
@@ -241,7 +241,7 @@ export class QuestionSettingsComponent {
 
   // --------------------------- 資料傳遞 --------------------------- //
 
-  // 儲存資料
+  // 儲存資料 -> 因為寫在同一頁所以可以全存
   saveSurveyData() {
     const surveyToSubmit = {
       // 問卷

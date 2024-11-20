@@ -1,27 +1,24 @@
 <mat-sidenav-container class="sidenav-container">
-
-    <mat-sidenav #sidenav mode="side" opened>
-      <mat-toolbar>選單</mat-toolbar>
-      <mat-nav-list style="width: 150px;">
-        <a mat-list-item href="#">首頁</a>
-        <a mat-list-item href="#">問卷設定</a>
-        <a mat-list-item href="#">統計圖表</a>
-        <a mat-list-item href="#">聯絡我們</a>
-      </mat-nav-list>
-    </mat-sidenav>
+  <mat-sidenav #sidenav mode="side" class="side">
+    <mat-toolbar class="menu">選單</mat-toolbar>
+    <mat-nav-list class="side-list">
+      <a mat-list-item href="/home">首頁</a>
+      <a mat-list-item href="/login">新增問卷</a>
+      @if(isAdmin){
+      <a mat-list-item (click)="logOut()">登出</a>}
+    </mat-nav-list>
+  </mat-sidenav>
 
   <mat-sidenav-content>
     <mat-toolbar>
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <span>我的應用程式</span>
+      <span>我的問卷</span>
     </mat-toolbar>
+
     <div class="content">
-      
+      <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
-<router-outlet></router-outlet>
-

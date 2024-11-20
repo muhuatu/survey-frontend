@@ -28,7 +28,6 @@ import { MatIcon } from '@angular/material/icon';
     MatToolbarModule,
     MatListModule,
     MatButtonModule,
-    MatIcon,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -67,7 +66,6 @@ export class HomeComponent implements AfterViewInit {
     // 預設日期
     this.defaultDate = this.dateService.changeDateFormat();
     this.isAdmin = this.userService.isAdmin;
-    //console.log('Home ngOnInit : 管理者(true)、使用者(false)：' + this.isAdmin);
 
     if (!this.isAdmin) {
       this.dataSource.data = ELEMENT_DATA.filter(

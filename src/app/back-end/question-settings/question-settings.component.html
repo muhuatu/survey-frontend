@@ -146,6 +146,7 @@
           margin: 0 0 0px 90px;
           width: 405px;
           height: 30px;
+          font-family: 'Noto Sans TC Medium';
         "
       >
         {{ isEditing ? "編輯問題" : "新增問題" }}
@@ -179,7 +180,7 @@
 
         <!-- 編號欄位 -->
         <ng-container matColumnDef="questionId">
-          <th mat-header-cell *matHeaderCellDef style="width: 80px">編號</th>
+          <th mat-header-cell *matHeaderCellDef style="width: 60px">編號</th>
           <td mat-cell *matCellDef="let question">{{ question.questionId }}</td>
         </ng-container>
 
@@ -193,9 +194,8 @@
         <ng-container matColumnDef="options">
           <th mat-header-cell *matHeaderCellDef>選項</th>
           <td mat-cell *matCellDef="let question">
-            @for(item of question.options; track $index){ 選項{{
-              $index + 1
-            }}：{{ item.answer }}
+            @for(item of question.options; track $index){
+              選項&nbsp;{{$index + 1 }}：{{ item.answer }}
             <br />
             }
             <!-- @if(question.options.length-1 != $index){

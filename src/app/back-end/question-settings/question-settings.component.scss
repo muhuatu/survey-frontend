@@ -26,6 +26,7 @@
   height: 35px;
   width: 100px;
   font-size: 16px;
+  //font-family: 'Noto Sans TC Medium';
 }
 
 .content {
@@ -88,7 +89,7 @@ select {
 
 ::ng-deep .mat-mdc-table {
   border-collapse: collapse; // 單元格邊框重疊顯示為單線
- 
+
 }
 
 // ::ng-deep .mat-elevation-z8 tr:nth-child(even) {
@@ -131,6 +132,16 @@ select {
 
 .button-delete {
   color: #e53935;
+  &:hover {
+    background-color: rgb(156, 193, 203);
+    color: white;
+  }
+
+  &:active {
+    background-color: rgba(156, 193, 203);
+    transform: scale(0.99);
+    color: white;
+  }
 }
 
 .button-add {

@@ -1,13 +1,18 @@
-.sidenav-container{
-  height: 100vw;
-}
-
-.mat-toolbar {
+.menu {
   position: sticky;
   top: 0;
   z-index: 1000;
 }
 
-.content {
-  padding: 16px;
+.side {
+  max-width: 160px;
+  overflow-x: hidden; // 隱藏橫向移動桿
+
+  .side-list {
+    padding: 0 10px;
+  }
+
+  .icon {
+    margin: 0 10px;
+  }
 }

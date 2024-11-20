@@ -21,7 +21,7 @@
           {{ survey.name }}
         </h2>
         <span style="font-size: 15px">{{ survey.description }}</span>
-        <span style="font-size: 14px; color: rgb(178, 34, 34, 0.8)"
+        <span style="font-size: 14px; color: rgb(87, 147, 163);"
           >開始時間：{{ survey.startDate }}　|　結束時間：{{
             survey.endDate
           }}</span
@@ -73,20 +73,20 @@
         class="question"
       >
         <div>
-          <span style="font-size: 18px; font-weight: 500"
+          <span style="font-weight: 600"
             >Q{{ i + 1 }}：{{ surveyItem.title }}</span
           >
           <!-- 類型 -->
           @if(surveyItem.type=='S'){
-          <span style="color: rgb(156, 193, 203)">（單選）</span>
+          <span style="color: rgb(100, 100, 100)">（單選）</span>
           }@else if (surveyItem.type=='M') {
-          <span style="color: rgb(156, 193, 203)">（多選）</span>
+          <span style="color: rgb(100, 100, 100)">（多選）</span>
           }@else {
-          <span style="color: rgb(156, 193, 203)">（簡答）</span>
+          <span style="color: rgb(100, 100, 100)">（簡答）</span>
           }
           <!-- 必填 -->
           @if (surveyItem.necessary) {
-          <span style="color: red">＊必填</span>
+          <span style="color: red">*</span>
           }
         </div>
 

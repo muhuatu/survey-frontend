@@ -4,7 +4,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { LoadingService } from '../@service/loading-service';
+import { UserService } from '../@service/user-service';
 
 
 @Component({
@@ -22,5 +24,30 @@ import { RouterModule } from '@angular/router';
   styleUrl: './sidenav-test.component.scss',
 })
 export class SidenavTestComponent {
+  constructor(
+    private router: Router,
+    private userService: UserService
+  ) {}
+
+  isAdmin!: boolean;
+  loading$!: any;
+  animal!: string;
+  name!: string;
+
+  // 頁面一打開就執行
+  ngOnInit(): void {
+    this.isAdmin = this.userService.isAdmin;
+  }
+
+  // 判斷值變更(生命週期)
+  ngDoCheck(): void {
+    this.isAdmin = this.userService.isAdmin;
+  }
+
+  logOut() {
+    this.userService.isAdmin = false;
+    window.location.reload(); // 重新整理，不然就要把首頁分成兩個組件
+    this.router.navigate(['/home']);
+  }
 
 }

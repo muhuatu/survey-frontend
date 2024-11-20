@@ -33,6 +33,7 @@ export class ResponseListComponent {
   displayedColumns: string[] = ['replyID', 'replyName', 'date', 'url'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   // 資料排序
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -53,6 +54,7 @@ export class ResponseListComponent {
     return;
   }
 
+  // 給模糊搜尋用的
   name = '';
 
   // 模糊搜尋

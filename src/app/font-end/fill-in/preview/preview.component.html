@@ -19,7 +19,7 @@
       <div class="surveyInfo">
         <h2 style="margin: 0; letter-spacing: 2px">{{ questData.name }}</h2>
         <span style="font-size: 15px">{{ questData.description }}</span>
-        <span style="font-size: 14px; color: rgb(178, 34, 34, 0.8)"
+        <span style="font-size: 14px; color: rgb(87, 147, 163)"
           >開始時間：{{ questData.startDate }}　|　結束時間：{{
             questData.endDate
           }}</span
@@ -64,7 +64,7 @@
       >
         <!-- 2. 類型 -->
         <div style="margin-bottom: 10px">
-          <span style="font-size: 18px; font-weight: 500"
+          <span style="font-weight: 600"
             >Q{{ i + 1 }}：{{ question.title }}</span
           >
           @if(question.type=='S'){
@@ -76,7 +76,7 @@
           }
           <!-- 必填 -->
           @if (question.necessary) {
-          <span style="color: red">＊必填</span>
+          <span style="color: red">*</span>
           }
         </div>
 

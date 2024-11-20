@@ -7,7 +7,6 @@ import { CheckComponent } from './back-end/question-settings/check/check.compone
 import { FillInComponent } from './font-end/fill-in/fill-in.component';
 import { PreviewComponent } from './font-end/fill-in/preview/preview.component';
 import { ChartComponent } from './back-end/statistics-list/chart/chart.component';
-import { SubmitComponent } from './font-end/fill-in/preview/submit/submit.component';
 import { StatisticsListComponent } from './back-end/statistics-list/statistics-list.component';
 import { LoginComponent } from './back-end/login/login.component';
 import { SidenavTestComponent } from './sidenav-test/sidenav-test.component';
@@ -49,10 +48,6 @@ export const routes: Routes = [
   {
     path: 'preview',
     component: PreviewComponent,
-  },
-  {
-    path: 'submit',
-    component: SubmitComponent,
   },
   {
     path: 'statistics-list',

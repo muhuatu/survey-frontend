@@ -30,7 +30,7 @@ export class FillInComponent {
 
   ngOnInit(): void {
     if (!this.questService.questData) {
-      // 無資料的話會使用方法紀錄答案
+      // 無資料的話會使用以下方法紀錄答案
       this.setupPreviewFields();
     } else {
       // 有資料的話會帶入原本的填寫框
@@ -52,6 +52,8 @@ export class FillInComponent {
   userPhone!: string;
   userEmail!: string;
   userAge!: string;
+
+  // 以下「資料傳遞」參考老師，先翻成中文，再寫程式碼
 
   // 為了讓預覽畫面有資料，必須新增兩個"欄位"放它們：文字輸入(answer)、單選(radioAnswer)
   // 在問題的選擇中加入 boxBoolean 讓 checkbox(多選) 去進行資料綁定
@@ -151,74 +153,8 @@ export class FillInComponent {
       return;
     }
   }
-  //--------------- 問卷內容 ---------------
 
-  // survey = {
-  //   name: '下午茶蛋糕團購登記',
-  //   description:
-  //     '本次團購品項有櫻桃派、楓糖麥片、提拉米蘇。團購時間至 2090/01/31 23:59 截止，請把握機會！' +
-  //     '訂單總金額未滿 $490 需另加 $60 運費。送出訂單後，如需更改內容，請以電話聯繫。',
-  //   startDate: '2090/01/01',
-  //   endDate: '2090/01/31',
-  //   questionArray: [
-  //     {
-  //       questionId: 1,
-  //       title: '櫻桃派',
-  //       type: 'S', // 單選
-  //       necessary: false,
-  //       options: [
-  //         { optionName: '1 份 280 元', code: 'A' },
-  //         { optionName: '2 份 560 元', code: 'B' },
-  //         { optionName: '3 份 840 元', code: 'C' },
-  //         { optionName: '4 份 1,120 元', code: 'D' },
-  //       ],
-  //     },
-  //     {
-  //       questionId: 2,
-  //       title: '楓糖麥片',
-  //       type: 'S', // 單選
-  //       necessary: false,
-  //       options: [
-  //         { optionName: '1 份 200 元', code: 'A' },
-  //         { optionName: '2 份 400 元', code: 'B' },
-  //         { optionName: '3 份 600 元', code: 'C' },
-  //         { optionName: '4 份 800 元', code: 'D' },
-  //       ],
-  //     },
-  //     {
-  //       questionId: 3,
-  //       title: '提拉米蘇',
-  //       type: 'S', // 單選
-  //       necessary: false,
-  //       options: [
-  //         { optionName: '1 吋 40 元', code: 'A' },
-  //         { optionName: '2 吋 80 元', code: 'B' },
-  //         { optionName: '3 吋 120 元', code: 'C' },
-  //         { optionName: '4 吋 160 元', code: 'D' },
-  //       ],
-  //     },
-  //     {
-  //       questionId: 4,
-  //       title:
-  //         '您希望以後新增哪些零食品項？',
-  //       type: 'M',
-  //       necessary: false,
-  //       options: [
-  //         { optionName: '巧克力餅乾', code: 'A' },
-  //         { optionName: '蔓越莓乾', code: 'B' },
-  //         { optionName: '布丁', code: 'C' },
-  //         { optionName: '洋芋片', code: 'D' },
-  //       ],
-  //     },
-  //     {
-  //       questionId: 5,
-  //       title: '是否同意提交後不可修改？',
-  //       type: 'S', // 單選
-  //       necessary: true,
-  //       options: [{ optionName: '同意', code: 'A' }],
-  //     },
-  //   ],
-  // };
+  //--------------- 問卷內容 ---------------
 
   survey = {
     name: '《三體》書籍讀者問卷調查',

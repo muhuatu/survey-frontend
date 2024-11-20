@@ -41,7 +41,8 @@ export class PreviewComponent {
   toSubmit() {
     // 儲存後必須將Service的資料清空，避免錯誤
     this.questService.questData = '';
-    this.router.navigate(['/submit']);
+    alert('問卷已填寫完畢，點擊確定後將跳轉至首頁');
+    this.router.navigate(['/home']);
   }
 
   getMultiIndex(options: any[], opt: any): number {
