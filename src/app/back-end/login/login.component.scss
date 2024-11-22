@@ -1,13 +1,25 @@
-.container {
-  display: flex;
-  flex-direction: column;
-  margin: 10px auto;
+:host {
+  background-image: url('D:/JavaProject/survey-frontend/src/login.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100vh;
+  /* 填滿整個螢幕高度 */
+  width: 100vw;
+  /* 填滿整個螢幕寬度 */
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  /* 固定背景 */
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  /* 確保背景在最上層 */
 }
 
 .login {
   display: flex;
   flex-direction: column;
-  margin: 50px auto;
+  margin: 150px auto;
   width: 300px;
   padding: 40px;
   border-radius: 8px;
@@ -29,28 +41,33 @@ p {
   margin: 0;
 }
 
-label {
-  display: block;
-  margin-bottom: 2px;
-  color: rgb(100, 100, 100);
-  font-weight: 500;
+input {
+  width: 100%;
+  padding: 8px 0;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  margin: 10px auto;
+  outline: none;
+  font-size: 16px;
+  transition: border-color 0.3s;
 }
 
-input[type="text"],
-input[type="password"] {
-  width: 100%;
-  padding: 8px;
-  margin: 8px auto;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+/* 聚焦時的底部線條效果 */
+input:focus {
+  border-bottom: 2px solid rgb(230, 130, 87);
+}
+
+/* 修改佔位符文字顏色 */
+input::placeholder {
+  color: #aaa;
+  font-style: italic;
 }
 
 .login-btn {
   width: 100%;
   padding: 10px;
-  margin: 10px auto;
-  background-color: rgba(156, 193, 203);
+  margin: 20px auto;
+  background-color: rgb(230, 130, 87);
   color: white;
   border: none;
   border-radius: 5px;
@@ -59,5 +76,5 @@ input[type="password"] {
 }
 
 .login-btn:hover {
-  background-color: rgba(156, 193, 203);
+  background-color: rgba(230, 130, 87, 0.9);
 }

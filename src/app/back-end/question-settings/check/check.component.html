@@ -4,7 +4,7 @@
       <button routerLink="/question-settings">設定問卷</button>
       <button
         routerLink="/check"
-        style="background-color: rgb(156, 193, 203); color: white"
+        style="background-color: rgb(230, 130, 87); color: white"
       >
         確認問卷
       </button>
@@ -18,7 +18,7 @@
         <div class="surveyInfo">
           <h2 style="margin: 10px 0 0 0">{{ questData.name }}</h2>
           <span style="width: 800px;">{{ questData.description }}</span>
-          <span style="font-size: 14px; color: rgb(87, 147, 163)"
+          <span style="font-size: 14px; color: rgb(230, 130, 87)"
             >開始時間：{{ questData.startDate }}　|　結束時間：{{ questData.endDate }}</span
           >
         </div>
@@ -26,36 +26,36 @@
         <!-- 基本資料 -->
         <div class="personInfo">
           <div>
-            <label>名稱</label>
-            <span style="color: red; font-size: 12px">*</span>
+            <!-- <label>名稱</label> -->
             <input
-              style="width: 200px; margin-left: 10px"
+              style="width: 200px;"
               placeholder="請輸入名稱"
               [(ngModel)]="userName"
             />
+            <span style="color: red; font-size: 12px">*</span>
           </div>
           <div>
-            <label>電話</label>
-            <span style="color: red; font-size: 12px; margin: 0">*</span>
+            <!-- <label>電話</label> -->
             <input
-              style="width: 200px; margin-left: 10px"
+              style="width: 200px;"
               placeholder="請輸入電話"
               [(ngModel)]="userPhone"
             />
+            <span style="color: red; font-size: 12px; margin: 0">*</span>
           </div>
           <div>
-            <label>信箱</label>
+            <!-- <label>信箱</label> -->
             <input
               type="email"
-              style="width: 200px; margin-left: 16px"
+              style="width: 200px; margin-right: 5px"
               placeholder="請輸入信箱"
               [(ngModel)]="userEmail"
             />
           </div>
           <div>
-            <label>年齡</label>
+            <!-- <label>年齡</label> -->
             <input
-              style="width: 200px; margin-left: 16px"
+              style="width: 200px; margin-right: 5px"
               placeholder="請輸入年齡"
               [(ngModel)]="userAge"
             />

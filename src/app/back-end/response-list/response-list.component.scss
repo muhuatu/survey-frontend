@@ -18,7 +18,7 @@
   justify-content: center;
   gap: 20px;
   overflow-y: auto;
-  margin-top: 20px;
+  //margin-top: 20px;
 }
 
 .sidebar button {
@@ -69,7 +69,7 @@ input {
 }
 
 ::ng-deep .mat-elevation-z8 th {
-  background-color: rgb(156, 193, 203) !important;
+  background-color: rgb(230, 130, 87) !important;
   color: rgb(255, 255, 255);
   font-weight: bold;
 }

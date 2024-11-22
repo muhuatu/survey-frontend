@@ -18,7 +18,7 @@
   justify-content: center;
   gap: 20px;
   overflow-y: auto;
-  margin-top: 20px;
+  //margin-top: 20px;
 }
 
 button {
@@ -59,10 +59,34 @@ button {
 .shortAnswer, .personInfo input {
   width: 300px;
   height: 25px;
-  border: 1px solid #eaeaea;
-  border-radius: 5px;
+  // border: 1px solid #eaeaea;
+  // border-radius: 5px;
+  // font-family: 'Noto Sans TC Medium';
+  // color: rgb(100, 100, 100);
+}
+
+textarea,
+input {
+  border: none;
+  border-bottom: 2px solid #ccc;
+  background: transparent;
+  outline: none;
+  font-size: 15px;
+  transition: border-color 0.3s;
+  margin: 5px auto;
   font-family: 'Noto Sans TC Medium';
-  color: rgb(100, 100, 100);
+  // color: rgb(100, 100, 100);
+  // border: 1px solid #eaeaea;
+  // border-radius: 5px;
+}
+
+textarea:focus,
+input:focus {
+  border-bottom: 2px solid rgb(230, 130, 87);
+}
+
+input::placeholder {
+  color: #aaa;
 }
 
 .step {

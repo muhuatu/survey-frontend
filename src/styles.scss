@@ -1,11 +1,9 @@
 body {
   background-color:  rgb(250, 249, 253);
-  //background-image: url('https://framerusercontent.com/images/1bZ0QatwEYYSEqJIYCz3XsbhaUg.png');
   margin: 0;
   padding: 0;
   width: 100vw;
   overflow-x: hidden; //表示「隱藏水平方向」上溢出容器的內容
-  margin: 0;
 
   font-size: 500;
   font-family: 'Noto Sans TC Medium';
@@ -22,12 +20,12 @@ button {
   cursor: pointer;
 
   &:hover {
-    background-color: rgb(156, 193, 203);
+    background-color: rgb(230, 130, 87);
     color: white;
   }
 
   &:active {
-    background-color: rgba(156, 193, 203);
+    background-color: rgba(230, 130, 87);
     transform: scale(0.99);
     color: white;
   }

@@ -1,7 +1,7 @@
 .search {
   display: flex;
   flex-direction: column;
-  margin: 30px auto;
+  margin: 0 auto 30px;
   gap: 10px;
   width: 450px;
   color: rgb(100, 100, 100);
@@ -20,7 +20,7 @@ input {
     cursor: pointer;
     margin-right: 10px;
     transform: scale(1);
-    background-color: rgb(156, 193, 203);
+    background-color: rgb(230, 130, 87);
     border-radius: 20px;
     padding: 3px;
     color: white;
@@ -63,7 +63,7 @@ input {
 
 // 標題
 ::ng-deep .mat-elevation-z8 th {
-  background-color: rgb(156, 193, 203) !important;
+  background-color: rgb(230, 130, 87) !important;
   color: rgb(255, 255, 255);
   font-weight: 600;
 }

@@ -3,7 +3,7 @@
   <aside class="sidebar">
     <button
       routerLink="/question-settings"
-      style="background-color: rgb(156, 193, 203); color: white"
+      style="background-color: rgb(230, 130, 87); color: white"
     >
       設定問卷
     </button>
@@ -16,20 +16,21 @@
     <div class="question-settings">
       <h2>新增問卷</h2>
       <div style="display: flex; gap: 10px">
-        <label for="name">問卷名稱：</label>
-        <input class="name" type="text" [(ngModel)]="name" />
+        <!-- <label for="name">問卷名稱：</label> -->
+        <input class="name" type="text" [(ngModel)]="name" placeholder="問卷名稱"/>
       </div>
 
       <div style="display: flex; gap: 10px">
-        <label for="description">問卷說明：</label>
+        <!-- <label for="description">問卷說明：</label> -->
         <textarea
           [(ngModel)]="description"
           style="height: 50px; resize: vertical"
+          placeholder="問卷說明"
         ></textarea>
       </div>
 
       <div class="date" style="display: flex; gap: 10px">
-        <label for="date">開始時間：</label>
+        <!-- <label for="date">開始時間：</label> -->
         <input
           type="date"
           [min]="defaultDate"
@@ -37,11 +38,12 @@
           (ngModelChange)="checkEndDate($event)"
           style="width: 149.8px"
         />
+        <label style="margin: 5px auto;">到</label>
         <!-- ngModelChange 偵測到 ngModel(開始日期) 改變後，便會觸發指定方法checkEndDate(startDate: string)。
          其中 $event 會自動帶入新的日期值，然後根據值來判斷下一步的結束日期不能小於開始日期。
          -->
 
-        <label for="date">結束時間：</label>
+        <!-- <label for="date">結束時間：</label> -->
         <input
           type="date"
           [min]="startDate"
@@ -53,13 +55,13 @@
       <!--------------------------- 問題設定區 --------------------------->
       <h2>設定問題</h2>
       <div style="display: flex; gap: 10px">
-        <label for="questionName">問題名稱：</label>
-        <input type="text" [(ngModel)]="title" />
+        <!-- <label for="questionName">問題名稱：</label> -->
+        <input type="text" [(ngModel)]="title" placeholder="問題名稱"/>
       </div>
 
-      <div style="display: flex; gap: 10px">
-        <label for="questionType">問題類型：</label>
-        <select [(ngModel)]="type">
+      <div style="display: flex; gap: 10px; margin: 0;">
+        <!-- <label for="questionType">問題類型：</label> -->
+        <select [(ngModel)]="type" style="margin-right: 20px;">
           <option value="S">單選</option>
           <option value="M">多選</option>
           <option value="T">簡答</option>
@@ -70,11 +72,12 @@
             type="checkbox"
             name="necessary"
             [(ngModel)]="necessary"
-            style="width: 16px"
+            style="width: 16px;"
           />
-          <label for="necessary" style="font-size: 15px; margin-bottom: 3px"
+          <label for="necessary" style="font-size: 15px; margin: 0 20px 3px 3px"
             >必填</label
           >
+          <button class="add-option" (click)="addOption()">新增選項</button>
         </div>
       </div>
 
@@ -97,12 +100,20 @@
             placeholder="輸入選項"
             style="width: 200px"
           />
-          <button class="button-delete" (click)="removeOption($index)">
+          <div class="icon-delete-select">
+            <link
+              href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+              rel="stylesheet"
+            />
+            <span class="material-symbols-outlined" (click)="removeOption($index)">
+              delete
+            </span>
+          </div>
+          <!-- <button class="button-delete" (click)="removeOption($index)">
             刪除
-          </button>
+          </button> -->
         </div>
         }
-        <button class="button-add" (click)="addOption()">新增選項</button>
       </div>
       }
 
@@ -125,12 +136,21 @@
             placeholder="輸入選項"
             style="width: 200px"
           />
-          <button class="button-delete" (click)="removeOption($index)">
+          <div class="icon-delete-select">
+            <link
+              href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+              rel="stylesheet"
+            />
+            <span class="material-symbols-outlined" (click)="removeOption($index)">
+              delete
+            </span>
+          </div>
+          <!-- <button class="button-delete" (click)="removeOption($index)">
             刪除
-          </button>
+          </button> -->
         </div>
         }
-        <button class="button-add" (click)="addOption()">新增選項</button>
+        <!-- <button class="add-option" (click)="addOption()">新增選項</button> -->
       </div>
       }
 
@@ -142,12 +162,7 @@
       <!-- 新增/編輯按鈕 -->
       <button
         (click)="addQuestion()"
-        style="
-          margin: 0 0 0px 90px;
-          width: 405px;
-          height: 30px;
-          font-family: 'Noto Sans TC Medium';
-        "
+        class="add-question"
       >
         {{ isEditing ? "編輯問題" : "新增問題" }}
       </button>
@@ -159,8 +174,9 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
         rel="stylesheet"
       />
-      <span class="material-symbols-outlined" (click)="deleteQuestions()"> delete </span>
-      <!-- <button class="icon-delete" (click)="deleteQuestions()">🗑️</button> -->
+      <span class="material-symbols-outlined" (click)="deleteQuestions()">
+        delete
+      </span>
     </div>
 
     <!--------------------------- 問題表格預覽區 --------------------------->
@@ -194,8 +210,9 @@
         <ng-container matColumnDef="options">
           <th mat-header-cell *matHeaderCellDef>選項</th>
           <td mat-cell *matCellDef="let question">
-            @for(item of question.options; track $index){
-              選項&nbsp;{{$index + 1 }}：{{ item.answer }}
+            @for(item of question.options; track $index){ 選項&nbsp;{{
+              $index + 1
+            }}：{{ item.answer }}
             <br />
             }
             <!-- @if(question.options.length-1 != $index){

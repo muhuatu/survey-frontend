@@ -4,7 +4,7 @@
     <button routerLink="/statistics-list">問卷統計</button>
     <button
       routerLink="/response-list"
-      style="background-color: rgb(156, 193, 203); color: white"
+      style="background-color: rgb(230, 130, 87); color: white"
     >
       問卷回覆
     </button>
@@ -12,12 +12,11 @@
 
   <!--------------------- 表格 --------------------->
   <div class="name" style="display: flex; gap: 10px">
-    <label>問卷名稱：</label>
     <input
       type="text"
       [(ngModel)]="name"
       (keyup)="changeData($event)"
-      placeholder="請輸入姓名"
+      placeholder="請輸入姓名查詢"
       style="width: 295px; height: 22px"
     />
   </div>
