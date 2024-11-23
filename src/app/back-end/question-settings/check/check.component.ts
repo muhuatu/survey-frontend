@@ -39,9 +39,16 @@ export class CheckComponent {
   userPhone!: string;
   userEmail!: string;
   userAge!: string;
+  isNew = true;
 
   ngOnInit(): void {
     this.questData = this.questService.questData;
+    if (
+      this.questService.questStatus === 'NOT_PUBLISHED' ||
+      this.questService.questStatus === 'NOT_STARTED'
+    ) {
+      this.isNew = false;
+    }
   }
 
   toQuestionSettings() {

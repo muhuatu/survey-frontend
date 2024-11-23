@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -11,6 +11,7 @@ import { DateService } from '../../@service/date-service';
 import { MatRadioModule } from '@angular/material/radio';
 import { CommonModule } from '@angular/common';
 import { QuestService } from '../../@service/quest-service';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-question-settings',
@@ -25,6 +26,7 @@ import { QuestService } from '../../@service/quest-service';
     MatTabsModule,
     MatRadioModule,
     CommonModule,
+    MatSlideToggleModule,
   ],
   templateUrl: './question-settings.component.html',
   styleUrl: './question-settings.component.scss',
@@ -43,6 +45,7 @@ export class QuestionSettingsComponent {
   title!: string;
   type!: string; // 單選、多選、簡答
   options: Array<any> = []; // 問題集
+  optionName!: string;
   necessary = false;
   checkbox = false;
 
@@ -50,12 +53,14 @@ export class QuestionSettingsComponent {
   editId: number | null = null; // 用來儲存當前正在編輯的問題 ID
   private nextID = 1; // 用來自增編號的變數
   isEditing = false; // 旗標變數：判斷是否處於編輯狀態
+  isNew = true;
   defaultDate = ''; // 預設日期(今日)
 
   constructor(
     private router: Router,
     private dateService: DateService,
-    private questService: QuestService
+    private questService: QuestService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   // 表格顯示的欄位
@@ -75,6 +80,14 @@ export class QuestionSettingsComponent {
     // 日期設定
     this.defaultDate = this.dateService.changeDateFormat();
 
+    if (
+      this.questService.questStatus === 'NOT_PUBLISHED' ||
+      this.questService.questStatus === 'NOT_STARTED'
+    ) {
+      this.questService.questData = this.survey;
+      this.isNew = false;
+    }
+
     // 判斷 1.新開啟(無資料) 2.從預覽頁回來(將資料帶回去)
     if (!this.questService.questData) {
       // 無資料的話會使用方法紀錄答案
@@ -86,10 +99,9 @@ export class QuestionSettingsComponent {
       this.description = q.description;
       this.startDate = q.startDate;
       this.endDate = q.endDate;
-      // 不需要用新陣列接收，因為 mat-table 的 dataSource 是吃 questionArray 資料
+      // 不需要用新陣列接收問題，因為 mat-table 的 dataSource 是吃 questionArray 資料
       // 若用新陣列接收，從預覽頁回來後，將導致表格無法渲染資料
       this.questionArray = q.questionArray;
-      this.options = this.options;
     }
   }
 
@@ -125,23 +137,15 @@ export class QuestionSettingsComponent {
       alert('⚠️ 請填寫問題名稱與類型');
       return false;
     }
-    if (
-      (this.type === 'S' || this.type === 'M') &&
-      (!this.options || this.options.length === 0)
-    ) {
-      alert('✍️ 單選或複選必須輸入選項');
+
+    if ((this.type === 'S' || this.type === 'M') && this.options.length === 0) {
+      alert('✍️ 單選或多選必須輸入選項');
       return false;
     }
+
     if (this.type === 'M' && this.options.length < 2) {
-      // 如果是多選，選項必須兩個以上。
       alert('✍️ 多選題選項必須填入兩個以上');
       return false;
-    }
-    for (const item of this.options) {
-      if (!item.answer) {
-        alert('✍️ 選項不可為空白');
-        return false;
-      }
     }
     return true;
   }
@@ -158,7 +162,7 @@ export class QuestionSettingsComponent {
         title: this.title,
         type: this.type,
         necessary: this.necessary,
-        options: this.options,
+        options: this.type === 'T' ? [] : this.options, // 簡答題清空選項
       };
 
       // 3. 更新問題列表
@@ -203,7 +207,11 @@ export class QuestionSettingsComponent {
     this.title = editQuestion.title;
     this.type = editQuestion.type;
     this.necessary = editQuestion.necessary;
-    this.options = editQuestion.options;
+    this.options = JSON.parse(JSON.stringify(editQuestion.options));
+    //this.options = editQuestion.options;
+    for(const item of this.options){
+      console.log(item.optionName);
+    }
 
     // 3. 設定狀態
     this.isEditing = true;
@@ -259,6 +267,7 @@ export class QuestionSettingsComponent {
       })),
     };
     this.questService.questData = surveyToSubmit;
+    //console.log(surveyToSubmit);
   }
 
   // 提交到預覽頁面
@@ -287,4 +296,52 @@ export class QuestionSettingsComponent {
     alert('⚠️ 請注意：問卷設定尚未完成，無法訪問此連結。');
     return;
   }
+
+  survey = {
+    name: '幸福飲品問卷調查',
+    description:
+      '您好！非常感謝您抽出寶貴的時間來參與這份關於飲品的問卷調查。我們希望能夠通過這份問卷，深入了解您對各種飲品的喜好和感受，無論是咖啡、茶、果汁還是其他飲品。希望這次調查能讓您回憶起那些讓您感到幸福的飲品時刻，並幫助我們更好地理解您對飲品的需求和期望。請您花幾分鐘時間完成問卷，再次感謝您的熱心參與與支持！',
+    startDate: '2024-11-23',
+    endDate: '2025-01-23',
+    questionArray: [
+      {
+        questionId: 1,
+        title: '什麼飲品讓你感覺幸福？',
+        type: 'S', // 單選
+        necessary: true, // 必填
+        options: [
+          { optionName: '咖啡', code: 'A' },
+          { optionName: '茶', code: 'B' },
+          { optionName: '果汁', code: 'C' },
+          { optionName: '其他', code: 'D' },
+        ],
+      },
+      {
+        questionId: 2,
+        title: '您認為哪些場合喝飲品最讓您感到幸福？',
+        type: 'M', // 多選
+        necessary: false,
+        options: [
+          { optionName: '早晨醒來時', code: 'A' },
+          { optionName: '下午放鬆時', code: 'B' },
+          { optionName: '與朋友聚會時', code: 'C' },
+          { optionName: '晚上入睡前', code: 'D' },
+        ],
+      },
+      {
+        questionId: 3,
+        title: '請簡述您最喜愛的飲品及原因。',
+        type: 'T', // 簡答
+        necessary: false,
+        options: [],
+      },
+      {
+        questionId: 4,
+        title: '本問卷將會作為市場研究調查使用',
+        type: 'S',
+        necessary: true,
+        options: [{ optionName: '我同意', code: 'A' }],
+      },
+    ],
+  };
 }

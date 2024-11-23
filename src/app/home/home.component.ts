@@ -1,3 +1,4 @@
+import { Survey } from './../@interface/Question';
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,7 +14,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-home',
@@ -33,7 +33,6 @@ import { MatIcon } from '@angular/material/icon';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements AfterViewInit {
-
   constructor(
     private router: Router,
     private dateService: DateService,
@@ -46,6 +45,7 @@ export class HomeComponent implements AfterViewInit {
   endDate = '';
   defaultDate = ''; // 預設日期(今日)
   isAdmin!: boolean;
+  element = { statusCode: 'IN_PROGRESS' }; // 初始值可以根據需求調整
 
   // 表格呈現的欄位
   displayedColumns: string[] = [
@@ -75,7 +75,7 @@ export class HomeComponent implements AfterViewInit {
 
     // 動態呈現
     this.displayedColumns = this.isAdmin
-      ? ['checkbox', 'id', 'name', 'status', 'startDate', 'endDate','url']
+      ? ['checkbox', 'id', 'name', 'status', 'startDate', 'endDate', 'url']
       : ['id', 'name', 'status', 'startDate', 'endDate'];
   }
 
@@ -116,23 +116,22 @@ export class HomeComponent implements AfterViewInit {
 
   // 路徑：統計圖
   toChart(element: any) {
-    if (element.statusCode == 'END' || element.statusCode == 'IN_PROGRESS') {
+    if (element.statusCode === 'END' || element.statusCode === 'IN_PROGRESS') {
       this.router.navigate(['/response-list']);
     }
   }
 
-  // 路徑：填寫頁面
-  toFillIn(element: any) {
-    if (element.statusCode == 'IN_PROGRESS') {
-      this.router.navigate(['/fill-in']);
-    }
-  }
-
-  // 路徑：編輯問卷（後端接資料）
+  // 路徑：編輯或填寫問卷（後端接資料）
   toEditOrFillIn(element: any) {
-    if (element.statusCode == 'NOT_PUBLISHED') {
+    if (
+      element.statusCode === 'NOT_PUBLISHED' ||
+      element.statusCode === 'NOT_STARTED'
+    ) {
+      this.questService.questStatus = 'NOT_PUBLISHED';
       this.router.navigate(['/question-settings']);
-    } else if (element.statusCode == 'IN_PROGRESS') {
+      console.log(this.questService.questStatus);
+
+    } else if (element.statusCode === 'IN_PROGRESS') {
       this.router.navigate(['/fill-in']);
     }
   }
@@ -161,6 +160,7 @@ export class HomeComponent implements AfterViewInit {
       return 0;
     });
   }
+
 }
 
 const ELEMENT_DATA: SurveyList[] = [
@@ -295,3 +295,6 @@ const ELEMENT_DATA: SurveyList[] = [
     url: '13',
   },
 ];
+
+
+

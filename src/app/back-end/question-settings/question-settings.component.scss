@@ -51,7 +51,7 @@ input {
   border-bottom: 2px solid #ccc;
   background: transparent;
   outline: none;
-  font-size: 16px;
+  font-size: 15px;
   transition: border-color 0.3s;
   margin: 5px auto;
   font-family: 'Noto Sans TC Medium';
@@ -69,10 +69,15 @@ input::placeholder {
   color: #aaa;
 }
 
-textarea,
 input {
-  width: 400px;
+  width: 500px;
   height: 25px;
+}
+
+textarea{
+  width: 500px;
+  height: 80px;
+  resize: vertical;
 }
 
 // 單選多選簡答的選單
@@ -81,7 +86,6 @@ select {
   border-radius: 5px;
   height: 28px;
   width: 150px;
-  //margin-right: 10px;
   color: rgb(100, 100, 100);
   border: 1px solid #eaeaea;
   border-radius: 5px;
@@ -90,10 +94,61 @@ select {
 
 .necessary {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  height: 28px;
 }
+
+.switch {
+  display: flex;
+  align-items: center;
+}
+
+.switch .slider {
+  margin-right: 5px; // 滑動開關和文字間的間距
+}
+
+.switch label {
+  margin: 0; // 移除標籤的預設邊距
+}
+
+/* 隱藏原生的 checkbox */
+.switch input {
+  display: none;
+}
+
+/* 滑動開關的外殼 */
+.slider {
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* 滑動開關的滑塊 */
+.slider:before {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+/* 當 checkbox 被選中時 */
+input:checked+.slider {
+  background-color: rgb(230, 130, 87);
+}
+
+input:checked+.slider:before {
+  transform: translateX(14px);
+}
+
 
 // ------------------------ 表格 ------------------------ //
 
@@ -147,8 +202,18 @@ select {
   //gap: 10px;
 }
 
+.button-delete{
+  color: red;
+}
+
+.button-edit,
 .button-delete {
-  color: #e53935;
+
+  width: 50px;
+  margin-right: 10px;
+  transform: scale(1);
+  border-radius: 20px;
+  padding: 3px;
 
   &:hover {
     background-color: rgb(230, 130, 87);
@@ -162,13 +227,14 @@ select {
   }
 }
 
-.add-option,
-.add-question {
+.add-option {
   width: 80px;
   height: 30px;
 }
 
 .add-question {
+  width: 350px;
+  height: 30px;
   margin: 10px auto 0;
 }
 

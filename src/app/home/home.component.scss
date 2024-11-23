@@ -1,16 +1,28 @@
 .search {
   display: flex;
   flex-direction: column;
-  margin: 0 auto 30px;
+  margin: 0 auto 20px;
   gap: 10px;
   width: 450px;
   color: rgb(100, 100, 100);
 }
 
-input {
-  border-radius: 5px;
-  border: 1px solid #eaeaea;
-  color: rgb(100, 100, 100);
+input,select {
+  border: none;
+  border-bottom: 2px solid #ccc;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  transition: border-color 0.3s;
+  font-family: 'Noto Sans TC Medium';
+}
+
+select:focus, input:focus {
+  border-bottom: 2px solid rgb(230, 130, 87);
+}
+
+select::placeholder, input::placeholder {
+  color: #aaa;
 }
 
 .icon {

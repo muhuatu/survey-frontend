@@ -9,27 +9,36 @@
   <div style="padding-top: 10px">
     <div
       style="
-        color: rgb(100, 100, 100, 0.9);
-        font-weight: 200;
+        color: rgb(100, 100, 100);
+        font-weight: 500;
         font-size: 18px;
+        margin-bottom: 15px;
       "
     >
       題目{{ questData.id }}：{{ questData.name }}
     </div>
 
-    <!-- 判斷不是文字題就顯示選項跟數量 -->
+    <!-- 單選或多選（非簡答） -->
     @if (questData.type != 'T') { @for (label of questData.labels; track $index)
     {
-    <p style="padding: 0 15px">
-      {{ questData.labels[$index] }}
-      <span style="float: right">{{ questData.data[$index] }}</span>
-    </p>
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        margin: 10px;
+        font-size: 16px;
+      "
+    >
+      <span>{{ questData.labels[$index] }}</span>
+      <span>{{ questData.data[$index] }}</span>
+    </div>
+
     } }
 
-    <!-- 判斷是文字提就顯示文字 -->
+    <!-- 簡答 -->
     @else {
     <div class="type">
-      <ol style="margin-left: 22px">
+      <ol style="margin-left: 20px">
         @for (data of questData.data; track $index) {
         <li class="typeT">{{ data }}</li>
         }
