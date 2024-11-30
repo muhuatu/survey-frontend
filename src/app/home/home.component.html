@@ -5,10 +5,10 @@
         type="text"
         id="name"
         [(ngModel)]="searchReq.name"
-        (keyup)="changeData($event)"
         placeholder="請輸入問卷名稱"
         style="width: 280px"
       />
+      <!-- (keyup)="changeData($event)" 模糊搜尋要放在input裡-->
       <select [(ngModel)]="element.statusCode">
         <option value="NOT_STARTED">尚未開始</option>
         <option value="IN_PROGRESS">進行中</option>
@@ -18,7 +18,6 @@
     </div>
 
     <div class="date" style="display: flex; gap: 10px">
-      <!-- <label for="date">統計時間：</label> -->
       <input
         style="width: 123px"
         type="date"

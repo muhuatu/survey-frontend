@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -97,12 +97,21 @@ export class QuestionSettingsComponent {
     // 日期設定
     this.defaultDate = this.dateService.changeDateFormat();
 
-    if (
-      this.questService.questStatus === 'NOT_PUBLISHED' ||
-      this.questService.questStatus === 'NOT_STARTED'
-    ) {
-      this.questService.questData = this.survey;
-      this.isNew = false;
+    // if (
+    //   this.questService.questStatus === 'NOT_PUBLISHED' ||
+    //   this.questService.questStatus === 'NOT_STARTED'
+    // ) {
+    //   this.questService.questData = this.survey;
+    //   this.isNew = false;
+    // }
+
+    if (!this.questService.questData) {
+      this.saveSurveyData();
+    } else {
+      // 確保 questionArray 是陣列
+      if (!Array.isArray(this.questService.questData.questionArray)) {
+        this.questService.questData.questionArray = [];
+      }
     }
 
     // 1.從預覽頁回來(前端有資料,ID=0) 2.從首頁進來編輯(後端有資料,有ID)
@@ -111,7 +120,7 @@ export class QuestionSettingsComponent {
       this.isExistingSurvey();
     } else {
       // 3.新增問卷(無資料,ID=0)
-      this.quizId = 0;
+      //this.saveSurveyData();
       this.isNewSurvey();
     }
   }
@@ -119,7 +128,7 @@ export class QuestionSettingsComponent {
   // 編輯問卷
   isExistingSurvey() {
     const q = this.questService.questData;
-    if (q.quizId) {
+    if (q.quizId > 0) {
       // 從首頁進來編輯(後端有資料, 有ID)
       this.loadFromBackend(q.quizId);
     } else {
@@ -187,7 +196,7 @@ export class QuestionSettingsComponent {
     // 若用新陣列接收，從預覽頁回來後，將導致表格無法渲染資料
   }
 
-  // **刷新表單資料**
+  // 刷新表單資料
   // 如果不寫：畫面上顯示的資料仍然是空的或舊的，因為模板上的綁定屬性（如 name, description 等）沒有被更新。
   refreshFormData(): void {
     const q = this.questService.questData;
@@ -202,10 +211,15 @@ export class QuestionSettingsComponent {
 
   // 添加選項
   addOption() {
+    if (!Array.isArray(this.questionArray)) {
+      this.questionArray = [];
+    }
+
+    if (!this.type) {
+      this.type = 'S'; // 默認設置為單選
+    }
     if (this.type === 'S' || this.type === 'M') {
       this.options.push({});
-      // 不可直接 push ''，因為這樣無法放入資料
-      // 必須改為 {} object 格式，當作一個容器去接收新資料
     }
   }
 
@@ -249,11 +263,14 @@ export class QuestionSettingsComponent {
         options:
           this.type === 'T'
             ? []
-            : this.options.map((option) => ({
+            : Array.isArray(this.options)
+            ? this.options.map((option) => ({
                 option: option.answer || option || '',
                 optionNumber: this.options.indexOf(option) + 1,
-              })),
+              }))
+            : [],
       };
+      console.log(newQuestion.options);
 
       // 3. 更新問題列表
       if (this.isEditing) {
@@ -300,6 +317,7 @@ export class QuestionSettingsComponent {
     this.options = editQuestion.options.map((option) => ({
       answer: option.option,
     }));
+    console.log(this.options);
 
     // 3. 設定狀態
     this.isEditing = true;
@@ -339,6 +357,10 @@ export class QuestionSettingsComponent {
 
   // 儲存資料 -> 因為寫在同一頁所以可以全存
   saveSurveyData() {
+    if (!Array.isArray(this.questionArray)) {
+      this.questionArray = []; // 如果不是陣列，初始化為空陣列
+    }
+
     for (const question of this.questionArray) {
       if (question.options) {
         // 調整每個選項的結構
@@ -397,51 +419,4 @@ export class QuestionSettingsComponent {
     alert('⚠️ 請注意：問卷設定尚未完成，無法訪問此連結。');
     return;
   }
-
-  survey = {
-    name: '幸福飲品問卷調查',
-    description: '您好！非常感謝您抽出寶貴的時間來參與這份關於飲品的問卷調查。',
-    startDate: '2024-11-23',
-    endDate: '2025-01-23',
-    questionArray: [
-      {
-        questionId: 1,
-        title: '什麼飲品讓你感覺幸福？',
-        type: 'S', // 單選
-        necessary: true, // 必填
-        options: [
-          { optionName: '咖啡', code: 'A' },
-          { optionName: '茶', code: 'B' },
-          { optionName: '果汁', code: 'C' },
-          { optionName: '其他', code: 'D' },
-        ],
-      },
-      {
-        questionId: 2,
-        title: '您認為哪些場合喝飲品最讓您感到幸福？',
-        type: 'M', // 多選
-        necessary: false,
-        options: [
-          { optionName: '早晨醒來時', code: 'A' },
-          { optionName: '下午放鬆時', code: 'B' },
-          { optionName: '與朋友聚會時', code: 'C' },
-          { optionName: '晚上入睡前', code: 'D' },
-        ],
-      },
-      {
-        questionId: 3,
-        title: '請簡述您最喜愛的飲品及原因。',
-        type: 'T', // 簡答
-        necessary: false,
-        options: [],
-      },
-      {
-        questionId: 4,
-        title: '本問卷將會作為市場研究調查使用',
-        type: 'S',
-        necessary: true,
-        options: [{ optionName: '我同意', code: 'A' }],
-      },
-    ],
-  };
 }

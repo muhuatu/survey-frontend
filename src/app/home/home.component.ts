@@ -14,6 +14,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { HttpClientService } from '../http-service/http-client.service';
+import { StatusCode } from '../@interface/SurveyList';
+import { Survey } from '../@interface/SurveyList';
+import { LoadingService } from '../@service/loading-service';
 
 @Component({
   selector: 'app-home',
@@ -38,7 +41,8 @@ export class HomeComponent implements AfterViewInit {
     private dateService: DateService,
     private userService: UserService,
     private questService: QuestService,
-    private http: HttpClientService
+    private http: HttpClientService,
+    private loading: LoadingService
   ) {}
 
   name = '';
@@ -73,6 +77,7 @@ export class HomeComponent implements AfterViewInit {
     // 預設日期
     this.defaultDate = this.dateService.changeDateFormat();
     this.isAdmin = this.userService.isAdmin;
+    this.loadAllData();
 
     // 後台顯示的內容
     this.displayedColumns = [
@@ -91,35 +96,6 @@ export class HomeComponent implements AfterViewInit {
     this.isAdmin = this.userService.isAdmin;
   }
 
-  // 搜尋
-  search() {
-    const req = {
-      name: this.searchReq.name,
-      start_date: this.searchReq.startDate,
-      end_date: this.searchReq.endDate,
-    };
-
-    this.http
-      .postApi('http://localhost:8080/admin/search', req)
-      .subscribe((res: any) => {
-        console.log('搜尋結果:', res);
-      }),
-      (error: any) => {
-        console.error('搜尋錯誤:', error);
-      };
-  }
-
-  // 模糊搜尋
-  changeData(event: Event) {
-    let tidyData: SurveyList[] = [];
-    ELEMENT_DATA.forEach((res) => {
-      if (res.name.indexOf((event.target as HTMLInputElement).value) != -1) {
-        tidyData.push(res);
-      }
-    });
-    this.dataSource.data = tidyData;
-  }
-
   // 刪除複數問題
   deleteQuestions() {
     if (confirm('確定要刪除嗎？')) {
@@ -131,8 +107,10 @@ export class HomeComponent implements AfterViewInit {
 
   // 新增問卷路徑：用在 + 的 icon 上
   toQuestionSetting() {
-    this.questService.questData = null;
-    this.router.navigate(['/question-settings']);
+    // 設置 questData 為 null，並初始化 quizId 為 0
+    this.questService.questData = { quizId: 0 };
+    let quizId = this.questService.questData.quizId;
+    this.router.navigate(['/question-settings', quizId]);
   }
 
   // 路徑：統計圖
@@ -148,8 +126,7 @@ export class HomeComponent implements AfterViewInit {
       element.statusCode === 'NOT_PUBLISHED' ||
       element.statusCode === 'NOT_STARTED'
     ) {
-      this.questService.questData.quizId;
-      this.router.navigate(['/question-settings']);
+      this.router.navigate(['/question-settings', element.quizId]);
     } else if (element.statusCode === 'IN_PROGRESS') {
       this.router.navigate(['/fill-in']);
     }
@@ -179,137 +156,98 @@ export class HomeComponent implements AfterViewInit {
       return 0;
     });
   }
+
+  // 模糊搜尋
+  changeData(event: Event) {
+    let tidyData: SurveyList[] = [];
+    ELEMENT_DATA.forEach((res) => {
+      if (res.name.indexOf((event.target as HTMLInputElement).value) != -1) {
+        tidyData.push(res);
+      }
+    });
+    this.dataSource.data = tidyData;
+  }
+
+  // 搜尋
+  search() {
+    const req = {
+      name: this.searchReq.name,
+      start_date: this.searchReq.startDate,
+      end_date: this.searchReq.endDate,
+    };
+
+    this.http
+      .postApi('http://localhost:8080/admin/search', req)
+      .subscribe((res: any) => {
+        console.log('後端搜尋結果:', res);
+
+        const result: SurveyList[] = res.quizList.map((item: any) => ({
+          checkbox: false,
+          id: item.id,
+          name: item.name,
+          status: this.getSurveyStatus(item), // 其實不太懂為何用item當參數就好?!
+          startDate: item.start_date,
+          endDate: item.end_date,
+          url: item.url,
+        }));
+        this.dataSource.data = result;
+        console.log(result);
+      }),
+      (error: any) => {
+        console.error('搜尋錯誤:', error);
+      };
+  }
+
+  allData: SurveyList[] = []; // 用來儲存所有資料的容器
+
+  // 搜尋所有資料(預設)
+  loadAllData() {
+    this.loading.show();
+
+    this.http.postApi('http://localhost:8080/admin/search', {}).subscribe({
+      next: (res: any) => {
+        //console.log('所有資料:', res);
+        this.allData = res.quizList.map((item: any) => ({
+          checkbox: false,
+          id: item.id,
+          name: item.name,
+          status: this.getSurveyStatus(item),
+          startDate: item.start_date,
+          endDate: item.end_date,
+          url: item.url,
+        }));
+        this.dataSource.data = [...this.allData]; // 把資料都加進來!!
+      },
+      error: (error: any) => {
+        console.error('加載資料錯誤:', error);
+      },
+      complete: () => {
+        this.loading.hide();
+      },
+    });
+  }
+
+  getSurveyStatus(survey: Survey): string {
+    const today = new Date().toISOString().split('T')[0];
+
+    // 如果問卷尚未發布，直接返回 "尚未發布"
+    if (!survey.published) {
+      return StatusCode.NOT_PUBLISHED;
+    }
+
+    // 如果已經過了結束日期，則狀態為 "已結束"
+    if (survey.endDate < today) {
+      return StatusCode.END;
+    }
+
+    // 如果今天的日期在開始日期之後，且還沒有結束，則狀態為 "進行中"
+    if (survey.startDate <= today && survey.endDate >= today) {
+      return StatusCode.IN_PROGRESS;
+    }
+
+    // 如果以上條件都不成立，則狀態為 "尚未開始"
+    return StatusCode.NOT_STARTED;
+  }
 }
 
-const ELEMENT_DATA: SurveyList[] = [
-  {
-    checkbox: false,
-    id: 1,
-    name: '《三體》書籍讀者問卷調查',
-    statusCode: 'IN_PROGRESS',
-    status: '進行中',
-    startDate: '2024-11-05',
-    endDate: '2024-12-01',
-    url: '1',
-  },
-  {
-    checkbox: false,
-    id: 11,
-    name: '你最常吃的速食餐點？',
-    statusCode: 'IN_PROGRESS',
-    status: '進行中',
-    startDate: '2024-11-06',
-    endDate: '2024-12-02',
-    url: '2',
-  },
-  {
-    checkbox: false,
-    id: 7,
-    name: '你對異國料理的喜好如何？',
-    statusCode: 'END',
-    status: '已結束',
-    startDate: '2024-11-08',
-    endDate: '2024-12-03',
-    url: '3',
-  },
-  {
-    checkbox: false,
-    id: 5,
-    name: '你最喜歡的甜點是什麼？',
-    statusCode: 'END',
-    status: '已結束',
-    startDate: '2024-11-15',
-    endDate: '2024-12-04',
-    url: '4',
-  },
-  {
-    checkbox: false,
-    id: 4,
-    name: '有什麼飲品讓你感覺幸福？',
-    statusCode: 'NOT_PUBLISHED',
-    status: '尚未發布',
-    startDate: '2024-11-05',
-    endDate: '2024-12-05',
-    url: '5',
-  },
-  {
-    checkbox: false,
-    id: 6,
-    name: '你是否喜歡吃辣的食物？',
-    statusCode: 'END',
-    status: '已結束',
-    startDate: '2024-11-07',
-    endDate: '2024-12-06',
-    url: '6',
-  },
-  {
-    checkbox: false,
-    id: 3,
-    name: '你最推薦的早餐是什麼？',
-    statusCode: 'IN_PROGRESS',
-    status: '進行中',
-    startDate: '2024-11-11',
-    endDate: '2024-12-07',
-    url: '7',
-  },
-  {
-    checkbox: false,
-    id: 8,
-    name: '你吃宵夜的頻率如何？',
-    statusCode: 'END',
-    status: '已結束',
-    startDate: '2024-11-01',
-    endDate: '2024-12-08',
-    url: '8',
-  },
-  {
-    checkbox: false,
-    id: 9,
-    name: '你覺得健康飲食重要嗎？',
-    statusCode: 'NOT_STARTED',
-    status: '尚未開始',
-    startDate: '2024-11-02',
-    endDate: '2024-12-09',
-    url: '9',
-  },
-  {
-    checkbox: false,
-    id: 10,
-    name: '你平常最常吃什麼水果？',
-    statusCode: 'IN_PROGRESS',
-    status: '進行中',
-    startDate: '2024-11-20',
-    endDate: '2024-12-10',
-    url: '10',
-  },
-  {
-    checkbox: false,
-    id: 2,
-    name: '你平時下廚的頻率如何？',
-    statusCode: 'NOT_STARTED',
-    status: '尚未開始',
-    startDate: '2024-11-19',
-    endDate: '2024-12-11',
-    url: '11',
-  },
-  {
-    checkbox: false,
-    id: 12,
-    name: '你最想嘗試的新食材是什麼？',
-    statusCode: 'IN_PROGRESS',
-    status: '進行中',
-    startDate: '2024-11-05',
-    endDate: '2024-12-12',
-    url: '12',
-  },
-  {
-    checkbox: false,
-    id: 13,
-    name: '你對蔬菜的接受程度如何？',
-    statusCode: 'NOT_STARTED',
-    status: '尚未開始',
-    startDate: '2024-11-11',
-    endDate: '2024-12-13',
-    url: '13',
-  },
-];
+const ELEMENT_DATA: SurveyList[] = [];

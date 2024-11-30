@@ -57,8 +57,8 @@ export class CheckComponent {
 
   }
 
-  toQuestionSettings() {
-    this.router.navigate(['/question-settings']);
+  toQuestionSettings(quizId: number) {
+    this.router.navigate(['/question-settings', quizId]);
   }
 
   //

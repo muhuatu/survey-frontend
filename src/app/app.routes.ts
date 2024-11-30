@@ -27,7 +27,7 @@ export const routes: Routes = [
     component: HomeComponent,
   },
   {
-    path: 'question-settings',
+    path: 'question-settings/:id',
     component: QuestionSettingsComponent,
   },
   {
