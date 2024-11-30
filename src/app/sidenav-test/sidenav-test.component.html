@@ -1,9 +1,9 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #sidenav mode="side" class="side">
+  <mat-sidenav #sidenav mode="side" class="side" [ngClass]="checkUrl()">
     <mat-toolbar class="menu">選單</mat-toolbar>
     <mat-nav-list class="side-list">
-      <a mat-list-item href="/home">首頁</a>
-      <a mat-list-item href="/login">新增問卷</a>
+      <a mat-list-item (click)="toHome()">首頁</a>
+      <a mat-list-item (click)="login()">新增問卷</a>
       @if(isAdmin){
       <a mat-list-item (click)="logOut()">登出</a>}
     </mat-nav-list>

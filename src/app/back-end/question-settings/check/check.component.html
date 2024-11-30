@@ -101,19 +101,19 @@
               <input
                 type="radio"
                 name="{{ question.questionId }}"
-                value="{{ item.answer }}"
+                value="{{ item.option }}"
                 style="margin-bottom: 10px"
               />
-              {{ item.answer }}
+              {{ item.option }}
               <br />
               } @else {
               <input
                 type="radio"
                 name="{{ question.questionId }}"
-                value="{{ item.answer }}"
+                value="{{ item.option }}"
                 style="margin-bottom: 10px"
               />
-              {{ item.optionName }}
+              {{ item.option }}
               <br />
               }
             </label>
@@ -128,18 +128,18 @@
               @if(isNew){
               <input
                 type="checkbox"
-                value="{{ item.answer }}"
+                value="{{ item.option }}"
                 style="margin-bottom: 10px"
               />
-              {{ item.answer }}
+              {{ item.option }}
               <br />
               } @else {
               <input
                 type="checkbox"
-                value="{{ item.answer }}"
+                value="{{ item.option }}"
                 style="margin-bottom: 10px"
               />
-              {{ item.optionName }}
+              {{ item.option }}
               <br />
               }
             </label>

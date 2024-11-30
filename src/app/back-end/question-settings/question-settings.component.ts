@@ -12,6 +12,9 @@ import { MatRadioModule } from '@angular/material/radio';
 import { CommonModule } from '@angular/common';
 import { QuestService } from '../../@service/quest-service';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { LoadingService } from '../../@service/loading-service';
+import { HttpClientService } from '../../http-service/http-client.service';
+import { Option } from '../../@interface/Question';
 
 @Component({
   selector: 'app-question-settings',
@@ -35,23 +38,25 @@ export class QuestionSettingsComponent {
   // --------------------------- 宣告變數 --------------------------- //
 
   // 問卷
+  quizId!: number;
   name!: string;
   description!: string;
   startDate!: string;
   endDate!: string;
+  //published!: boolean;
 
   // 問題
   questionArray: Question[] = [];
   title!: string;
   type!: string; // 單選、多選、簡答
   options: Array<any> = []; // 問題集
-  optionName!: string;
+  //optionName!: string;
   necessary = false;
   checkbox = false;
 
   // 判斷
   editId: number | null = null; // 用來儲存當前正在編輯的問題 ID
-  private nextID = 1; // 用來自增編號的變數
+  private nextID = 1; // 用來自增編號的問題變數
   isEditing = false; // 旗標變數：判斷是否處於編輯狀態
   isNew = true;
   defaultDate = ''; // 預設日期(今日)
@@ -60,7 +65,9 @@ export class QuestionSettingsComponent {
     private router: Router,
     private dateService: DateService,
     private questService: QuestService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private http: HttpClientService,
+    private loading: LoadingService
   ) {}
 
   // 表格顯示的欄位
@@ -76,6 +83,16 @@ export class QuestionSettingsComponent {
 
   // --------------------------- 日期、路由、初始化 --------------------------- //
 
+  // 判斷"結束日期"不可小於"開始日期"
+  checkEndDate(startDate: string): void {
+    // 1. 賦值給開始日期
+    this.startDate = startDate;
+    // 2. 判斷
+    if (this.endDate < this.startDate) {
+      this.endDate = this.startDate; // 如果END小於START就讓它們相等囉!!
+    }
+  }
+
   ngOnInit(): void {
     // 日期設定
     this.defaultDate = this.dateService.changeDateFormat();
@@ -88,31 +105,97 @@ export class QuestionSettingsComponent {
       this.isNew = false;
     }
 
-    // 判斷 1.新開啟(無資料) 2.從預覽頁回來(將資料帶回去)
-    if (!this.questService.questData) {
-      // 無資料的話會使用方法紀錄答案
-      this.saveSurveyData();
+    // 1.從預覽頁回來(前端有資料,ID=0) 2.從首頁進來編輯(後端有資料,有ID)
+    if (this.questService.questData) {
+      this.quizId = this.questService.questData.quizId || 0;
+      this.isExistingSurvey();
     } else {
-      // 有資料的話會帶入原本的填寫框
-      const q = this.questService.questData;
-      this.name = q.name;
-      this.description = q.description;
-      this.startDate = q.startDate;
-      this.endDate = q.endDate;
-      // 不需要用新陣列接收問題，因為 mat-table 的 dataSource 是吃 questionArray 資料
-      // 若用新陣列接收，從預覽頁回來後，將導致表格無法渲染資料
-      this.questionArray = q.questionArray;
+      // 3.新增問卷(無資料,ID=0)
+      this.quizId = 0;
+      this.isNewSurvey();
     }
   }
 
-  // 判斷"結束日期"不可小於"開始日期"
-  checkEndDate(startDate: string): void {
-    // 1. 賦值給開始日期
-    this.startDate = startDate;
-    // 2. 判斷
-    if (this.endDate < this.startDate) {
-      this.endDate = this.startDate; // 如果END小於START就讓它們相等囉!!
+  // 編輯問卷
+  isExistingSurvey() {
+    const q = this.questService.questData;
+    if (q.quizId) {
+      // 從首頁進來編輯(後端有資料, 有ID)
+      this.loadFromBackend(q.quizId);
+    } else {
+      // 從預覽頁回來(前端有資料, ID=0)
+      this.loadFromCheck(q);
     }
+  }
+
+  // 新增問卷
+  isNewSurvey(): void {
+    // 新增問卷(無資料, ID=0)
+    const newSurvey = {
+      quizId: 0,
+      name: '',
+      description: '',
+      startDate: this.defaultDate,
+      endDate: '',
+      questionArray: [],
+    };
+    this.questService.questData = newSurvey;
+    this.saveSurveyData();
+  }
+
+  // 從後端載入問卷資料
+  loadFromBackend(quizId: number): void {
+    // 獲取問卷ID
+    const req = {
+      id: quizId,
+    };
+    // 用API獲取問卷資料
+    this.loading.show();
+    this.http.getApi('http://localhost:8080/admin/search_quiz', req).subscribe({
+      next: (res: any) => {
+        if (res.code === 200) {
+          this.questService.questData = {
+            id: res.id,
+            name: res.name,
+            description: res.description,
+            startDate: res.start_date,
+            endDate: res.end_date,
+            published: res.published,
+            questionArray: res.question_list,
+          };
+        }
+        this.loading.hide();
+      },
+      error: (err) => {
+        console.error('問卷載入錯誤', err);
+        this.loading.hide();
+      },
+    });
+  }
+
+  // 從預覽頁載入問卷資料
+  loadFromCheck(q: any): void {
+    q = this.questService.questData;
+    this.quizId = 0;
+    this.name = q.name;
+    this.description = q.description;
+    this.startDate = q.startDate;
+    this.endDate = q.endDate;
+    this.questionArray = q.questionArray;
+    // 註解
+    // 不需要用新陣列接收問題，因為 mat-table 的 dataSource 是吃 questionArray 資料
+    // 若用新陣列接收，從預覽頁回來後，將導致表格無法渲染資料
+  }
+
+  // **刷新表單資料**
+  // 如果不寫：畫面上顯示的資料仍然是空的或舊的，因為模板上的綁定屬性（如 name, description 等）沒有被更新。
+  refreshFormData(): void {
+    const q = this.questService.questData;
+    this.name = q.name;
+    this.description = q.description;
+    this.startDate = q.startDate;
+    this.endDate = q.endDate;
+    this.questionArray = q.questionArray;
   }
 
   // --------------------------- 問題 --------------------------- //
@@ -120,7 +203,7 @@ export class QuestionSettingsComponent {
   // 添加選項
   addOption() {
     if (this.type === 'S' || this.type === 'M') {
-      this.options.push({ answer: '' });
+      this.options.push({});
       // 不可直接 push ''，因為這樣無法放入資料
       // 必須改為 {} object 格式，當作一個容器去接收新資料
     }
@@ -131,7 +214,7 @@ export class QuestionSettingsComponent {
     this.options.splice(index, 1); // 刪除 index 後一個元素，例如索引0就是刪除第1個元素
   }
 
-  // 檢查問題必填 -> 考慮改 dialog ? by 11/20
+  // 檢查問題必填 -> 考慮改 dialog ?
   checkQuestionNecessary(): boolean {
     if (!this.title || !this.type) {
       alert('⚠️ 請填寫問題名稱與類型');
@@ -162,7 +245,14 @@ export class QuestionSettingsComponent {
         title: this.title,
         type: this.type,
         necessary: this.necessary,
-        options: this.type === 'T' ? [] : this.options, // 簡答題清空選項
+        //options: this.type === 'T' ? [] : this.options, // 簡答題清空選項
+        options:
+          this.type === 'T'
+            ? []
+            : this.options.map((option) => ({
+                option: option.answer || option || '',
+                optionNumber: this.options.indexOf(option) + 1,
+              })),
       };
 
       // 3. 更新問題列表
@@ -207,11 +297,9 @@ export class QuestionSettingsComponent {
     this.title = editQuestion.title;
     this.type = editQuestion.type;
     this.necessary = editQuestion.necessary;
-    this.options = JSON.parse(JSON.stringify(editQuestion.options));
-    //this.options = editQuestion.options;
-    for(const item of this.options){
-      console.log(item.optionName);
-    }
+    this.options = editQuestion.options.map((option) => ({
+      answer: option.option,
+    }));
 
     // 3. 設定狀態
     this.isEditing = true;
@@ -251,8 +339,21 @@ export class QuestionSettingsComponent {
 
   // 儲存資料 -> 因為寫在同一頁所以可以全存
   saveSurveyData() {
+    for (const question of this.questionArray) {
+      if (question.options) {
+        // 調整每個選項的結構
+        question.options = question.options.map(
+          (option: any, index: number) => ({
+            option: option.answer || option.option, // 將 answer 的值移到 option 屬性
+            optionNumber: index + 1, // 選項編號
+          })
+        );
+      }
+    }
+
     const surveyToSubmit = {
       // 問卷
+      quizId: this.quizId || 0,
       name: this.name,
       description: this.description,
       startDate: this.startDate,
@@ -267,7 +368,7 @@ export class QuestionSettingsComponent {
       })),
     };
     this.questService.questData = surveyToSubmit;
-    //console.log(surveyToSubmit);
+    console.log('儲存資料:', surveyToSubmit);
   }
 
   // 提交到預覽頁面
@@ -299,8 +400,7 @@ export class QuestionSettingsComponent {
 
   survey = {
     name: '幸福飲品問卷調查',
-    description:
-      '您好！非常感謝您抽出寶貴的時間來參與這份關於飲品的問卷調查。我們希望能夠通過這份問卷，深入了解您對各種飲品的喜好和感受，無論是咖啡、茶、果汁還是其他飲品。希望這次調查能讓您回憶起那些讓您感到幸福的飲品時刻，並幫助我們更好地理解您對飲品的需求和期望。請您花幾分鐘時間完成問卷，再次感謝您的熱心參與與支持！',
+    description: '您好！非常感謝您抽出寶貴的時間來參與這份關於飲品的問卷調查。',
     startDate: '2024-11-23',
     endDate: '2025-01-23',
     questionArray: [

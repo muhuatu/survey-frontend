@@ -247,7 +247,7 @@
             @for(item of question.options; track $index){ 選項&nbsp;{{
               $index + 1
             }}：
-            {{ isNew ? item.answer : item.optionName }}
+            {{ item.option }}
             <br />
             }
           </td>
@@ -307,7 +307,7 @@
 
     <!-- 下一步 -->
     <div class="step">
-      <button (click)="submitToCheck()">預覽問卷</button>
+      <button (click)="submitToCheck()">預覽</button>
     </div>
   </main>
 </div>

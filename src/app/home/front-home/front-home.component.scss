@@ -25,20 +25,6 @@ select::placeholder, input::placeholder {
   color: #aaa;
 }
 
-.icon {
-  margin: 0 0 10px 240px;
-
-  .material-symbols-outlined {
-    cursor: pointer;
-    margin-right: 10px;
-    transform: scale(1);
-    background-color: rgb(230, 130, 87);
-    border-radius: 20px;
-    padding: 3px;
-    color: white;
-  }
-}
-
 // -------------------- 以下是表格 -------------------- //
 
 ::ng-deep .mat-elevation-z8 {
@@ -53,10 +39,6 @@ select::placeholder, input::placeholder {
 ::ng-deep .mat-mdc-table {
   border-collapse: collapse; // 單元格邊框重疊顯示為單線
 }
-
-// ::ng-deep .mat-elevation-z8 tr:nth-child(even) {
-//   background-color: #ffffff;
-// }
 
 // 一行
 ::ng-deep .mat-elevation-z8 tr {
@@ -78,14 +60,6 @@ select::placeholder, input::placeholder {
   background-color: rgb(230, 130, 87) !important;
   color: rgb(255, 255, 255);
   font-weight: 600;
-}
-
-// 選擇方框
-.checkBox {
-  border-radius: 3px;
-  border: 1px solid #eaeaea;
-  box-sizing: border-box;
-  transform: scale(1.2);
 }
 
 .urlCss {

@@ -8,12 +8,10 @@ export interface Question {
   options: Array<any>;
 }
 
-// 問卷(目前沒用到)
-export interface Survey {
-  name: string;
-  description: string;
-  startDate: string;
-  endDate: string;
+// 選項
+export interface Option {
+  option: string;
+  optionNumber: number;
 }
 
 // 回饋表

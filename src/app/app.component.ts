@@ -47,7 +47,7 @@ export class AppComponent {
   }
 
   toHome() {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/front-home']);
   }
 
   toLogin() {

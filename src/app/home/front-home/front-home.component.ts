@@ -1,22 +1,22 @@
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { SurveyList } from '../@interface/SurveyList';
 import { Router } from '@angular/router';
-import { DateService } from '../@service/date-service';
-import { UserService } from '../@service/user-service';
+import { SurveyList } from '../../@interface/SurveyList';
+import { DateService } from '../../@service/date-service';
+import { QuestService } from '../../@service/quest-service';
+import { UserService } from '../../@service/user-service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { QuestService } from '../@service/quest-service';
+import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatListModule } from '@angular/material/list';
-import { MatButtonModule } from '@angular/material/button';
-import { HttpClientService } from '../http-service/http-client.service';
+import { HttpClientService } from '../../http-service/http-client.service';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-front-home',
   standalone: true,
   imports: [
     FormsModule,
@@ -29,10 +29,10 @@ import { HttpClientService } from '../http-service/http-client.service';
     MatListModule,
     MatButtonModule,
   ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+  templateUrl: './front-home.component.html',
+  styleUrl: './front-home.component.scss',
 })
-export class HomeComponent implements AfterViewInit {
+export class FrontHomeComponent {
   constructor(
     private router: Router,
     private dateService: DateService,
@@ -55,15 +55,7 @@ export class HomeComponent implements AfterViewInit {
   };
 
   // 表格呈現的欄位
-  displayedColumns: string[] = [
-    'checkbox',
-    'id',
-    'name',
-    'status',
-    'startDate',
-    'endDate',
-    'url',
-  ];
+  displayedColumns: string[] = ['name', 'status', 'startDate', 'endDate'];
 
   // 分頁查詢
   dataSource = new MatTableDataSource<SurveyList>(ELEMENT_DATA);
@@ -74,21 +66,21 @@ export class HomeComponent implements AfterViewInit {
     this.defaultDate = this.dateService.changeDateFormat();
     this.isAdmin = this.userService.isAdmin;
 
-    // 後台顯示的內容
-    this.displayedColumns = [
-      'checkbox',
-      'id',
-      'name',
-      'status',
-      'startDate',
-      'endDate',
-      'url',
-    ];
+    if (!this.isAdmin) {
+      this.dataSource.data = ELEMENT_DATA.filter(
+        (item) =>
+          item.statusCode !== 'NOT_PUBLISHED' &&
+          item.statusCode !== 'NOT_STARTED'
+      );
+    }
+
+    // 前台顯示的表格內容
+    this.displayedColumns = ['name', 'status', 'startDate', 'endDate'];
   }
 
   // 判斷值變更(生命週期)
   ngDoCheck(): void {
-    this.isAdmin = this.userService.isAdmin;
+    //this.isAdmin = this.userService.isAdmin;
   }
 
   // 搜尋
@@ -100,13 +92,20 @@ export class HomeComponent implements AfterViewInit {
     };
 
     this.http
-      .postApi('http://localhost:8080/admin/search', req)
+      .postApi('http://localhost:8080/user/search', req)
       .subscribe((res: any) => {
         console.log('搜尋結果:', res);
       }),
       (error: any) => {
         console.error('搜尋錯誤:', error);
       };
+  }
+
+  // 路徑：編輯或填寫問卷（後端接資料）
+  toFillIn(element: any) {
+    if (element.statusCode === 'IN_PROGRESS') {
+      this.router.navigate(['/fill-in']);
+    }
   }
 
   // 模糊搜尋
@@ -118,41 +117,6 @@ export class HomeComponent implements AfterViewInit {
       }
     });
     this.dataSource.data = tidyData;
-  }
-
-  // 刪除複數問題
-  deleteQuestions() {
-    if (confirm('確定要刪除嗎？')) {
-      this.dataSource.data = this.dataSource.data.filter(
-        (question) => !question.checkbox
-      );
-    }
-  }
-
-  // 新增問卷路徑：用在 + 的 icon 上
-  toQuestionSetting() {
-    this.questService.questData = null;
-    this.router.navigate(['/question-settings']);
-  }
-
-  // 路徑：統計圖
-  toChart(element: any) {
-    if (element.statusCode === 'END' || element.statusCode === 'IN_PROGRESS') {
-      this.router.navigate(['/response-list']);
-    }
-  }
-
-  // 路徑：編輯或填寫問卷（後端接資料）
-  toEditOrFillIn(element: any) {
-    if (
-      element.statusCode === 'NOT_PUBLISHED' ||
-      element.statusCode === 'NOT_STARTED'
-    ) {
-      this.questService.questData.quizId;
-      this.router.navigate(['/question-settings']);
-    } else if (element.statusCode === 'IN_PROGRESS') {
-      this.router.navigate(['/fill-in']);
-    }
   }
 
   // 判斷"結束日期"不可小於"開始日期"
@@ -181,135 +145,96 @@ export class HomeComponent implements AfterViewInit {
   }
 }
 
-const ELEMENT_DATA: SurveyList[] = [
+const ELEMENT_DATA: any[] = [
   {
-    checkbox: false,
-    id: 1,
     name: '《三體》書籍讀者問卷調查',
     statusCode: 'IN_PROGRESS',
     status: '進行中',
     startDate: '2024-11-05',
     endDate: '2024-12-01',
-    url: '1',
   },
   {
-    checkbox: false,
-    id: 11,
     name: '你最常吃的速食餐點？',
     statusCode: 'IN_PROGRESS',
     status: '進行中',
     startDate: '2024-11-06',
     endDate: '2024-12-02',
-    url: '2',
   },
   {
-    checkbox: false,
-    id: 7,
     name: '你對異國料理的喜好如何？',
-    statusCode: 'END',
+    statusCode: 'NOT_STARTED',
     status: '已結束',
     startDate: '2024-11-08',
     endDate: '2024-12-03',
-    url: '3',
   },
   {
-    checkbox: false,
-    id: 5,
     name: '你最喜歡的甜點是什麼？',
     statusCode: 'END',
     status: '已結束',
     startDate: '2024-11-15',
     endDate: '2024-12-04',
-    url: '4',
   },
   {
-    checkbox: false,
-    id: 4,
     name: '有什麼飲品讓你感覺幸福？',
     statusCode: 'NOT_PUBLISHED',
     status: '尚未發布',
     startDate: '2024-11-05',
     endDate: '2024-12-05',
-    url: '5',
   },
   {
-    checkbox: false,
-    id: 6,
     name: '你是否喜歡吃辣的食物？',
     statusCode: 'END',
     status: '已結束',
     startDate: '2024-11-07',
     endDate: '2024-12-06',
-    url: '6',
   },
   {
-    checkbox: false,
-    id: 3,
     name: '你最推薦的早餐是什麼？',
     statusCode: 'IN_PROGRESS',
     status: '進行中',
     startDate: '2024-11-11',
     endDate: '2024-12-07',
-    url: '7',
   },
   {
-    checkbox: false,
-    id: 8,
     name: '你吃宵夜的頻率如何？',
     statusCode: 'END',
     status: '已結束',
     startDate: '2024-11-01',
     endDate: '2024-12-08',
-    url: '8',
   },
   {
-    checkbox: false,
-    id: 9,
     name: '你覺得健康飲食重要嗎？',
     statusCode: 'NOT_STARTED',
     status: '尚未開始',
     startDate: '2024-11-02',
     endDate: '2024-12-09',
-    url: '9',
   },
   {
-    checkbox: false,
-    id: 10,
     name: '你平常最常吃什麼水果？',
     statusCode: 'IN_PROGRESS',
     status: '進行中',
     startDate: '2024-11-20',
     endDate: '2024-12-10',
-    url: '10',
   },
   {
-    checkbox: false,
-    id: 2,
     name: '你平時下廚的頻率如何？',
     statusCode: 'NOT_STARTED',
     status: '尚未開始',
     startDate: '2024-11-19',
     endDate: '2024-12-11',
-    url: '11',
   },
   {
-    checkbox: false,
-    id: 12,
     name: '你最想嘗試的新食材是什麼？',
     statusCode: 'IN_PROGRESS',
     status: '進行中',
     startDate: '2024-11-05',
     endDate: '2024-12-12',
-    url: '12',
   },
   {
-    checkbox: false,
-    id: 13,
     name: '你對蔬菜的接受程度如何？',
     statusCode: 'NOT_STARTED',
     status: '尚未開始',
     startDate: '2024-11-11',
     endDate: '2024-12-13',
-    url: '13',
   },
 ];
