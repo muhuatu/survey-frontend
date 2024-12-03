@@ -1,7 +1,7 @@
 <div class="container">
   <!--------------------- 功能表 --------------------->
   <aside class="sidebar">
-    <button routerLink="/statistics-list">問卷統計</button>
+    <button (click)="toStatistics()">問卷統計</button>
     <button
       routerLink="/response-list"
       style="background-color: rgb(230, 130, 87); color: white"
@@ -24,28 +24,28 @@
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource">
       <!-- Position Column -->
-      <ng-container matColumnDef="replyID">
+      <ng-container matColumnDef="responseId">
         <th mat-header-cell *matHeaderCellDef style="width: 50px">編號</th>
-        <td mat-cell *matCellDef="let element">{{ element.replyID }}</td>
+        <td mat-cell *matCellDef="let element">{{ element.responseId }}</td>
       </ng-container>
 
       <!-- Name Column -->
-      <ng-container matColumnDef="replyName">
+      <ng-container matColumnDef="responseUserName">
         <th mat-header-cell *matHeaderCellDef style="width: 100px">姓名</th>
-        <td mat-cell *matCellDef="let element">{{ element.replyName }}</td>
+        <td mat-cell *matCellDef="let element">{{ element.responseUserName }}</td>
       </ng-container>
 
       <!-- Date Column -->
-      <ng-container matColumnDef="date">
+      <ng-container matColumnDef="responseDate">
         <th mat-header-cell *matHeaderCellDef style="width: 60px">填寫時間</th>
-        <td mat-cell *matCellDef="let element">{{ element.date }}</td>
+        <td mat-cell *matCellDef="let element">{{ element.responseDate }}</td>
       </ng-container>
 
       <!-- URL Column -->
-      <ng-container matColumnDef="url">
+      <ng-container matColumnDef="responseUrl">
         <th mat-header-cell *matHeaderCellDef style="width: 60px">觀看回覆</th>
         <td mat-cell *matCellDef="let element">
-          <a [href]="element.url">前往</a>
+          <a [href]="element.responseUrl">前往</a>
         </td>
       </ng-container>
 

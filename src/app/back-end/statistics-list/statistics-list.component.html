@@ -1,11 +1,10 @@
 <aside class="sidebar">
   <button
-    routerLink="/statistics-list"
     style="background-color: rgb(230, 130, 87); color: white"
   >
     問卷統計
   </button>
-  <button routerLink="/response-list">問卷回覆</button>
+  <button (click)="toResponse()">問卷回覆</button>
 </aside>
 
 @for (quest of questData.quest; track $index) {

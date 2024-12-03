@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { SurveyList } from '../../@interface/SurveyList';
+import { StatusCode, Survey, SurveyList } from '../../@interface/SurveyList';
 import { DateService } from '../../@service/date-service';
 import { QuestService } from '../../@service/quest-service';
 import { UserService } from '../../@service/user-service';
@@ -14,6 +14,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { HttpClientService } from '../../http-service/http-client.service';
+import { LoadingService } from '../../@service/loading-service';
+import { DialogService } from '../../@service/dialog.service';
 
 @Component({
   selector: 'app-front-home',
@@ -38,7 +40,9 @@ export class FrontHomeComponent {
     private dateService: DateService,
     private userService: UserService,
     private questService: QuestService,
-    private http: HttpClientService
+    private http: HttpClientService,
+    private loading: LoadingService,
+    private dialogService: DialogService
   ) {}
 
   name = '';
@@ -46,7 +50,14 @@ export class FrontHomeComponent {
   endDate = '';
   defaultDate = ''; // 預設日期(今日)
   isAdmin!: boolean;
-  element = { statusCode: 'IN_PROGRESS' }; // 初始值可以根據需求調整
+  statusCode!: string; // 用在 HTML 搜尋
+  allData: SurveyList[] = []; // 用來儲存所有資料的容器
+
+  survey: Survey = {
+    published: false, // 預設尚未發布
+    startDate: '',
+    endDate: '',
+  };
 
   searchReq = {
     name: '',
@@ -64,10 +75,11 @@ export class FrontHomeComponent {
   ngOnInit(): void {
     // 預設日期
     this.defaultDate = this.dateService.changeDateFormat();
-    this.isAdmin = this.userService.isAdmin;
+    this.isAdmin = false;
+    this.loadAllData();
 
     if (!this.isAdmin) {
-      this.dataSource.data = ELEMENT_DATA.filter(
+      this.dataSource.data = this.dataSource.data.filter(
         (item) =>
           item.statusCode !== 'NOT_PUBLISHED' &&
           item.statusCode !== 'NOT_STARTED'
@@ -80,7 +92,7 @@ export class FrontHomeComponent {
 
   // 判斷值變更(生命週期)
   ngDoCheck(): void {
-    //this.isAdmin = this.userService.isAdmin;
+    this.isAdmin = this.userService.isAdmin;
   }
 
   // 搜尋
@@ -91,20 +103,104 @@ export class FrontHomeComponent {
       end_date: this.searchReq.endDate,
     };
 
+    this.loading.show();
+
     this.http
-      .postApi('http://localhost:8080/user/search', req)
+      .postApi('http://localhost:8080/admin/search', req)
       .subscribe((res: any) => {
-        console.log('搜尋結果:', res);
+        console.log('後端搜尋結果:', res);
+        const result: SurveyList[] = res.quizList.map((item: any) => ({
+          checkbox: false,
+          id: item.id,
+          name: item.name,
+          status: this.getSurveyStatus(item), // 其實不太懂為何用item當參數就好?! 太厲害了ㄅ
+          startDate: item.start_date,
+          endDate: item.end_date,
+          url: item.url,
+        }));
+        this.dataSource.data = result; // 表格渲染
+        this.loading.hide();
       }),
       (error: any) => {
         console.error('搜尋錯誤:', error);
       };
   }
 
-  // 路徑：編輯或填寫問卷（後端接資料）
-  toFillIn(element: any) {
-    if (element.statusCode === 'IN_PROGRESS') {
-      this.router.navigate(['/fill-in']);
+  // 搜尋所有資料(預設)
+  loadAllData() {
+    this.loading.show();
+
+    this.http.postApi('http://localhost:8080/admin/search', {}).subscribe({
+      next: (res: any) => {
+        console.log('所有資料:', res);
+        this.allData = res.quizList.map((item: any) => ({
+          checkbox: false,
+          id: item.id,
+          name: item.name,
+          status: this.getSurveyStatus({
+            ...item, // 傳遞完整物件
+            startDate: item.start_date || '', // 預設為空字串避免 undefined
+            endDate: item.end_date || '',
+          }),
+          startDate: item.start_date,
+          endDate: item.end_date,
+          url: item.url,
+        }));
+
+        // 篩選資料
+        if (!this.isAdmin) {
+          this.dataSource.data = this.allData.filter(
+            (item) =>
+              item.statusCode !== 'NOT_PUBLISHED' &&
+              item.statusCode !== 'NOT_STARTED'
+          );
+        } else {
+          this.dataSource.data = [...this.allData];
+        }
+      },
+
+      error: (error: any) => {
+        console.error('加載資料錯誤:', error);
+      },
+      complete: () => {
+        this.loading.hide();
+      },
+    });
+  }
+
+  getSurveyStatus(survey: Survey): string {
+    const today = new Date().toISOString().split('T')[0];
+
+    // 如果問卷尚未發布，直接返回 "尚未發布"
+    if (!survey.published) {
+      return StatusCode.NOT_PUBLISHED;
+    }
+
+    // 如果已經過了結束日期，則狀態為 "已結束"
+    if (survey.endDate < today) {
+      return StatusCode.END;
+    }
+
+    // 如果今天的日期在開始日期之後，且還沒有結束，則狀態為 "進行中"
+    if (survey.startDate <= today && survey.endDate >= today) {
+      return StatusCode.IN_PROGRESS;
+    }
+
+    // 如果以上條件都不成立，則狀態為 "尚未開始"
+    return StatusCode.NOT_STARTED;
+  }
+
+  // 路徑：填寫問卷
+  toFillIn(element: SurveyList) {
+    // 確認問卷狀態是否為 IN_PROGRESS
+    if (element.status === StatusCode.IN_PROGRESS) {
+      // 導航到 fill-in 組件，並傳遞問卷 ID
+      this.questService.questData = { quizId: 0 };
+      this.questService.questData.quizId = element.id;
+      this.router.navigate(['/fill-in', element.id]);
+    } else {
+      // 顯示提示訊息
+      this.dialogService.showAlert('僅進行中的問卷可以填寫');
     }
   }
 
@@ -145,96 +241,4 @@ export class FrontHomeComponent {
   }
 }
 
-const ELEMENT_DATA: any[] = [
-  {
-    name: '《三體》書籍讀者問卷調查',
-    statusCode: 'IN_PROGRESS',
-    status: '進行中',
-    startDate: '2024-11-05',
-    endDate: '2024-12-01',
-  },
-  {
-    name: '你最常吃的速食餐點？',
-    statusCode: 'IN_PROGRESS',
-    status: '進行中',
-    startDate: '2024-11-06',
-    endDate: '2024-12-02',
-  },
-  {
-    name: '你對異國料理的喜好如何？',
-    statusCode: 'NOT_STARTED',
-    status: '已結束',
-    startDate: '2024-11-08',
-    endDate: '2024-12-03',
-  },
-  {
-    name: '你最喜歡的甜點是什麼？',
-    statusCode: 'END',
-    status: '已結束',
-    startDate: '2024-11-15',
-    endDate: '2024-12-04',
-  },
-  {
-    name: '有什麼飲品讓你感覺幸福？',
-    statusCode: 'NOT_PUBLISHED',
-    status: '尚未發布',
-    startDate: '2024-11-05',
-    endDate: '2024-12-05',
-  },
-  {
-    name: '你是否喜歡吃辣的食物？',
-    statusCode: 'END',
-    status: '已結束',
-    startDate: '2024-11-07',
-    endDate: '2024-12-06',
-  },
-  {
-    name: '你最推薦的早餐是什麼？',
-    statusCode: 'IN_PROGRESS',
-    status: '進行中',
-    startDate: '2024-11-11',
-    endDate: '2024-12-07',
-  },
-  {
-    name: '你吃宵夜的頻率如何？',
-    statusCode: 'END',
-    status: '已結束',
-    startDate: '2024-11-01',
-    endDate: '2024-12-08',
-  },
-  {
-    name: '你覺得健康飲食重要嗎？',
-    statusCode: 'NOT_STARTED',
-    status: '尚未開始',
-    startDate: '2024-11-02',
-    endDate: '2024-12-09',
-  },
-  {
-    name: '你平常最常吃什麼水果？',
-    statusCode: 'IN_PROGRESS',
-    status: '進行中',
-    startDate: '2024-11-20',
-    endDate: '2024-12-10',
-  },
-  {
-    name: '你平時下廚的頻率如何？',
-    statusCode: 'NOT_STARTED',
-    status: '尚未開始',
-    startDate: '2024-11-19',
-    endDate: '2024-12-11',
-  },
-  {
-    name: '你最想嘗試的新食材是什麼？',
-    statusCode: 'IN_PROGRESS',
-    status: '進行中',
-    startDate: '2024-11-05',
-    endDate: '2024-12-12',
-  },
-  {
-    name: '你對蔬菜的接受程度如何？',
-    statusCode: 'NOT_STARTED',
-    status: '尚未開始',
-    startDate: '2024-11-11',
-    endDate: '2024-12-13',
-  },
-];
+const ELEMENT_DATA: SurveyList[] = [];

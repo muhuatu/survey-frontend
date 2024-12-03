@@ -12,6 +12,7 @@ import { UserService } from '../../../@service/user-service';
 import { HttpClientService } from '../../../http-service/http-client.service';
 import { LoadingService } from '../../../@service/loading-service';
 import { Option } from '../../../@interface/Question';
+import { DialogService } from '../../../@service/dialog.service';
 
 @Component({
   selector: 'app-check',
@@ -35,7 +36,8 @@ export class CheckComponent {
     private questService: QuestService,
     private userService: UserService,
     private http: HttpClientService,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private dialogService: DialogService
   ) {}
 
   // 宣告變數
@@ -44,24 +46,16 @@ export class CheckComponent {
   userPhone!: string;
   userEmail!: string;
   userAge!: string;
-  isNew = true;
 
   ngOnInit(): void {
     this.questData = this.questService.questData;
-    if (
-      this.questService.questStatus === 'NOT_PUBLISHED' ||
-      this.questService.questStatus === 'NOT_STARTED'
-    ) {
-      this.isNew = false;
-    }
-
   }
 
   toQuestionSettings(quizId: number) {
     this.router.navigate(['/question-settings', quizId]);
   }
 
-  //
+  // 發布問卷
   toPublish() {
     // 將 this.questData 存進資料庫
     let frontendReq = {
@@ -71,20 +65,18 @@ export class CheckComponent {
       start_date: this.questData?.startDate,
       end_date: this.questData?.endDate,
       published: true,
-      question_list: this.questData?.questionArray.map(
-        (q: any) => ({
-          question_id: q.questionId,
-          title: q.title,
-          type: q.type,
-          necessary: q.necessary,
-          option_list: JSON.stringify(
-            q.options.map((item: Option) => ({
-              option: item.option,
-              optionNumber: String(item.optionNumber), // 確保是字串
-            }))
-          ),
-        })
-      ),
+      question_list: this.questData?.questionArray.map((q: any) => ({
+        question_id: q.questionId,
+        title: q.title,
+        type: q.type,
+        necessary: q.necessary,
+        option_list: JSON.stringify(
+          q.options.map((item: Option) => ({
+            option: item.option,
+            optionNumber: String(item.optionNumber), // 確保是字串
+          }))
+        ),
+      })),
     };
 
     this.loading.show();
@@ -96,8 +88,7 @@ export class CheckComponent {
         next: (res: any) => {
           if (res.code === 200) {
             this.questService.questData = null; // 發布後資料需清除
-            //this.loading.hide();
-            this.router.navigate(['/publish']);
+            this.router.navigate(['/publish', this.questData?.quizId]);
           } else {
             console.error('發布失敗');
           }
@@ -111,11 +102,52 @@ export class CheckComponent {
       });
   }
 
-  // published 會是 false
+  // 儲存問卷：published 會是 false
   toSave() {
-    alert('問卷已儲存，將跳轉至首頁。');
-    this.questService.questStatus = 'NOT_PUBLISHED';
+    // 將 this.questData 存進資料庫
+    let frontendReq = {
+      id: this.questData?.quizId || 0,
+      name: this.questData?.name,
+      description: this.questData?.description,
+      start_date: this.questData?.startDate,
+      end_date: this.questData?.endDate,
+      published: false,
+      question_list: this.questData?.questionArray.map((q: any) => ({
+        question_id: q.questionId,
+        title: q.title,
+        type: q.type,
+        necessary: q.necessary,
+        option_list: JSON.stringify(
+          q.options.map((item: Option) => ({
+            option: item.option,
+            optionNumber: String(item.optionNumber), // 確保是字串
+          }))
+        ),
+      })),
+    };
+
+    this.loading.show();
+
+    // 判斷 id 為 0 就是新增
+    this.http
+      .postApi('http://localhost:8080/admin/create&update', frontendReq)
+      .subscribe({
+        next: (res: any) => {
+          if (res.code === 200) {
+            this.questService.questData = null; // 發布後資料需清除
+            this.router.navigate(['/publish', this.questData?.quizId]);
+          } else {
+            console.error('發布失敗');
+          }
+        },
+        error: (err) => {
+          console.log(err.message);
+        },
+        complete: () => {
+          this.loading.hide();
+        },
+      });
+    this.dialogService.showAlert('問卷已儲存。');
     this.userService.isAdmin = true;
-    this.router.navigate(['/home']);
   }
 }

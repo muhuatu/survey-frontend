@@ -14,7 +14,8 @@ import { QuestService } from '../../@service/quest-service';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { LoadingService } from '../../@service/loading-service';
 import { HttpClientService } from '../../http-service/http-client.service';
-import { Option } from '../../@interface/Question';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogService } from '../../@service/dialog.service';
 
 @Component({
   selector: 'app-question-settings',
@@ -50,7 +51,6 @@ export class QuestionSettingsComponent {
   title!: string;
   type!: string; // 單選、多選、簡答
   options: Array<any> = []; // 問題集
-  //optionName!: string;
   necessary = false;
   checkbox = false;
 
@@ -67,7 +67,9 @@ export class QuestionSettingsComponent {
     private questService: QuestService,
     private cdr: ChangeDetectorRef,
     private http: HttpClientService,
-    private loading: LoadingService
+    private loading: LoadingService,
+    public dialog: MatDialog,
+    private dialogService: DialogService
   ) {}
 
   // 表格顯示的欄位
@@ -83,28 +85,11 @@ export class QuestionSettingsComponent {
 
   // --------------------------- 日期、路由、初始化 --------------------------- //
 
-  // 判斷"結束日期"不可小於"開始日期"
-  checkEndDate(startDate: string): void {
-    // 1. 賦值給開始日期
-    this.startDate = startDate;
-    // 2. 判斷
-    if (this.endDate < this.startDate) {
-      this.endDate = this.startDate; // 如果END小於START就讓它們相等囉!!
-    }
-  }
-
   ngOnInit(): void {
     // 日期設定
     this.defaultDate = this.dateService.changeDateFormat();
 
-    // if (
-    //   this.questService.questStatus === 'NOT_PUBLISHED' ||
-    //   this.questService.questStatus === 'NOT_STARTED'
-    // ) {
-    //   this.questService.questData = this.survey;
-    //   this.isNew = false;
-    // }
-
+    // 如果不加這段，新增選項的功能無法使用
     if (!this.questService.questData) {
       this.saveSurveyData();
     } else {
@@ -116,21 +101,31 @@ export class QuestionSettingsComponent {
 
     // 1.從預覽頁回來(前端有資料,ID=0) 2.從首頁進來編輯(後端有資料,有ID)
     if (this.questService.questData) {
-      this.quizId = this.questService.questData.quizId || 0;
+      this.quizId = this.questService.questData.id || 0;
+      //console.log('問卷ID：' + this.quizId);
       this.isExistingSurvey();
     } else {
       // 3.新增問卷(無資料,ID=0)
-      //this.saveSurveyData();
       this.isNewSurvey();
+    }
+  }
+
+  // 判斷"結束日期"不可小於"開始日期"
+  checkEndDate(startDate: string): void {
+    // 1. 賦值給開始日期
+    this.startDate = startDate;
+    // 2. 判斷
+    if (this.endDate < this.startDate) {
+      this.endDate = this.startDate; // 如果END小於START就讓它們相等囉!!
     }
   }
 
   // 編輯問卷
   isExistingSurvey() {
     const q = this.questService.questData;
-    if (q.quizId > 0) {
+    if (q.id > 0) {
       // 從首頁進來編輯(後端有資料, 有ID)
-      this.loadFromBackend(q.quizId);
+      this.loadFromBackend(q.id);
     } else {
       // 從預覽頁回來(前端有資料, ID=0)
       this.loadFromCheck(q);
@@ -160,26 +155,41 @@ export class QuestionSettingsComponent {
     };
     // 用API獲取問卷資料
     this.loading.show();
-    this.http.getApi('http://localhost:8080/admin/search_quiz', req).subscribe({
-      next: (res: any) => {
-        if (res.code === 200) {
-          this.questService.questData = {
-            id: res.id,
-            name: res.name,
-            description: res.description,
-            startDate: res.start_date,
-            endDate: res.end_date,
-            published: res.published,
-            questionArray: res.question_list,
-          };
-        }
-        this.loading.hide();
-      },
-      error: (err) => {
-        console.error('問卷載入錯誤', err);
-        this.loading.hide();
-      },
-    });
+    this.http
+      .postApi('http://localhost:8080/admin/search_quiz', req)
+      .subscribe({
+        next: (res: any) => {
+          if (res.code === 200) {
+            this.questService.questData = {
+              quizId: res.id,
+              name: res.name,
+              description: res.description,
+              startDate: res.start_date,
+              endDate: res.end_date,
+              published: res.published,
+              questionArray: res.question_list.map((q: any) => ({
+                questionId: q.question_id,
+                title: q.title,
+                type: q.type,
+                necessary: q.necessary,
+                options: JSON.parse(q.option_list).map(
+                  (item: { option: any; optionNumber: any }) => ({
+                    option: item.option,
+                    optionNumber: Number(item.optionNumber), // 轉回數字
+                  })
+                ),
+              })),
+            };
+            console.log('我是來自後端的資料：', this.questService.questData);
+            this.refreshFormData(); // 資料載入後刷新表單
+          }
+          this.loading.hide();
+        },
+        error: (err) => {
+          console.error('問卷載入錯誤', err);
+          this.loading.hide();
+        },
+      });
   }
 
   // 從預覽頁載入問卷資料
@@ -214,12 +224,11 @@ export class QuestionSettingsComponent {
     if (!Array.isArray(this.questionArray)) {
       this.questionArray = [];
     }
-
     if (!this.type) {
-      this.type = 'S'; // 默認設置為單選
+      this.type = 'S'; // 默認單選
     }
     if (this.type === 'S' || this.type === 'M') {
-      this.options.push({});
+      this.options.push({ answer: '' });
     }
   }
 
@@ -228,22 +237,30 @@ export class QuestionSettingsComponent {
     this.options.splice(index, 1); // 刪除 index 後一個元素，例如索引0就是刪除第1個元素
   }
 
-  // 檢查問題必填 -> 考慮改 dialog ?
+  // 檢查問題必填
   checkQuestionNecessary(): boolean {
     if (!this.title || !this.type) {
-      alert('⚠️ 請填寫問題名稱與類型');
+      this.dialogService.showAlert('⚠️ 請填寫問題名稱與類型');
       return false;
     }
 
     if ((this.type === 'S' || this.type === 'M') && this.options.length === 0) {
-      alert('✍️ 單選或多選必須輸入選項');
+      this.dialogService.showAlert('✍️ 單選或多選必須輸入選項');
       return false;
     }
 
     if (this.type === 'M' && this.options.length < 2) {
-      alert('✍️ 多選題選項必須填入兩個以上');
+      this.dialogService.showAlert('✍️ 多選題選項必須填入兩個以上');
       return false;
     }
+
+    for (let option of this.options) {
+      if (option.answer === '') {
+        this.dialogService.showAlert('⚠️ 選項答案不能為空白');
+        return false;
+      }
+    }
+
     return true;
   }
 
@@ -259,7 +276,6 @@ export class QuestionSettingsComponent {
         title: this.title,
         type: this.type,
         necessary: this.necessary,
-        //options: this.type === 'T' ? [] : this.options, // 簡答題清空選項
         options:
           this.type === 'T'
             ? []
@@ -270,7 +286,6 @@ export class QuestionSettingsComponent {
               }))
             : [],
       };
-      console.log(newQuestion.options);
 
       // 3. 更新問題列表
       if (this.isEditing) {
@@ -317,7 +332,6 @@ export class QuestionSettingsComponent {
     this.options = editQuestion.options.map((option) => ({
       answer: option.option,
     }));
-    console.log(this.options);
 
     // 3. 設定狀態
     this.isEditing = true;
@@ -326,23 +340,31 @@ export class QuestionSettingsComponent {
 
   // 刪除單數問題
   deleteQuestion(id: number) {
-    if (confirm('確定要刪除嗎？')) {
-      this.questionArray = this.questionArray.filter(
-        (question) => question.questionId !== id
-      );
-      // 把 questions 中不符合 需刪除ID 的問題都放入新陣列 (表示去除該刪除的ID)
-    }
-    this.reorderQuestions();
+    this.dialogService.showDialogWithCallback(
+      '確認刪除',
+      '您確定要刪除此問題嗎？',
+      () => {
+        this.questionArray = this.questionArray.filter(
+          (question) => question.questionId !== id
+        );
+        // 把 questions 中不符合 需刪除ID 的問題都放入新陣列 (表示去除該刪除的ID)
+        this.reorderQuestions();
+      }
+    );
   }
 
   // 刪除複數問題
   deleteQuestions() {
-    if (confirm('確定要刪除嗎？')) {
-      this.questionArray = this.questionArray.filter(
-        (question) => !question.checkbox
-      );
-      this.reorderQuestions();
-    }
+    this.dialogService.showDialogWithCallback(
+      '確認刪除',
+      '您確定要刪除此問題嗎？',
+      () => {
+        this.questionArray = this.questionArray.filter(
+          (question) => !question.checkbox
+        );
+        this.reorderQuestions();
+      }
+    );
   }
 
   // 重新編號
@@ -397,18 +419,19 @@ export class QuestionSettingsComponent {
   submitToCheck() {
     if (this.checkNecessary()) {
       this.saveSurveyData();
-      this.router.navigate(['/check']);
+      (this.quizId = this.questService.questData.quizId),
+        this.router.navigate(['/check', this.quizId]);
     }
   }
 
   // 檢查必填邏輯
   checkNecessary(): boolean {
     if (!this.name || !this.description || !this.startDate || !this.endDate) {
-      alert('✍️ 問卷欄位皆為必填');
+      this.dialogService.showAlert('✍️ 問卷欄位皆為必填');
       return false;
     }
     if (!this.questionArray || this.questionArray.length === 0) {
-      alert('⚠️ 請設定問題');
+      this.dialogService.showAlert('⚠️ 請設定問題');
       return false;
     }
     return true;
@@ -416,7 +439,9 @@ export class QuestionSettingsComponent {
 
   // 禁止通行!!
   ban() {
-    alert('⚠️ 請注意：問卷設定尚未完成，無法訪問此連結。');
+    this.dialogService.showAlert(
+      '⚠️ 請注意：問卷設定尚未完成，無法訪問此連結。'
+    );
     return;
   }
 }

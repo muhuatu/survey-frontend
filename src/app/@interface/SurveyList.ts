@@ -2,7 +2,7 @@ export interface SurveyList {
   checkbox: boolean;
   id: number;
   name: string;
-  //status: string;
+  status: any;
   statusCode: keyof typeof StatusCode;
   startDate: string;
   endDate: string;
@@ -17,8 +17,7 @@ export enum StatusCode {
 }
 
 export interface Survey {
-  published: boolean; // 是否發布
-  //statusCode: keyof typeof StatusCode; // 問卷的狀態
+  published: boolean | null; // 是否發布
   startDate: string; // 開始日期 (格式：yyyy-MM-dd)
   endDate: string; // 結束日期 (格式：yyyy-MM-dd)
 }

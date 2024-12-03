@@ -1,6 +1,5 @@
 import { Response } from '../../@interface/Question';
 import { Component, ViewChild } from '@angular/core';
-import { DateService } from '../../@service/date-service';
 import { Router, RouterModule } from '@angular/router';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -9,6 +8,11 @@ import { MatInputModule } from '@angular/material/input';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { HttpClientService } from '../../http-service/http-client.service';
+import { LoadingService } from '../../@service/loading-service';
+import { StatusCode, SurveyList } from '../../@interface/SurveyList';
+import { QuestService } from '../../@service/quest-service';
+import { DialogService } from '../../@service/dialog.service';
 
 @Component({
   selector: 'app-response-list',
@@ -27,12 +31,78 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
   styleUrl: './response-list.component.scss',
 })
 export class ResponseListComponent {
-  constructor(private router: Router, private dateService: DateService) {}
+  constructor(
+    private router: Router,
+    private questService: QuestService,
+    private http: HttpClientService,
+    private loading: LoadingService,
+    private dialogService: DialogService
+  ) {}
 
   dataSource = new MatTableDataSource<Response>(ELEMENT_DATA);
-  displayedColumns: string[] = ['replyID', 'replyName', 'date', 'url'];
+  displayedColumns: string[] = [
+    'responseId',
+    'responseUserName',
+    'responseDate',
+    'responseUrl',
+  ];
+  quizId!: number;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  ngOnInit(): void {
+    // 獲取前頁面的問卷ID
+    this.quizId = this.questService.questData.quizId;
+    this.loadFromBackend(this.quizId);
+  }
+
+  toStatistics() {
+    this.questService.questData.quizId = this.quizId;
+    this.router.navigate(['/statistics-list', this.quizId]);
+  }
+
+  // 從後端載入問卷資料
+  loadFromBackend(quizId: number): void {
+    this.loading.show();
+
+    this.http
+      .getApi(
+        `http://localhost:8080/admin/get_all_response_by_id?quizId=${quizId}`
+      )
+      .subscribe({
+        next: (res: any) => {
+          if (res.code === 200) {
+
+            const responseMap = new Map();
+            res.responseDTOList.forEach((item: any) => {
+              if(!responseMap.has(item.responseId)){
+                responseMap.set(item.responseId, {
+                  responseId: item.responseId,
+              responseUserName: item.username,
+              responseDate: item.fillInDate,
+                });
+              }
+            });
+
+            // 將 Map 轉換為陣列
+            const survey = Array.from(responseMap.values());
+            // const survey = res.responseDTOList.map((r: any) => ({
+            //   responseId: r.responseId,
+            //   responseUserName: r.username,
+            //   responseDate: r.fillInDate,
+            // }));
+            console.log(survey);
+            this.dataSource = new MatTableDataSource(survey);
+          }
+          this.loading.hide();
+        },
+        error: (err) => {
+          console.error('問卷回覆載入錯誤:', err);
+          this.dialogService.showAlert('⚠️ 問卷載入失敗，請稍後重試');
+          this.loading.hide();
+        },
+      });
+  }
 
   // 資料排序
   ngAfterViewInit() {
@@ -49,19 +119,15 @@ export class ResponseListComponent {
     });
   }
 
-  ban() {
-    alert('問卷已發布，無法進入此連結');
-    return;
-  }
-
   // 給模糊搜尋用的
   name = '';
-
   // 模糊搜尋
   changeData(event: Event) {
     let tidyData: Response[] = [];
     ELEMENT_DATA.forEach((res) => {
-      if (res.replyName.indexOf((event.target as HTMLInputElement).value) != -1) {
+      if (
+        res.replyName.indexOf((event.target as HTMLInputElement).value) != -1
+      ) {
         tidyData.push(res);
       }
     });
@@ -69,53 +135,4 @@ export class ResponseListComponent {
   }
 }
 
-const ELEMENT_DATA: Response[] = [
-  {
-    replyID: 1,
-    replyName: 'ちいかわ',
-    date: '2024/11/16 20:11',
-    url: '/preview',
-  },
-  {
-    replyID: 2,
-    replyName: 'ハチワレ',
-    date: '2024/11/16 20:11',
-    url: '/preview',
-  },
-  {
-    replyID: 3,
-    replyName: 'うさぎ',
-    date: '2024/11/16 20:11',
-    url: '/preview',
-  },
-  {
-    replyID: 4,
-    replyName: 'モモンガ',
-    date: '2024/11/16 20:11',
-    url: '/preview',
-  },
-  {
-    replyID: 5,
-    replyName: 'くりまんじゅう',
-    date: '2024/11/16 20:11',
-    url: '/preview',
-  },
-  {
-    replyID: 6,
-    replyName: '鎧さん',
-    date: '2024/11/16 20:11',
-    url: '/preview',
-  },
-  {
-    replyID: 7,
-    replyName: 'シーサー',
-    date: '2024/11/16 20:11',
-    url: '/preview',
-  },
-  {
-    replyID: 8,
-    replyName: 'あの子',
-    date: '2024/11/16 20:11',
-    url: '/preview',
-  },
-];
+const ELEMENT_DATA: Response[] = [];

@@ -36,16 +36,16 @@
           <span style="color: red">*</span>
         </div>
         <div>
-          <label>手機：</label>
+          <label>信箱：</label>
           <span style="color: rgb(92, 76, 76); margin-bottom: 5px">{{
-            questData.userPhone
+            questData.userEmail
           }}</span>
           <span style="color: red">*</span>
         </div>
         <div>
-          <label>信箱：</label>
+          <label>手機：</label>
           <span style="color: rgb(92, 76, 76); margin-bottom: 5px">{{
-            questData.userEmail
+            questData.userPhone
           }}</span>
         </div>
         <div>
@@ -60,7 +60,7 @@
       <!-- 1. for遍歷問卷的問題 -->
       <div
         class="question"
-        *ngFor="let question of questData.surveyArray; let i = index"
+        *ngFor="let question of questData.questionArray; let i = index"
       >
         <!-- 2. 類型 -->
         <div style="margin-bottom: 10px">
@@ -82,11 +82,11 @@
 
         <!-- 3. if判斷問題類型 -->
 
-        <!-- 3-1. S(單選)：for遍歷選項，答案存在 radioAnswer ，所以可用 code 判斷是哪個 option -->
+        <!-- 3-1. S(單選)：for遍歷選項，答案存在 radioAnswer ，所以可用 optionNumber 判斷是哪個 option -->
         @if (question.type=='S') { @if (question.radioAnswer) { @for (option of
         question.options; track $index) { @if (question.radioAnswer ==
-        option.code) {
-        <span style="color: rgb(92, 76, 76)">{{ option.optionName }}</span>
+        option.optionNumber) {
+        <span style="color: rgb(92, 76, 76)">{{ option.option }}</span>
         } } } @else {
         <span>無</span>
         } }
@@ -96,7 +96,7 @@
         @if(opt.boxBoolean === true){
         <span style="color: rgb(92, 76, 76)">
           {{ getMultiIndex(question.options, opt) + 1 }}.&nbsp;{{
-            opt.optionName
+            opt.option
           }}</span
         >
         } } }
@@ -107,6 +107,7 @@
           [disabled]="true"
           style="
             color: rgb(92, 76, 76);
+            font-size: 15px;
             margin-bottom: 15px;
             width: 400px;
             height: 80px;
@@ -115,7 +116,10 @@
           >{{ question.answer }}</textarea
         >
         } @else {
-        <span style="color: rgb(92, 76, 76); margin-bottom: 15px">無</span>
+        <span
+          style="color: rgb(92, 76, 76); font-size: 15px; margin-bottom: 15px"
+          >無</span
+        >
         } }
       </div>
     </div>
@@ -123,6 +127,6 @@
   <!-- 上一步＆下一步 -->
   <div class="step">
     <button (click)="toFillIn()">更改</button>
-    <button (click)="toSubmit()">送出</button>
+    <button (click)="toSubmit(quizId)">送出</button>
   </div>
 </div>

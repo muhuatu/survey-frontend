@@ -31,7 +31,6 @@
       <!-- 基本資料 -->
       <div class="personInfo">
         <div>
-          <!-- <label>名稱</label> -->
           <input
             style="width: 200px;"
             placeholder="請輸入名稱"
@@ -40,25 +39,22 @@
           <span style="color: red; font-size: 12px">*</span>
         </div>
         <div>
-          <!-- <label>電話</label> -->
           <input
-            style="width: 200px;"
-            placeholder="請輸入電話"
-            [(ngModel)]="userPhone"
+            type="email"
+            style="width: 200px"
+            placeholder="請輸入信箱"
+            [(ngModel)]="userEmail"
           />
           <span style="color: red; font-size: 12px; margin: 0">*</span>
         </div>
         <div>
-          <!-- <label>信箱</label> -->
           <input
-            type="email"
             style="width: 200px; margin-right: 5px"
-            placeholder="請輸入信箱"
-            [(ngModel)]="userEmail"
+            placeholder="請輸入電話"
+            [(ngModel)]="userPhone"
           />
         </div>
         <div>
-          <!-- <label>年齡</label> -->
           <input
             style="width: 200px; margin-right: 5px"
             placeholder="請輸入年齡"
@@ -69,7 +65,7 @@
 
       <!-- 問題 -->
       <div
-        *ngFor="let surveyItem of newQuestionArray; let i = index"
+        *ngFor="let surveyItem of survey.questionArray; let i = index"
         class="question"
       >
         <div>
@@ -105,10 +101,10 @@
               <input
                 type="radio"
                 name="{{ surveyItem.questionId }}"
-                value="{{ option.code }}"
+                value="{{ option.optionNumber }}"
                 [(ngModel)]="surveyItem.radioAnswer"
                 style="margin-bottom: 10px;"/>
-              {{ option.optionName }}
+              {{ option.option }}
               <br>
             </label>
           </div>
@@ -125,7 +121,7 @@
                 [(ngModel)]="option.boxBoolean"
                 style="margin-bottom: 10px;"
               />
-              {{ option.optionName }}
+              {{ option.option }}
               <br>
             </label>
           </div>

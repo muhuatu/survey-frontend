@@ -36,13 +36,11 @@ export class SidenavTestComponent {
   // 頁面一打開就執行
   ngOnInit(): void {
     this.isAdmin = this.userService.isAdmin;
-    //console.log(this.isAdmin);
   }
 
   // 判斷值變更(生命週期)
   ngDoCheck(): void {
     this.isAdmin = this.userService.isAdmin;
-    //console.log(this.isAdmin);
   }
 
   toHome() {

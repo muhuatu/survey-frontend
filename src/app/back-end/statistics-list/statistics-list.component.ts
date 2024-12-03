@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ChartComponent } from './chart/chart.component';
+import { LoadingService } from '../../@service/loading-service';
+import { QuestService } from '../../@service/quest-service';
+import { HttpClientService } from '../../http-service/http-client.service';
 
 @Component({
   selector: 'app-statistics-list',
@@ -10,9 +13,27 @@ import { ChartComponent } from './chart/chart.component';
   styleUrl: './statistics-list.component.scss',
 })
 export class StatisticsListComponent {
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private questService: QuestService,
+    private http: HttpClientService,
+    private loading: LoadingService
+  ) {}
 
-  ngOnInit(): void {}
+  quizId!: number;
+
+  ngOnInit(): void {
+    // 獲取前頁面的問卷ID
+    this.quizId = this.questService.questData.quizId;
+    //console.log(this.quizId);
+  }
+
+  toResponse() {
+    this.questService.questData = { quizId: 0 };
+    this.questService.questData.quizId = this.quizId;
+    //console.log(this.quizId);
+    this.router.navigate(['/response-list', this.quizId]);
+  }
 
   questData = {
     questName: '《進擊的巨人》調查問卷結果',
@@ -56,5 +77,4 @@ export class StatisticsListComponent {
       },
     ],
   };
-
 }

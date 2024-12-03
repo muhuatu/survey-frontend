@@ -1,7 +1,6 @@
 <div class="content">
   <div class="search">
     <div class="name" style="display: flex; gap: 10px">
-      <!-- <label for="surveyName">問卷名稱：</label> -->
       <input
         type="text"
         id="surveyName"
@@ -10,7 +9,7 @@
         placeholder="請輸入問卷名稱"
         style="width: 280px"
       />
-      <select [(ngModel)]="element.statusCode" style="width: 80px;">
+      <select [(ngModel)]="statusCode" style="width: 80px;">
         <option value="IN_PROGRESS">進行中</option>
         <option value="END">已結束</option>
         @if(isAdmin){
@@ -21,7 +20,6 @@
     </div>
 
     <div class="date" style="display: flex; gap: 10px">
-      <!-- <label for="date">統計時間：</label> -->
       <input
         style="width: 123px"
         type="date"
@@ -80,6 +78,7 @@
         <td mat-cell *matCellDef="let element">{{ element.endDate }}</td>
       </ng-container>
 
+      <!-- 欄位 -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr
         mat-row

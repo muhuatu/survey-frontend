@@ -1,3 +1,4 @@
+import { Survey } from './../@interface/SurveyList';
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,8 +16,10 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { HttpClientService } from '../http-service/http-client.service';
 import { StatusCode } from '../@interface/SurveyList';
-import { Survey } from '../@interface/SurveyList';
 import { LoadingService } from '../@service/loading-service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../dialog/dialog.component';
+import { DialogService } from '../@service/dialog.service';
 
 @Component({
   selector: 'app-home',
@@ -42,15 +45,24 @@ export class HomeComponent implements AfterViewInit {
     private userService: UserService,
     private questService: QuestService,
     private http: HttpClientService,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private dialogService: DialogService
   ) {}
 
+  quizId!: number;
   name = '';
   startDate = '';
   endDate = '';
   defaultDate = ''; // 預設日期(今日)
   isAdmin!: boolean;
-  element = { statusCode: 'IN_PROGRESS' }; // 初始值可以根據需求調整
+  statusCode!: string; // 用在 HTML 搜尋
+  allData: SurveyList[] = []; // 用來儲存所有資料的容器
+
+  survey: Survey = {
+    published: null,
+    startDate: '',
+    endDate: '',
+  };
 
   searchReq = {
     name: '',
@@ -96,39 +108,136 @@ export class HomeComponent implements AfterViewInit {
     this.isAdmin = this.userService.isAdmin;
   }
 
-  // 刪除複數問題
-  deleteQuestions() {
-    if (confirm('確定要刪除嗎？')) {
-      this.dataSource.data = this.dataSource.data.filter(
-        (question) => !question.checkbox
-      );
+  // 刪除問卷
+  deleteQuizs() {
+    // 找出所有勾選的問卷ID
+    const selectedQuizIds = this.dataSource.data
+      .filter((quiz) => quiz.checkbox) // 篩選出已選中的問卷
+      .map((quiz) => quiz.id); // 取得問卷的ID
+
+    if (selectedQuizIds.length === 0) {
+      this.dialogService.showAlert('請至少選擇一個問卷進行刪除');
+      return;
     }
+
+    const selectedStatus = this.dataSource.data
+      .filter((quiz) => quiz.checkbox) // 篩選出已選中的問卷
+      .map((quiz) => quiz.status);
+
+    if (selectedStatus[0] === StatusCode.IN_PROGRESS) {
+      this.dialogService.showAlert('進行中的問卷不可刪除');
+      return;
+    }
+
+    this.dialogService.showDialogWithCallback(
+      'Confirm',
+      '您確定要刪除此問卷嗎？',
+      () => {
+        // 後台聯動資料庫刪除 quizId_list
+        const req = { quizId_list: selectedQuizIds };
+
+        // 用API獲取問卷資料
+        this.loading.show();
+
+        this.http.postApi('http://localhost:8080/admin/delete', req).subscribe({
+          next: (res: any) => {
+            if (res.code === 200) {
+              // 獲取要刪除的問卷資料
+              this.questService.questData = {
+                id: res.id,
+                name: res.name,
+                description: res.description,
+                startDate: res.start_date,
+                endDate: res.end_date,
+                published: res.published,
+                questionArray: res.question_list,
+              };
+            }
+            // 前台渲染，將已刪除的問卷從顯示資料中移除
+            this.dataSource.data = this.dataSource.data.filter(
+              (question) => !selectedQuizIds.includes(question.id)
+            );
+            // 隱藏 loading
+            this.loading.hide();
+          },
+          error: (err) => {
+            // 錯誤處理
+            console.error('刪除問卷時發生錯誤:', err);
+            this.loading.hide();
+          },
+        });
+      }
+    );
   }
 
   // 新增問卷路徑：用在 + 的 icon 上
   toQuestionSetting() {
-    // 設置 questData 為 null，並初始化 quizId 為 0
+    // 設置 questData 為 null，並讓 quizId 為 0
     this.questService.questData = { quizId: 0 };
     let quizId = this.questService.questData.quizId;
     this.router.navigate(['/question-settings', quizId]);
   }
 
-  // 路徑：統計圖
-  toChart(element: any) {
-    if (element.statusCode === 'END' || element.statusCode === 'IN_PROGRESS') {
-      this.router.navigate(['/response-list']);
+  // 路徑：回覆頁面
+  toResponse(element: SurveyList) {
+    if (
+      element.status === StatusCode.IN_PROGRESS ||
+      element.status === StatusCode.END
+    ) {
+      this.questService.questData = { quizId: 0 };
+      this.questService.questData.quizId = element.id;
+      this.router.navigate(['/response-list', element.id]);
     }
   }
 
-  // 路徑：編輯或填寫問卷（後端接資料）
-  toEditOrFillIn(element: any) {
+  // 路徑：填寫問卷
+  toFillIn(element: SurveyList) {
+    // 確認問卷狀態是否為 IN_PROGRESS
+    if (element.status === StatusCode.IN_PROGRESS) {
+      // 導航到 fill-in 組件，並傳遞問卷 ID
+      this.questService.questData = { quizId: 0 };
+      this.questService.questData.quizId = element.id;
+      this.router.navigate(['/fill-in', element.id]);
+    } else {
+      // 顯示提示訊息
+      this.dialogService.showAlert('僅進行中的問卷可以填寫');
+    }
+  }
+
+  // 路徑：編輯問卷
+  toEdit(survey: Survey): void {
+    // 找出勾選的問卷
+    const selectedQuiz = this.dataSource.data.filter((quiz) => quiz.checkbox);
+
+    // 驗證是否有選中問卷
+    if (selectedQuiz.length === 0) {
+      this.dialogService.showAlert('請選擇問卷進行編輯');
+      return;
+    }
+    if (selectedQuiz.length > 1) {
+      this.dialogService.showAlert('只能選擇一筆問卷進行編輯');
+      return;
+    }
+
+    const editQuiz = selectedQuiz[0]; // 獲取選中的問卷
+    const status = editQuiz.status;
+
+    // 初始化 questData
+    if (!this.questService.questData) {
+      this.questService.questData = {}; // 防止 questData 為 undefined
+    }
+
+    // 只允許未發布或未開始的問卷進行編輯
     if (
-      element.statusCode === 'NOT_PUBLISHED' ||
-      element.statusCode === 'NOT_STARTED'
+      status === StatusCode.NOT_PUBLISHED ||
+      status === StatusCode.NOT_STARTED
     ) {
-      this.router.navigate(['/question-settings', element.quizId]);
-    } else if (element.statusCode === 'IN_PROGRESS') {
-      this.router.navigate(['/fill-in']);
+      this.questService.questData.id = editQuiz.id;
+      this.router.navigate(['/question-settings', editQuiz.id], {
+        state: { data: survey },
+      });
+    } else {
+      this.dialogService.showAlert('此問卷無法編輯');
     }
   }
 
@@ -176,29 +285,28 @@ export class HomeComponent implements AfterViewInit {
       end_date: this.searchReq.endDate,
     };
 
+    this.loading.show();
+
     this.http
       .postApi('http://localhost:8080/admin/search', req)
       .subscribe((res: any) => {
         console.log('後端搜尋結果:', res);
-
         const result: SurveyList[] = res.quizList.map((item: any) => ({
           checkbox: false,
           id: item.id,
           name: item.name,
-          status: this.getSurveyStatus(item), // 其實不太懂為何用item當參數就好?!
+          status: this.getSurveyStatus(item), // 其實不太懂為何用item當參數就好?! 太厲害了ㄅ
           startDate: item.start_date,
           endDate: item.end_date,
           url: item.url,
         }));
-        this.dataSource.data = result;
-        console.log(result);
+        this.dataSource.data = result; // 表格渲染
+        this.loading.hide();
       }),
       (error: any) => {
         console.error('搜尋錯誤:', error);
       };
   }
-
-  allData: SurveyList[] = []; // 用來儲存所有資料的容器
 
   // 搜尋所有資料(預設)
   loadAllData() {
@@ -206,16 +314,21 @@ export class HomeComponent implements AfterViewInit {
 
     this.http.postApi('http://localhost:8080/admin/search', {}).subscribe({
       next: (res: any) => {
-        //console.log('所有資料:', res);
+        console.log('所有資料:', res);
         this.allData = res.quizList.map((item: any) => ({
           checkbox: false,
           id: item.id,
           name: item.name,
-          status: this.getSurveyStatus(item),
+          status: this.getSurveyStatus({
+            ...item, // 傳遞完整物件
+            startDate: item.start_date || '', // 預設為空字串避免 undefined
+            endDate: item.end_date || '',
+          }),
           startDate: item.start_date,
           endDate: item.end_date,
           url: item.url,
         }));
+
         this.dataSource.data = [...this.allData]; // 把資料都加進來!!
       },
       error: (error: any) => {

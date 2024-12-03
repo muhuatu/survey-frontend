@@ -1,12 +1,20 @@
-<h1 mat-dialog-title>Welcome user</h1>
-<div mat-dialog-content>
-  <p>What's your favorite animal?</p>
-  <mat-form-field>
-    <input matInput [(ngModel)]="data.animal">
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="close()" style="margin-right: 10px;">No Thanks</button>
-  <button mat-button [mat-dialog-close]="data.animal"
-             cdkFocusInitial>Ok</button>
+<div class="dialog-container">
+  <h2 mat-dialog-title>{{ data.title }}</h2>
+  <mat-dialog-content>
+    <p>{{ data.message }}</p>
+  </mat-dialog-content>
+
+  <!-- 根據是否有 onConfirm 回調來顯示不同的按鈕組 -->
+  <mat-dialog-actions style="display: flex; gap: 10px;">
+    <!-- 如果有回調函數，就顯示確認和取消按鈕 -->
+    <ng-container *ngIf="data.onConfirm; else simpleAlert">
+      <button mat-button (click)="dialogRef.close(false)">取消</button>
+      <button mat-button color="warn" (click)="dialogRef.close(true)">確定</button>
+    </ng-container>
+
+    <!-- 如果沒有回調函數，就顯示單純的「確定」按鈕 -->
+    <ng-template #simpleAlert>
+      <button mat-button (click)="dialogRef.close(true)">確定</button>
+    </ng-template>
+  </mat-dialog-actions>
 </div>

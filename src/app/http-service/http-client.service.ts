@@ -9,7 +9,7 @@ export class HttpClientService {
   constructor(private http: HttpClient) {}
 
   // read
-  getApi(url: string, getData: any) {
+  getApi(url: string) {
     return this.http.get(url);
   }
 
@@ -24,7 +24,7 @@ export class HttpClientService {
   }
 
   // delete
-  delApi(url: string) {
+  delApi(url: string, postData: any) {
     return this.http.delete(url);
   }
 }

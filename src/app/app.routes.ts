@@ -5,7 +5,7 @@ import { PublishComponent } from './back-end/question-settings/check/publish/pub
 import { ResponseListComponent } from './back-end/response-list/response-list.component';
 import { CheckComponent } from './back-end/question-settings/check/check.component';
 import { FillInComponent } from './front-end/fill-in/fill-in.component';
-import { PreviewComponent } from './front-end/fill-in/preview/preview.component';
+import { PreviewComponent } from './front-end/preview/preview.component';
 import { ChartComponent } from './back-end/statistics-list/chart/chart.component';
 import { StatisticsListComponent } from './back-end/statistics-list/statistics-list.component';
 import { LoginComponent } from './back-end/login/login.component';
@@ -31,31 +31,31 @@ export const routes: Routes = [
     component: QuestionSettingsComponent,
   },
   {
-    path: 'check',
+    path: 'check/:id',
     component: CheckComponent,
   },
   {
-    path: 'publish',
+    path: 'publish/:id',
     component: PublishComponent,
   },
   {
-    path: 'chart',
+    path: 'chart/:id',
     component: ChartComponent,
   },
   {
-    path: 'response-list',
+    path: 'response-list/:id',
     component: ResponseListComponent,
   },
   {
-    path: 'fill-in',
+    path: 'fill-in/:id',
     component: FillInComponent,
   },
   {
-    path: 'preview',
+    path: 'preview/:id',
     component: PreviewComponent,
   },
   {
-    path: 'statistics-list',
+    path: 'statistics-list/:id',
     component: StatisticsListComponent,
   },
   {

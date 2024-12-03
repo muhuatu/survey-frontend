@@ -21,26 +21,7 @@ export class LoginComponent {
 
   // 登入功能
   login() {
-
     this.userService.isAdmin = true;
     this.router.navigate(['/home']);
-
-    // this.http
-    //   .postApi('http://localhost:8080/login', {
-    //     username: '1234',
-    //     password: 'aaaaaaaa',
-    //   })
-    //   .subscribe((res: any) => {
-    //     console.log('Response:', res.code);
-    //     if (res.code == 200) {
-    //       this.questService.questData = res.data;
-    //       console.log(this.questService.questData);
-    //       if (this.userService.isAdmin) {
-    //         this.router.navigate(['/home']);
-    //       } else {
-    //         this.router.navigate(['/front-home']);
-    //       }
-    //     }
-    //   });
   }
 }
