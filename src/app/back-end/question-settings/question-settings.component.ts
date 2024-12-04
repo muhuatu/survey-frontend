@@ -91,6 +91,7 @@ export class QuestionSettingsComponent {
 
     // 如果不加這段，新增選項的功能無法使用
     if (!this.questService.questData) {
+      //this.questService.questData = { questionArray: [] };
       this.saveSurveyData();
     } else {
       // 確保 questionArray 是陣列
@@ -159,6 +160,7 @@ export class QuestionSettingsComponent {
       .postApi('http://localhost:8080/admin/search_quiz', req)
       .subscribe({
         next: (res: any) => {
+          console.log('後端回傳資料:', res);
           if (res.code === 200) {
             this.questService.questData = {
               quizId: res.id,
@@ -412,7 +414,7 @@ export class QuestionSettingsComponent {
       })),
     };
     this.questService.questData = surveyToSubmit;
-    console.log('儲存資料:', surveyToSubmit);
+    //console.log('儲存資料:', surveyToSubmit);
   }
 
   // 提交到預覽頁面

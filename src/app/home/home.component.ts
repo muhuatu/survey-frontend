@@ -267,15 +267,15 @@ export class HomeComponent implements AfterViewInit {
   }
 
   // 模糊搜尋
-  changeData(event: Event) {
-    let tidyData: SurveyList[] = [];
-    ELEMENT_DATA.forEach((res) => {
-      if (res.name.indexOf((event.target as HTMLInputElement).value) != -1) {
-        tidyData.push(res);
-      }
-    });
-    this.dataSource.data = tidyData;
-  }
+  // changeData(event: Event) {
+  //   let tidyData: SurveyList[] = [];
+  //   ELEMENT_DATA.forEach((res) => {
+  //     if (res.name.indexOf((event.target as HTMLInputElement).value) != -1) {
+  //       tidyData.push(res);
+  //     }
+  //   });
+  //   this.dataSource.data = tidyData;
+  // }
 
   // 搜尋
   search() {

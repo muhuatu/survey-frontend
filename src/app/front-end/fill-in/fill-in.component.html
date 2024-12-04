@@ -89,8 +89,6 @@
         <!-- 問題類型 -->
         <ng-container [ngSwitch]="surveyItem.type">
           <!--  position: relative 或 z-index 來調整其位置優先度 -->
-          <!-- *ngSwitchCase 的值是要輸入表達式，而非一般文字
-                所以當要使用字串作為判斷的依據時，兩旁邊要加上引號 *ngSwitchCase="'S'" -->
 
           <!-- 單選題 -->
           <div *ngSwitchCase="'S'">

@@ -16,11 +16,11 @@
     <div class="survey-preview">
       <!-- 問卷資料 -->
       <div class="surveyInfo">
-        <h2 style="margin: 10px 0 0 0">{{ questData.name }}</h2>
-        <span style="width: 800px">{{ questData.description }}</span>
+        <h2 style="margin: 10px 0 0 0">{{ transferData.name }}</h2>
+        <span style="width: 800px">{{ transferData.description }}</span>
         <span style="font-size: 14px; color: rgb(230, 130, 87)"
-          >開始時間：{{ questData.startDate }}　|　結束時間：{{
-            questData.endDate
+          >開始時間：{{ transferData.startDate }}　|　結束時間：{{
+            transferData.endDate
           }}</span
         >
       </div>
@@ -66,7 +66,7 @@
 
       <!-- 問題 -->
       <div
-        *ngFor="let question of questData.questionArray; let i = index"
+        *ngFor="let question of transferData.questionArray; let i = index"
         class="question"
       >
         <div>
@@ -138,7 +138,7 @@
 
     <!-- 上一步＆下一步 -->
     <div class="step">
-      <button (click)="toQuestionSettings(questData.quizId)">編輯</button>
+      <button (click)="toQuestionSettings(transferData.quizId)">編輯</button>
       <button (click)="toSave()">儲存</button>
       <button (click)="toPublish()">發布</button>
     </div>

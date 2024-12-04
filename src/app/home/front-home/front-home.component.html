@@ -5,18 +5,9 @@
         type="text"
         id="surveyName"
         [(ngModel)]="searchReq.name"
-        (keyup)="changeData($event)"
         placeholder="請輸入問卷名稱"
-        style="width: 280px"
+        style="width: 370px"
       />
-      <select [(ngModel)]="statusCode" style="width: 80px;">
-        <option value="IN_PROGRESS">進行中</option>
-        <option value="END">已結束</option>
-        @if(isAdmin){
-          <option value="NOT_STARTED">尚未開始</option>
-        <option value="NOT_PUBLISHED">尚未發布</option>
-        }
-      </select>
     </div>
 
     <div class="date" style="display: flex; gap: 10px">
@@ -53,7 +44,7 @@
           (click)="toFillIn(element)"
           [ngClass]="{
             urlCss:
-              element.statusCode == 'IN_PROGRESS'
+              element.status == '進行中'
           }"
         >
           {{ element.name }}

@@ -36,14 +36,16 @@ export class PreviewComponent {
     private loading: LoadingService,
     private dialogService: DialogService,
     private http: HttpClientService,
-    private dateService: DateService
+    private dateService: DateService,
   ) {}
 
   questData!: any;
   quizId!: number;
   survey: any = {};
+  defaultDate = ''; // 預設日期(今日)
 
   ngOnInit(): void {
+    this.defaultDate = this.dateService.changeDateFormat();
     this.quizId = this.questService.questData.quizId;
     this.questData = this.questService.questData;
     //console.log('PreviewComponent: ', this.questData);
@@ -62,6 +64,7 @@ export class PreviewComponent {
 
     for (const question of survey.questionArray) {
       let answerStr: Array<string> = [];
+
       // 單選題
       if (question.type === 'S') {
         question.options.forEach((opt: any) => {
@@ -81,18 +84,75 @@ export class PreviewComponent {
       // 簡答題
       if (question.type === 'T' && question.answer) {
         answerStr.push(question.answer);
-      } else if (question.type === 'T') {
-        answerStr.push('');
       }
+      // 回答為空
+      if (answerStr.length === 0) {
+        answerStr.push("");
+      }
+
       answers[question.questionId] = answerStr;
     }
     return answers;
   }
 
+  getAns() {
+    let answer: { [key: number]: Array<string> } = {};
+
+    for (let i = 0; i < this.questData.questionArray.length; i++) {
+      let answerStr: Array<string> = [];
+      if (this.questData.questionArray[i].type == 'S') {
+        this.questData.questionArray[i].options.forEach((item: any) => {
+          if (
+            this.questData.questionArray[i].radioAnswer == item.optionNumber
+          ) {
+            answerStr.push(item.option);
+          }
+        });
+      }
+      if (this.questData.questionArray[i].type == 'M') {
+        this.questData.questionArray[i].options.forEach((item: any) => {
+          if (item.boxBoolean) {
+            answerStr.push(item.option);
+          }
+        });
+      }
+      if (this.questData.questionArray[i].type == 'T') {
+        answerStr.push(this.questData.questionArray[i].answer);
+      }
+      answer[this.questData.questionArray[i].questionId] = answerStr;
+    }
+  }
+
   // 儲存回覆到資料庫(API)
   toSubmit(quizId: number) {
+    //let answers = this.getAnswers(this.questData);
+
     let answers: { [key: number]: Array<string> } = {};
     answers = this.getAnswers(this.questData);
+
+    // for (let i = 0; i < this.questData.questionArray.length; i++) {
+    //   let answerStr: Array<string> = [];
+    //   if (this.questData.questionArray[i].type == 'S') {
+    //     this.questData.questionArray[i].options.forEach((item: any) => {
+    //       if (
+    //         this.questData.questionArray[i].radioAnswer == item.optionNumber
+    //       ) {
+    //         answerStr.push(item.option);
+    //       }
+    //     });
+    //   }
+    //   if (this.questData.questionArray[i].type == 'M') {
+    //     this.questData.questionArray[i].options.forEach((item: any) => {
+    //       if (item.boxBoolean) {
+    //         answerStr.push(item.option);
+    //       }
+    //     });
+    //   }
+    //   if (this.questData.questionArray[i].type == 'T') {
+    //     answerStr.push(this.questData.questionArray[i].answer);
+    //   }
+    //   answers[this.questData.questionArray[i].questionId] = answerStr;
+    // }
 
     const req = {
       quiz_id: this.quizId,
@@ -101,7 +161,7 @@ export class PreviewComponent {
       email: this.questData.userEmail,
       age: this.questData.userAge,
       answers: answers,
-      fill_in_date: new Date(),
+      fill_in_date: this.defaultDate
     };
 
     console.log('提交的問卷資料:', req);

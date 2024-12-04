@@ -41,14 +41,14 @@ export class CheckComponent {
   ) {}
 
   // 宣告變數
-  questData!: any;
+  transferData!: any;
   userName!: string;
   userPhone!: string;
   userEmail!: string;
   userAge!: string;
 
   ngOnInit(): void {
-    this.questData = this.questService.questData;
+    this.transferData = this.questService.questData;
   }
 
   toQuestionSettings(quizId: number) {
@@ -57,15 +57,15 @@ export class CheckComponent {
 
   // 發布問卷
   toPublish() {
-    // 將 this.questData 存進資料庫
+    // 將 this.transferData 存進資料庫
     let frontendReq = {
-      id: this.questData?.quizId || 0,
-      name: this.questData?.name,
-      description: this.questData?.description,
-      start_date: this.questData?.startDate,
-      end_date: this.questData?.endDate,
+      id: this.transferData?.quizId || 0,
+      name: this.transferData?.name,
+      description: this.transferData?.description,
+      start_date: this.transferData?.startDate,
+      end_date: this.transferData?.endDate,
       published: true,
-      question_list: this.questData?.questionArray.map((q: any) => ({
+      question_list: this.transferData?.questionArray.map((q: any) => ({
         question_id: q.questionId,
         title: q.title,
         type: q.type,
@@ -87,8 +87,11 @@ export class CheckComponent {
       .subscribe({
         next: (res: any) => {
           if (res.code === 200) {
+            const transferQuizId = this.transferData.quizId;
             this.questService.questData = null; // 發布後資料需清除
-            this.router.navigate(['/publish', this.questData?.quizId]);
+            this.questService.questData = { quizId: transferQuizId }; // 更新結構
+            this.router.navigate(['/home']);
+            //this.router.navigate(['/publish', transferQuizId]);
           } else {
             console.error('發布失敗');
           }
@@ -100,19 +103,21 @@ export class CheckComponent {
           this.loading.hide();
         },
       });
+    this.dialogService.showAlert('問卷已發布，即將跳轉至首頁。');
+    this.userService.isAdmin = true;
   }
 
   // 儲存問卷：published 會是 false
   toSave() {
     // 將 this.questData 存進資料庫
     let frontendReq = {
-      id: this.questData?.quizId || 0,
-      name: this.questData?.name,
-      description: this.questData?.description,
-      start_date: this.questData?.startDate,
-      end_date: this.questData?.endDate,
+      id: this.transferData?.quizId || 0,
+      name: this.transferData?.name,
+      description: this.transferData?.description,
+      start_date: this.transferData?.startDate,
+      end_date: this.transferData?.endDate,
       published: false,
-      question_list: this.questData?.questionArray.map((q: any) => ({
+      question_list: this.transferData?.questionArray.map((q: any) => ({
         question_id: q.questionId,
         title: q.title,
         type: q.type,
@@ -135,7 +140,7 @@ export class CheckComponent {
         next: (res: any) => {
           if (res.code === 200) {
             this.questService.questData = null; // 發布後資料需清除
-            this.router.navigate(['/publish', this.questData?.quizId]);
+            this.router.navigate(['/home']);
           } else {
             console.error('發布失敗');
           }

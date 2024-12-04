@@ -61,13 +61,16 @@ export class FillInComponent {
   ngOnInit(): void {
     this.quizId = this.questService.questData.quizId;
 
+    // 從預覽頁回來
     if (this.questService.questData.userName) {
       this.loadFromPreview(this.questService.questData);
       this.userName = this.questService.questData.userName;
       this.userPhone = this.questService.questData.userPhone;
       this.userEmail = this.questService.questData.userEmail;
       this.userAge = this.questService.questData.userAge;
-    } else if (this.questService.questData) {
+    }
+    // 從首頁進來，載入後端資料
+    else if (this.questService.questData) {
       this.loadFromBackend(this.quizId);
     } else {
       this.dialogService.showAlert('⚠️ 問卷載入失敗，請稍後重試');
@@ -92,7 +95,7 @@ export class FillInComponent {
               description: res.description,
               startDate: res.startDate,
               endDate: res.endDate,
-              questionArray: res.questionList.map((q: any) => ({
+              questionArray: res.question_list.map((q: any) => ({
                 questionId: q.question_id,
                 title: q.title,
                 type: q.type,

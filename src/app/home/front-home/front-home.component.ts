@@ -78,14 +78,6 @@ export class FrontHomeComponent {
     this.isAdmin = false;
     this.loadAllData();
 
-    if (!this.isAdmin) {
-      this.dataSource.data = this.dataSource.data.filter(
-        (item) =>
-          item.statusCode !== 'NOT_PUBLISHED' &&
-          item.statusCode !== 'NOT_STARTED'
-      );
-    }
-
     // 前台顯示的表格內容
     this.displayedColumns = ['name', 'status', 'startDate', 'endDate'];
   }
@@ -109,16 +101,31 @@ export class FrontHomeComponent {
       .postApi('http://localhost:8080/admin/search', req)
       .subscribe((res: any) => {
         console.log('後端搜尋結果:', res);
-        const result: SurveyList[] = res.quizList.map((item: any) => ({
+        this.allData = res.quizList.map((item: any) => ({
           checkbox: false,
           id: item.id,
           name: item.name,
-          status: this.getSurveyStatus(item), // 其實不太懂為何用item當參數就好?! 太厲害了ㄅ
+          status: this.getSurveyStatus({
+            ...item, // 傳遞完整物件
+            startDate: item.start_date || '',
+            endDate: item.end_date || '',
+          }),
+          statusCode: this.getSurveyStatus(item),
           startDate: item.start_date,
           endDate: item.end_date,
           url: item.url,
         }));
-        this.dataSource.data = result; // 表格渲染
+        // 篩選資料
+        if (!this.isAdmin) {
+          this.dataSource.data = this.allData.filter((item) => {
+            return (
+              item.status !== StatusCode.NOT_PUBLISHED &&
+              item.status !== StatusCode.NOT_STARTED
+            );
+          });
+        } else {
+          this.dataSource.data = [...this.allData];
+        }
         this.loading.hide();
       }),
       (error: any) => {
@@ -130,7 +137,7 @@ export class FrontHomeComponent {
   loadAllData() {
     this.loading.show();
 
-    this.http.postApi('http://localhost:8080/admin/search', {}).subscribe({
+    this.http.postApi('http://localhost:8080/search', {}).subscribe({
       next: (res: any) => {
         console.log('所有資料:', res);
         this.allData = res.quizList.map((item: any) => ({
@@ -139,21 +146,27 @@ export class FrontHomeComponent {
           name: item.name,
           status: this.getSurveyStatus({
             ...item, // 傳遞完整物件
-            startDate: item.start_date || '', // 預設為空字串避免 undefined
+            startDate: item.start_date || '',
+            endDate: item.end_date || '',
+          }),
+          statusCode: this.getSurveyStatus({
+            ...item, // 傳遞完整物件
+            startDate: item.start_date || '',
             endDate: item.end_date || '',
           }),
           startDate: item.start_date,
           endDate: item.end_date,
-          url: item.url,
+          //url: item.url,
         }));
 
         // 篩選資料
         if (!this.isAdmin) {
-          this.dataSource.data = this.allData.filter(
-            (item) =>
-              item.statusCode !== 'NOT_PUBLISHED' &&
-              item.statusCode !== 'NOT_STARTED'
-          );
+          this.dataSource.data = this.allData.filter((item) => {
+            return (
+              item.status !== StatusCode.NOT_PUBLISHED &&
+              item.status !== StatusCode.NOT_STARTED
+            );
+          });
         } else {
           this.dataSource.data = [...this.allData];
         }
@@ -204,17 +217,6 @@ export class FrontHomeComponent {
     }
   }
 
-  // 模糊搜尋
-  changeData(event: Event) {
-    let tidyData: SurveyList[] = [];
-    ELEMENT_DATA.forEach((res) => {
-      if (res.name.indexOf((event.target as HTMLInputElement).value) != -1) {
-        tidyData.push(res);
-      }
-    });
-    this.dataSource.data = tidyData;
-  }
-
   // 判斷"結束日期"不可小於"開始日期"
   checkEndDate(startDate: string): void {
     // 1. 賦值給開始日期
@@ -239,6 +241,18 @@ export class FrontHomeComponent {
       return 0;
     });
   }
+
+  // 模糊搜尋
+  // changeData(event: Event) {
+  //   let tidyData: SurveyList[] = [];
+  //   ELEMENT_DATA.forEach((res) => {
+  //     if (res.name.indexOf((event.target as HTMLInputElement).value) != -1) {
+  //       tidyData.push(res);
+  //     }
+  //   });
+  //   this.dataSource.data = tidyData;
+  // }
+
 }
 
 const ELEMENT_DATA: SurveyList[] = [];

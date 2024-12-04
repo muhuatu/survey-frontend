@@ -6,15 +6,8 @@
         id="name"
         [(ngModel)]="searchReq.name"
         placeholder="請輸入問卷名稱"
-        style="width: 280px"
+        style="width: 370px"
       />
-      <!-- (keyup)="changeData($event)" 模糊搜尋要放在input裡-->
-      <select [(ngModel)]="statusCode">
-        <option value="NOT_STARTED">尚未開始</option>
-        <option value="IN_PROGRESS">進行中</option>
-        <option value="END">已結束</option>
-        <option value="NOT_PUBLISHED">尚未發布</option>
-      </select>
     </div>
 
     <div class="date" style="display: flex; gap: 10px">
@@ -98,7 +91,7 @@
           [(ngModel)]="element.name"
           (click)="toFillIn(element)"
           [ngClass]="{
-            urlCss: element.status == '進行中'
+            urlCss: element.status === '進行中'
           }"
         >
           {{ element.name }}

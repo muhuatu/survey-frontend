@@ -72,26 +72,20 @@ export class ResponseListComponent {
       .subscribe({
         next: (res: any) => {
           if (res.code === 200) {
-
             const responseMap = new Map();
             res.responseDTOList.forEach((item: any) => {
-              if(!responseMap.has(item.responseId)){
+              if (!responseMap.has(item.responseId)) {
                 responseMap.set(item.responseId, {
                   responseId: item.responseId,
-              responseUserName: item.username,
-              responseDate: item.fillInDate,
+                  responseUserName: item.username,
+                  responseDate: item.fillInDate,
                 });
               }
             });
 
             // 將 Map 轉換為陣列
             const survey = Array.from(responseMap.values());
-            // const survey = res.responseDTOList.map((r: any) => ({
-            //   responseId: r.responseId,
-            //   responseUserName: r.username,
-            //   responseDate: r.fillInDate,
-            // }));
-            console.log(survey);
+            //console.log(survey);
             this.dataSource = new MatTableDataSource(survey);
           }
           this.loading.hide();
