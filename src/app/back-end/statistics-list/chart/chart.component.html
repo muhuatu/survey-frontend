@@ -1,11 +1,8 @@
 <div class="chart-container">
-  @if(questData.type != 'T'){
   <!-- id 可自由取名，此為統計圖本身，大小由height: 300px控制 -->
   <div class="canvas">
     <canvas id="{{ dataId }}" style="height: 300px"></canvas>
   </div>
-  }
-
   <div style="padding-top: 10px">
     <div
       style="
@@ -17,9 +14,8 @@
     >
       題目{{ questData.id }}：{{ questData.name }}
     </div>
-
     <!-- 單選或多選（非簡答） -->
-    @if (questData.type != 'T') { @for (label of questData.labels; track $index)
+    @for (label of questData.labels; track $index)
     {
     <div
       style="
@@ -31,18 +27,6 @@
     >
       <span>{{ questData.labels[$index] }}</span>
       <span>{{ questData.data[$index] }}</span>
-    </div>
-
-    } }
-
-    <!-- 簡答 -->
-    @else {
-    <div class="type">
-      <ol style="margin-left: 20px">
-        @for (data of questData.data; track $index) {
-        <li class="typeT">{{ data }}</li>
-        }
-      </ol>
     </div>
     }
   </div>

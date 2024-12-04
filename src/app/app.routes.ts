@@ -11,6 +11,7 @@ import { StatisticsListComponent } from './back-end/statistics-list/statistics-l
 import { LoginComponent } from './back-end/login/login.component';
 import { SidenavTestComponent } from './sidenav-test/sidenav-test.component';
 import { FrontHomeComponent } from './home/front-home/front-home.component';
+import { FeedbackComponent } from './front-end/feedback/feedback.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/front-home', pathMatch: 'full' },
@@ -53,6 +54,10 @@ export const routes: Routes = [
   {
     path: 'preview/:id',
     component: PreviewComponent,
+  },
+  {
+    path: 'feedback/:id',
+    component: FeedbackComponent,
   },
   {
     path: 'statistics-list/:id',

@@ -13,6 +13,7 @@ import { LoadingService } from '../../@service/loading-service';
 import { StatusCode, SurveyList } from '../../@interface/SurveyList';
 import { QuestService } from '../../@service/quest-service';
 import { DialogService } from '../../@service/dialog.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-response-list',
@@ -26,6 +27,7 @@ import { DialogService } from '../../@service/dialog.service';
     MatFormFieldModule,
     FormsModule,
     MatPaginatorModule,
+    CommonModule,
   ],
   templateUrl: './response-list.component.html',
   styleUrl: './response-list.component.scss',
@@ -59,6 +61,13 @@ export class ResponseListComponent {
   toStatistics() {
     this.questService.questData.quizId = this.quizId;
     this.router.navigate(['/statistics-list', this.quizId]);
+  }
+
+  // 前往個人回覆頁 (綁在 HTML 中的 responseUrl)
+  toFeedback(element: any) {
+      this.questService.questData = { quizId: this.quizId };
+      this.questService.questData.responseId = element.responseId;
+      this.router.navigate(['/feedback', element.responseId]);
   }
 
   // 從後端載入問卷資料

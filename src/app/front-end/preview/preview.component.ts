@@ -36,7 +36,7 @@ export class PreviewComponent {
     private loading: LoadingService,
     private dialogService: DialogService,
     private http: HttpClientService,
-    private dateService: DateService,
+    private dateService: DateService
   ) {}
 
   questData!: any;
@@ -60,10 +60,10 @@ export class PreviewComponent {
   getAnswers(survey: any) {
     // survey 是 this.questData (this.questService.questData)
 
-    let answers: { [key: number]: Array<string> } = {};
+    let answers: { [key: number]: Array<string | null> } = {};
 
     for (const question of survey.questionArray) {
-      let answerStr: Array<string> = [];
+      let answerStr: Array<string | null> = [];
 
       // 單選題
       if (question.type === 'S') {
@@ -85,7 +85,6 @@ export class PreviewComponent {
       if (question.type === 'T' && question.answer) {
         answerStr.push(question.answer);
       }
-      // 回答為空
       if (answerStr.length === 0) {
         answerStr.push("");
       }
@@ -125,43 +124,17 @@ export class PreviewComponent {
 
   // 儲存回覆到資料庫(API)
   toSubmit(quizId: number) {
-    //let answers = this.getAnswers(this.questData);
-
-    let answers: { [key: number]: Array<string> } = {};
-    answers = this.getAnswers(this.questData);
-
-    // for (let i = 0; i < this.questData.questionArray.length; i++) {
-    //   let answerStr: Array<string> = [];
-    //   if (this.questData.questionArray[i].type == 'S') {
-    //     this.questData.questionArray[i].options.forEach((item: any) => {
-    //       if (
-    //         this.questData.questionArray[i].radioAnswer == item.optionNumber
-    //       ) {
-    //         answerStr.push(item.option);
-    //       }
-    //     });
-    //   }
-    //   if (this.questData.questionArray[i].type == 'M') {
-    //     this.questData.questionArray[i].options.forEach((item: any) => {
-    //       if (item.boxBoolean) {
-    //         answerStr.push(item.option);
-    //       }
-    //     });
-    //   }
-    //   if (this.questData.questionArray[i].type == 'T') {
-    //     answerStr.push(this.questData.questionArray[i].answer);
-    //   }
-    //   answers[this.questData.questionArray[i].questionId] = answerStr;
-    // }
+    //let answers: { [key: number]: Array<string | null> } = {};
+    let answers = this.getAnswers(this.questData);
 
     const req = {
       quiz_id: this.quizId,
       username: this.questData.userName,
-      phone: this.questData.userPhone,
       email: this.questData.userEmail,
+      phone: this.questData.userPhone,
       age: this.questData.userAge,
       answers: answers,
-      fill_in_date: this.defaultDate
+      fill_in_date: this.defaultDate,
     };
 
     console.log('提交的問卷資料:', req);
@@ -169,21 +142,21 @@ export class PreviewComponent {
     this.loading.show();
     this.http.postApi('http://localhost:8080/fillIn', req).subscribe({
       next: (res: any) => {
+        console.log(res);
         if (res.code === 200) {
-          console.log(res);
-          this.loading.hide();
           this.questService.questData = ''; // 清空資料
           this.dialogService.showAlert(
             '問卷已填寫完畢，點擊確定後將跳轉至首頁'
           );
           this.router.navigate(['/home']);
-          //this.refreshFormData();
         }
       },
       error: (err) => {
-        console.error('問卷載入錯誤:', err);
+        console.error('問卷載入錯誤:', err.message);
         this.dialogService.showAlert('⚠️ 問卷載入失敗，請稍後重試');
-        this.loading.hide();
+      },
+      complete: () => {
+        this.loading.hide(); // 確保隱藏 loading
       },
     });
   }

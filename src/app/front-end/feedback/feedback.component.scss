@@ -1,0 +1,53 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  color: rgb(100, 100, 100);
+  gap: 20px;
+}
+
+// ------------------------ 右側問卷預覽 ------------------------ //
+.survey {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.surveyInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin: 10px 0;
+}
+
+.personInfo {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+}
+
+.question {
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  margin: 10px 0;
+}
+
+pre {
+  line-height: 1.6; /* 調整行間距 */
+}

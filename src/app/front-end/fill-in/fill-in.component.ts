@@ -63,6 +63,7 @@ export class FillInComponent {
 
     // 從預覽頁回來
     if (this.questService.questData.userName) {
+      console.log(this.questService.questData);
       this.loadFromPreview(this.questService.questData);
       this.userName = this.questService.questData.userName;
       this.userPhone = this.questService.questData.userPhone;
@@ -71,6 +72,7 @@ export class FillInComponent {
     }
     // 從首頁進來，載入後端資料
     else if (this.questService.questData) {
+      console.log(this.questService.questData);
       this.loadFromBackend(this.quizId);
     } else {
       this.dialogService.showAlert('⚠️ 問卷載入失敗，請稍後重試');
@@ -88,13 +90,13 @@ export class FillInComponent {
       .subscribe({
         next: (res: any) => {
           if (res.code === 200) {
-            console.log(res);
+            //console.log(res);
             const survey = {
               quizId: res.id,
               name: res.name,
               description: res.description,
-              startDate: res.startDate,
-              endDate: res.endDate,
+              startDate: res.start_date,
+              endDate: res.end_date,
               questionArray: res.question_list.map((q: any) => ({
                 questionId: q.question_id,
                 title: q.title,
@@ -104,7 +106,9 @@ export class FillInComponent {
               })),
             };
             this.survey = survey;
-            this.questService.questData = survey; // 緩存資料
+            this.questService.questData = survey;
+            console.log(this.questService.questData);
+
             this.refreshFormData();
             //this.setupPreviewFields();
           }
@@ -146,6 +150,45 @@ export class FillInComponent {
     this.survey.startDate = surveyData.startDate;
     this.survey.endDate = surveyData.endDate;
     this.survey.questionArray = surveyData.questionArray || [];
+  }
+
+  // 提交到預覽頁
+  submitToPreview(): void {
+    this.setupPreviewFields();
+    console.log(this.questService.questData);
+    if (this.checkNecessary()) {
+      const q = this.questService.questData;
+      this.questService.questData = {
+        quizId: q.quizId,
+        userName: this.userName,
+        userPhone: this.userPhone,
+        userEmail: this.userEmail,
+        userAge: this.userAge,
+        name: q.name,
+        startDate: q.startDate,
+        endDate: q.endDate,
+        description: q.description,
+        questionArray: this.survey.questionArray,
+      };
+      console.log('提交到預覽頁', this.questService.questData);
+      this.router.navigate(['/preview', this.quizId]);
+    }
+  }
+  // 為了讓預覽畫面有資料，必須新增兩個"欄位"放它們：文字輸入(answer)、單選(radioAnswer)
+  // 在問題的選擇中加入 boxBoolean 讓 checkbox(多選) 去進行資料綁定
+  setupPreviewFields() {
+    // 1. 新增 answer 和 radioAnswer
+    this.survey.questionArray.map((question: any) => ({
+      ...question,
+      answer:'',
+      radioAnswer: '',
+      // 2. 新增一個空陣列接收包含新屬性的 boxBoolean 的資料
+      options: question.options.map((option: any) => ({
+        ...option,
+        boxBoolean: option.boxBoolean !== undefined ? option.boxBoolean : false,
+      })),
+    }));
+    //console.log('設定回答結果', this.survey.questionArray);
   }
 
   checkNecessary(): boolean {
@@ -200,42 +243,5 @@ export class FillInComponent {
       }
     }
     return true;
-  }
-
-  // 提交到預覽頁
-  submitToPreview(): void {
-    this.setupPreviewFields();
-    if (this.checkNecessary()) {
-      this.questService.questData = {
-        quizId: this.quizId,
-        userName: this.userName,
-        userPhone: this.userPhone,
-        userEmail: this.userEmail,
-        userAge: this.userAge,
-        name: this.name,
-        startDate: this.startDate,
-        endDate: this.endDate,
-        description: this.description,
-        questionArray: this.survey.questionArray,
-      };
-      console.log('提交到預覽頁', this.questService.questData);
-      this.router.navigate(['/preview', this.quizId]);
-    }
-  }
-  // 為了讓預覽畫面有資料，必須新增兩個"欄位"放它們：文字輸入(answer)、單選(radioAnswer)
-  // 在問題的選擇中加入 boxBoolean 讓 checkbox(多選) 去進行資料綁定
-  setupPreviewFields() {
-    // 1. 新增 answer 和 radioAnswer
-    this.survey.questionArray.map((question: any) => ({
-      ...question,
-      answer:'',
-      radioAnswer: '',
-      // 2. 新增一個空陣列接收包含新屬性的 boxBoolean 的資料
-      options: question.options.map((option: any) => ({
-        ...option,
-        boxBoolean: option.boxBoolean !== undefined ? option.boxBoolean : false,
-      })),
-    }));
-    console.log('設定回答結果', this.survey.questionArray);
   }
 }
