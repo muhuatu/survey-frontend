@@ -16,8 +16,8 @@ export interface Option {
 
 // 回饋表
 export interface Response {
-  replyID: number;
-  replyName: string;
-  date: any;
-  url: string;
+  responseId: number;
+  responseUserName: string;
+  responseDate: any;
+  responseUrl: string;
 }

@@ -64,7 +64,7 @@ export class StatisticsListComponent {
             };
             //console.log('questData:', this.questData);
             this.cdr.detectChanges();
-          } else {
+          } else if (res.code !== 200) {
             this.dialogService.showAlert('⚠️ 此問卷尚無數據');
           }
           this.loading.hide();

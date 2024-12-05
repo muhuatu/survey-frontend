@@ -148,7 +148,7 @@ export class PreviewComponent {
           this.dialogService.showAlert(
             '問卷已填寫完畢，點擊確定後將跳轉至首頁'
           );
-          this.router.navigate(['/home']);
+          this.router.navigate(['/front-home']);
         }
       },
       error: (err) => {

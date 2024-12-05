@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { Component, ViewChild } from '@angular/core';
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,6 +27,8 @@ import { CommonModule } from '@angular/common';
 export class SidenavTestComponent {
   constructor(private router: Router, private userService: UserService) {}
 
+  @ViewChild(MatSidenav) sidenav!: MatSidenav;  // 取得 MatSidenav 參考
+
   isAdmin!: boolean;
   loading$!: any;
   animal!: string;
@@ -49,6 +51,7 @@ export class SidenavTestComponent {
     } else {
       this.router.navigate(['/front-home']);
     }
+    this.closeSidenav();  // 導航後關閉 sidenav
   }
 
   login() {
@@ -57,6 +60,7 @@ export class SidenavTestComponent {
     } else {
       this.router.navigate(['/login']);
     }
+    this.closeSidenav();  // 導航後關閉 sidenav
   }
 
   logOut() {
@@ -69,5 +73,11 @@ export class SidenavTestComponent {
     // 如果畫面是login的話，就會返回'hideSiden'的CSS(隱藏)
     if (window.location.href.indexOf('login') != -1) return 'hideSiden';
     return null;
+  }
+
+  closeSidenav() {
+    if (this.sidenav) {
+      this.sidenav.close();  // 關閉 sidenav
+    }
   }
 }

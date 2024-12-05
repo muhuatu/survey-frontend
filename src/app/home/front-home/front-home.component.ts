@@ -98,7 +98,7 @@ export class FrontHomeComponent {
     this.loading.show();
 
     this.http
-      .postApi('http://localhost:8080/admin/search', req)
+      .postApi('http://localhost:8080/search', req)
       .subscribe((res: any) => {
         console.log('後端搜尋結果:', res);
         this.allData = res.quizList.map((item: any) => ({
@@ -110,7 +110,11 @@ export class FrontHomeComponent {
             startDate: item.start_date || '',
             endDate: item.end_date || '',
           }),
-          statusCode: this.getSurveyStatus(item),
+          statusCode: this.getSurveyStatus({
+            ...item, // 傳遞完整物件
+            startDate: item.start_date || '',
+            endDate: item.end_date || '',
+          }),
           startDate: item.start_date,
           endDate: item.end_date,
           url: item.url,

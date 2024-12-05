@@ -38,6 +38,21 @@ p {
   margin: 0;
 }
 
+a {
+  display: flex;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(100, 100, 100);
+  margin-top: 10px;
+  text-decoration: none;
+}
+
+a:hover,
+a:active {
+  color: rgba(100, 100, 100, 0.7);
+}
+
 input {
   width: 100%;
   padding: 8px 0;
@@ -74,4 +89,26 @@ input::placeholder {
 
 .login-btn:hover {
   background-color: rgba(230, 130, 87, 0.9);
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  flex: 1;
+  padding-right: 40px;
+}
+
+.toggle-visibility {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #757575;
+}
+
+.toggle-visibility:hover {
+  color: #000;
 }

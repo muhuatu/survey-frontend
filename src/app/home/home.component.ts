@@ -266,17 +266,6 @@ export class HomeComponent implements AfterViewInit {
     });
   }
 
-  // 模糊搜尋
-  // changeData(event: Event) {
-  //   let tidyData: SurveyList[] = [];
-  //   ELEMENT_DATA.forEach((res) => {
-  //     if (res.name.indexOf((event.target as HTMLInputElement).value) != -1) {
-  //       tidyData.push(res);
-  //     }
-  //   });
-  //   this.dataSource.data = tidyData;
-  // }
-
   // 搜尋
   search() {
     const req = {
@@ -295,7 +284,16 @@ export class HomeComponent implements AfterViewInit {
           checkbox: false,
           id: item.id,
           name: item.name,
-          status: this.getSurveyStatus(item), // 其實不太懂為何用item當參數就好?! 太厲害了ㄅ
+          status: this.getSurveyStatus({
+            ...item,
+            startDate: item.start_date || '',
+            endDate: item.end_date || '',
+          }),
+          statusCode: this.getSurveyStatus({
+            ...item,
+            startDate: item.start_date || '',
+            endDate: item.end_date || '',
+          }),
           startDate: item.start_date,
           endDate: item.end_date,
           url: item.url,
@@ -361,6 +359,17 @@ export class HomeComponent implements AfterViewInit {
     // 如果以上條件都不成立，則狀態為 "尚未開始"
     return StatusCode.NOT_STARTED;
   }
+
+  // 模糊搜尋
+  // changeData(event: Event) {
+  //   let tidyData: SurveyList[] = [];
+  //   ELEMENT_DATA.forEach((res) => {
+  //     if (res.name.indexOf((event.target as HTMLInputElement).value) != -1) {
+  //       tidyData.push(res);
+  //     }
+  //   });
+  //   this.dataSource.data = tidyData;
+  // }
 }
 
 const ELEMENT_DATA: SurveyList[] = [];

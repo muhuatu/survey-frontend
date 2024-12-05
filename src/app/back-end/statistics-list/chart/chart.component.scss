@@ -1,20 +1,32 @@
 .chart-container {
+  max-width: 900px;
   display: flex;
   justify-content: center;
-  position: relative;
+  //align-items: flex-end;
   gap: 60px;
-  margin: 30px 0;
+  margin: 40px auto;
   color: rgb(100, 100, 100); // 字體顏色
   font-weight: 500;
 }
 
-.type {
-  border-radius: 5px; // 邊框
-  border: 1px solid #eaeaea; // 邊框顏色
-  margin: 10px 0 10px 0;
-  width: 600px;
+.canvas {
+  height: 280px;
+  width: 500px;
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 10px;
 }
 
-.typeT {
- margin: 10px 0 10px 0;
+.question {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+th,
+td {
+  font-size: 14px;
 }

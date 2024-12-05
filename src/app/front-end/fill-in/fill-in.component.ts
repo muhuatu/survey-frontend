@@ -13,6 +13,7 @@ import { Question } from '../../@interface/Question';
 import { DialogService } from '../../@service/dialog.service';
 import { LoadingService } from '../../@service/loading-service';
 import { HttpClientService } from '../../http-service/http-client.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-fill-in',
@@ -153,10 +154,10 @@ export class FillInComponent {
   }
 
   // 提交到預覽頁
-  submitToPreview(): void {
+  async submitToPreview(): Promise<void> {
     this.setupPreviewFields();
     console.log(this.questService.questData);
-    if (this.checkNecessary()) {
+    if (await this.checkNecessary()) {
       const q = this.questService.questData;
       this.questService.questData = {
         quizId: q.quizId,
@@ -180,7 +181,7 @@ export class FillInComponent {
     // 1. 新增 answer 和 radioAnswer
     this.survey.questionArray.map((question: any) => ({
       ...question,
-      answer:'',
+      answer: '',
       radioAnswer: '',
       // 2. 新增一個空陣列接收包含新屬性的 boxBoolean 的資料
       options: question.options.map((option: any) => ({
@@ -191,12 +192,10 @@ export class FillInComponent {
     //console.log('設定回答結果', this.survey.questionArray);
   }
 
-  checkNecessary(): boolean {
+  async checkNecessary(): Promise<boolean> {
     const emailReg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     const phoneRge = /^09[0-9]{8}$/;
-    // 若要剛好是 10 位數，要加開頭（^）和結尾（$）限制，不然輸入 11 位數也給過
 
-    // 1. 基本資料
     if (!(this.userName && this.userEmail)) {
       this.dialogService.showAlert('✍️ 名稱與信箱為必填項');
       return false;
@@ -212,24 +211,37 @@ export class FillInComponent {
       return false;
     }
 
-    // 2. 問題選項 (用迴圈遍歷每個問題)
+    try {
+      const result = await firstValueFrom(
+        this.http.getApi(
+          `http://localhost:8080/check_email?email=${this.userEmail}`
+        )
+      );
+      if (result) {
+        this.dialogService.showAlert('⚠️ 信箱已被使用，請更換信箱');
+        return false;
+      }
+      return this.validateSurvey();
+    } catch (err) {
+      this.dialogService.showAlert('⚠️ 信箱檢查失敗，請稍後重試');
+      return false;
+    }
+  }
+
+  validateSurvey(): boolean {
+    // 問題檢查
     for (let question of this.survey.questionArray) {
-      // 3. 如果是必填
       if (question.necessary) {
-        // 3-1. 簡答 (answer)
         if (question.type === 'T' && !question.answer) {
           this.dialogService.showAlert('✍️ 請確認簡答題必填皆有填寫');
           return false;
         }
-        // 3-2. 單選 (radioAnswer)
         if (question.type === 'S' && !question.radioAnswer) {
           this.dialogService.showAlert('✍️ 請確認單選題必填皆有填寫');
           return false;
         }
-        // 3-3. 多選 (checkbox)
         if (question.type === 'M') {
-          console.log('多選題資料:', question.options);
-          let check = false; // 先預設多選框皆未填
+          let check = false;
           for (let opt of question.options) {
             if (opt.boxBoolean) {
               check = true;

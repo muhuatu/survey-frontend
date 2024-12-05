@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, input, ViewChild } from '@angular/core';
-import Chart from 'chart.js/auto';
+import Chart, { plugins } from 'chart.js/auto';
 
 @Component({
   selector: 'app-chart',
@@ -36,7 +36,7 @@ export class ChartComponent {
       labels: this.questData.labels,
       datasets: [
         {
-          label: '統計',
+          label: '',
           data: this.questData.data,
           fill: false,
           backgroundColor: [
@@ -67,8 +67,15 @@ export class ChartComponent {
     var options = {
       scales: {
         y: {
-          // y 軸從 0 開始
-          beginAtZero: true,
+          beginAtZero: true, // y 軸從 0 開始
+          ticks: {
+            stepSize: 1, // 設定 y 軸單位為 1
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false, // 禁用圖標
         },
       },
     };

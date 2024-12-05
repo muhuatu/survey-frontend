@@ -28,7 +28,7 @@ export class DialogService {
   // 簡單警示框
   showAlert(message: string): void {
     this.dialog.open(DialogComponent, {
-      data: { title: 'Confirm', message },
+      data: { title: '確認', message },
       panelClass: 'custom-dialog', // 可選：為對話框添加自定義樣式類
     });
   }

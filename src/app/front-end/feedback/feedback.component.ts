@@ -58,9 +58,19 @@ export class FeedbackComponent {
     return options.filter((opt) => opt.boxBoolean === true).indexOf(opt);
   }
 
-  formatAnswer(answer: string): string{
+  formatAnswer(answer: string): string {
     const parsedAnswer = JSON.parse(answer);
-    return parsedAnswer.length === 1 && parsedAnswer[0] === "" ? "無" : parsedAnswer.join("\n");
+    return parsedAnswer.length === 1 && parsedAnswer[0] === ''
+      ? '無填寫'
+      : parsedAnswer.join('\n');
+  }
+
+  formatAgeOrPhone(param: number): string {
+    if (param === null || undefined) {
+      return '無填寫';
+    }
+    const newParam = param.toString();
+    return param === 0 ? '無填寫' : newParam;
   }
 
   // 從後端傳入指定 quizId & responseId 的資料
@@ -80,11 +90,11 @@ export class FeedbackComponent {
               fillInDate: res.responseDTOList[0].fillInDate,
               userName: res.responseDTOList[0].username,
               userEmail: res.responseDTOList[0].email,
-              userPhone: res.responseDTOList[0].phone,
-              userAge: res.responseDTOList[0].age,
+              userPhone: this.formatAgeOrPhone(res.responseDTOList[0].phone),
+              userAge: this.formatAgeOrPhone(res.responseDTOList[0].age),
               questionArray: res.responseDTOList.map((r: any) => ({
                 title: r.title,
-                answer: r.answerStr
+                answer: r.answerStr,
               })),
             };
             this.replyData = reply;

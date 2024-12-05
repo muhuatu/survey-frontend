@@ -42,6 +42,8 @@ export class ResponseListComponent {
   ) {}
 
   dataSource = new MatTableDataSource<Response>(ELEMENT_DATA);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   displayedColumns: string[] = [
     'responseId',
     'responseUserName',
@@ -49,8 +51,6 @@ export class ResponseListComponent {
     'responseUrl',
   ];
   quizId!: number;
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit(): void {
     // 獲取前頁面的問卷ID
@@ -65,9 +65,9 @@ export class ResponseListComponent {
 
   // 前往個人回覆頁 (綁在 HTML 中的 responseUrl)
   toFeedback(element: any) {
-      this.questService.questData = { quizId: this.quizId };
-      this.questService.questData.responseId = element.responseId;
-      this.router.navigate(['/feedback', element.responseId]);
+    this.questService.questData = { quizId: this.quizId };
+    this.questService.questData.responseId = element.responseId;
+    this.router.navigate(['/feedback', element.responseId]);
   }
 
   // 從後端載入問卷資料
@@ -96,6 +96,7 @@ export class ResponseListComponent {
             const survey = Array.from(responseMap.values());
             //console.log(survey);
             this.dataSource = new MatTableDataSource(survey);
+            this.dataSource.paginator = this.paginator;
           }
           this.loading.hide();
         },
@@ -112,10 +113,10 @@ export class ResponseListComponent {
     this.dataSource.paginator = this.paginator;
     // function (a, b) 可簡化為 (a, b) =>
     this.dataSource.data = this.dataSource.data.sort(function (a, b) {
-      if (a.replyID > b.replyID) {
+      if (a.responseId > b.responseId) {
         return -1;
       }
-      if (a.replyID < b.replyID) {
+      if (a.responseId < b.responseId) {
         return 1;
       }
       return 0;
@@ -123,19 +124,21 @@ export class ResponseListComponent {
   }
 
   // 給模糊搜尋用的
-  name = '';
+  // responseUserName = '';
   // 模糊搜尋
-  changeData(event: Event) {
-    let tidyData: Response[] = [];
-    ELEMENT_DATA.forEach((res) => {
-      if (
-        res.replyName.indexOf((event.target as HTMLInputElement).value) != -1
-      ) {
-        tidyData.push(res);
-      }
-    });
-    this.dataSource.data = tidyData;
-  }
+  //   changeData(event: Event) {
+  //     let tidyData: Response[] = [];
+  //     console.log(this.dataSource);
+  //     this.dataSource.data.forEach((res) => {
+  //       if (
+  //         res.responseUserName.indexOf((event.target as HTMLInputElement).value) != -1
+  //       ) {
+  //         tidyData.push(res);
+  //       }
+  //     });
+  //     this.dataSource.data = tidyData;
+  //     this.dataSource.paginator = this.paginator; // 重新綁定分頁器
+  //   }
 }
 
 const ELEMENT_DATA: Response[] = [];

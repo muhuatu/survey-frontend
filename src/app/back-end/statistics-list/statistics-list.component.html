@@ -1,17 +1,28 @@
-<aside class="sidebar">
-  <button
-    style="background-color: rgb(230, 130, 87); color: white"
-  >
-    問卷統計
-  </button>
-  <button (click)="toResponse()">問卷回覆</button>
-</aside>
+<div style="height: 100%;">
 
-@for (quest of questData.quest; track $index) {
-  <app-chart
-    class="chartCSS"
-    [dataId]="quest.id"
-    [questData]="quest"
+  <aside class="sidebar">
+    <button
+      style="background-color: rgb(230, 130, 87); color: white"
     >
-  </app-chart>
-}
+      問卷統計
+    </button>
+    <button (click)="toResponse()">問卷回覆</button>
+  </aside>
+
+  @if(questData){
+    @for (quest of questData.quest; track $index) {
+      <app-chart
+        class="chartCSS"
+        [dataId]="quest.id"
+        [questData]="quest"
+        >
+      </app-chart>
+    }
+  } @else {
+    <div class="none">
+      {{ '尚未有人填寫此問卷' }}
+    </div>
+  }
+
+</div>
+

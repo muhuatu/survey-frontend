@@ -234,7 +234,7 @@
 
         <!-- 問題欄位 -->
         <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef>問題</th>
+          <th mat-header-cell *matHeaderCellDef style="width: 300px">問題</th>
           <td mat-cell *matCellDef="let question">{{ question.title }}</td>
         </ng-container>
 
@@ -265,9 +265,9 @@
 
         <!-- 必填判斷欄位 -->
         <ng-container matColumnDef="necessary">
-          <th mat-header-cell *matHeaderCellDef style="width: 70px">必填</th>
+          <th mat-header-cell *matHeaderCellDef style="width: 50px">必填</th>
           <td mat-cell *matCellDef="let question">
-            {{ question.necessary ? "　✓" : "" }}
+            {{ question.necessary ? "&ensp;✓" : "" }}
           </td>
         </ng-container>
 
