@@ -160,7 +160,7 @@ export class QuestionSettingsComponent {
       .postApi('http://localhost:8080/admin/search_quiz', req)
       .subscribe({
         next: (res: any) => {
-          console.log('後端回傳資料:', res);
+          //console.log('後端回傳資料:', res);
           if (res.code === 200) {
             this.questService.questData = {
               quizId: res.id,
@@ -182,7 +182,7 @@ export class QuestionSettingsComponent {
                 ),
               })),
             };
-            console.log('我是來自後端的資料：', this.questService.questData);
+            //console.log('我是來自後端的資料：', this.questService.questData);
             this.refreshFormData(); // 資料載入後刷新表單
           }
           this.loading.hide();

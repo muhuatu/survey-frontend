@@ -198,10 +198,11 @@ export class HomeComponent implements AfterViewInit {
       this.questService.questData = { quizId: 0 };
       this.questService.questData.quizId = element.id;
       this.router.navigate(['/fill-in', element.id]);
-    } else {
-      // 顯示提示訊息
-      this.dialogService.showAlert('僅進行中的問卷可以填寫');
     }
+    // else {
+    //   // 顯示提示訊息
+    //   this.dialogService.showAlert('僅進行中的問卷可以填寫');
+    // }
   }
 
   // 路徑：編輯問卷
@@ -264,6 +265,14 @@ export class HomeComponent implements AfterViewInit {
       }
       return 0;
     });
+  }
+
+  // 清空搜尋
+  searchClear() {
+    this.searchReq.name = '';
+    this.searchReq.startDate = '';
+    this.searchReq.endDate = '';
+    this.loadAllData();
   }
 
   // 搜尋

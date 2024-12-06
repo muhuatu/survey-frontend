@@ -39,12 +39,14 @@ export class PreviewComponent {
     private dateService: DateService
   ) {}
 
+  isAdmin!: boolean;
   questData!: any;
   quizId!: number;
   survey: any = {};
   defaultDate = ''; // 預設日期(今日)
 
   ngOnInit(): void {
+    this.isAdmin = this.questService.questData.isAdmin;
     this.defaultDate = this.dateService.changeDateFormat();
     this.quizId = this.questService.questData.quizId;
     this.questData = this.questService.questData;

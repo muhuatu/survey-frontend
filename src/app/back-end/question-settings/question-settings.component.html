@@ -25,13 +25,19 @@
       </div>
 
       <div style="display: flex; gap: 10px">
-        <textarea
-          [(ngModel)]="description"
-          placeholder="問卷說明"
-        ></textarea>
+        <textarea [(ngModel)]="description" placeholder="問卷說明"></textarea>
       </div>
 
       <div class="date" style="display: flex; gap: 10px">
+        @if(quizId===0){
+        <input
+          type="date"
+          [min]="defaultDate"
+          [(ngModel)]="defaultDate"
+          (ngModelChange)="checkEndDate($event)"
+          style="width: 235px"
+        />
+        } @else {
         <input
           type="date"
           [min]="defaultDate"
@@ -39,10 +45,11 @@
           (ngModelChange)="checkEndDate($event)"
           style="width: 235px"
         />
+        }
         <label style="margin: 5px auto">到</label>
         <input
           type="date"
-          [min]="startDate"
+          [min]="startDate || defaultDate"
           [(ngModel)]="endDate"
           style="width: 235px"
         />
@@ -54,8 +61,8 @@
         <input type="text" [(ngModel)]="title" placeholder="問題名稱" />
       </div>
 
-      <div style="width: 500px; display: flex;justify-content: center;">
-        <div style="display: flex; gap: 20px; margin: 0;">
+      <div style="width: 500px; display: flex; justify-content: center">
+        <div style="display: flex; gap: 20px; margin: 0">
           <select [(ngModel)]="type">
             <option value="S">單選</option>
             <option value="M">多選</option>
@@ -234,13 +241,13 @@
 
         <!-- 問題欄位 -->
         <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef style="width: 300px">問題</th>
+          <th mat-header-cell *matHeaderCellDef style="width: 350px">問題</th>
           <td mat-cell *matCellDef="let question">{{ question.title }}</td>
         </ng-container>
 
         <!-- 選項欄位 -->
         <ng-container matColumnDef="options">
-          <th mat-header-cell *matHeaderCellDef>選項</th>
+          <th mat-header-cell *matHeaderCellDef style="width: 350px">選項</th>
           <td mat-cell *matCellDef="let question">
             @for(item of question.options; track $index){ 選項&nbsp;{{
               $index + 1

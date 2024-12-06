@@ -7,7 +7,8 @@
   color: rgb(100, 100, 100);
 }
 
-input,select {
+input,
+select {
   border: none;
   border-bottom: 2px solid #ccc;
   background: transparent;
@@ -17,11 +18,13 @@ input,select {
   font-family: 'Noto Sans TC Medium';
 }
 
-select:focus, input:focus {
+select:focus,
+input:focus {
   border-bottom: 2px solid rgb(230, 130, 87);
 }
 
-select::placeholder, input::placeholder {
+select::placeholder,
+input::placeholder {
   color: #aaa;
 }
 
@@ -29,6 +32,7 @@ select::placeholder, input::placeholder {
   margin: 0 0 10px 240px;
 
   .material-symbols-outlined {
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     margin-right: 10px;
     transform: scale(1);
@@ -36,6 +40,43 @@ select::placeholder, input::placeholder {
     border-radius: 20px;
     padding: 3px;
     color: white;
+    &:active {
+      background-color: rgba(230, 130, 87);
+      transform: scale(0.95);
+      color: white;
+    }
+  }
+}
+
+.search-clear-button{
+  &:hover {
+    background-color: rgb(230, 130, 87);
+    color: white;
+  }
+
+  &:active {
+    background-color: rgba(230, 130, 87);
+    color: white;
+    transform: scale(0.95);
+  }
+}
+
+.search-button {
+  width: 80px;
+  height: 30px;
+  font-size: 16px;
+  background-color: rgb(230, 130, 87);
+  color: white;
+  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+  &:hover {
+    background-color: rgb(230, 130, 87);
+    color: white;
+  }
+
+  &:active {
+    background-color: rgba(230, 130, 87);
+    color: white;
+    transform: scale(0.95);
   }
 }
 
@@ -86,6 +127,10 @@ select::placeholder, input::placeholder {
   border: 1px solid #eaeaea;
   box-sizing: border-box;
   transform: scale(1.2);
+}
+
+.hidden {
+  display: none;
 }
 
 .urlCss {

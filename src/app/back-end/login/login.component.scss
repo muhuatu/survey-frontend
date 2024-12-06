@@ -85,10 +85,16 @@ input::placeholder {
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-}
-
-.login-btn:hover {
-  background-color: rgba(230, 130, 87, 0.9);
+  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+  &:active {
+    background-color: rgba(230, 130, 87);
+    color: white;
+    transform: scale(0.97);
+  }
+  &:hover {
+    background-color: rgba(230, 130, 87, 0.9);
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+  }
 }
 
 .password-wrapper {

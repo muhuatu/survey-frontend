@@ -25,6 +25,39 @@ select::placeholder, input::placeholder {
   color: #aaa;
 }
 
+.search-clear-button{
+  &:hover {
+    background-color: rgb(230, 130, 87);
+    color: white;
+  }
+
+  &:active {
+    background-color: rgba(230, 130, 87);
+    color: white;
+    transform: scale(0.95);
+  }
+}
+
+.search-button {
+  width: 80px;
+  height: 30px;
+  font-size: 16px;
+  background-color: rgb(230, 130, 87);
+  color: white;
+  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+  &:hover {
+    background-color: rgb(230, 130, 87);
+    color: white;
+  }
+
+  &:active {
+    background-color: rgba(230, 130, 87);
+    color: white;
+    transform: scale(0.95);
+  }
+}
+
+
 // -------------------- 以下是表格 -------------------- //
 
 ::ng-deep .mat-elevation-z8 {

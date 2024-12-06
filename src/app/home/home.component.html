@@ -1,13 +1,20 @@
 <div class="content">
   <div class="search">
-    <div class="name" style="display: flex; gap: 10px">
-      <input
-        type="text"
-        id="name"
-        [(ngModel)]="searchReq.name"
-        placeholder="請輸入問卷名稱"
-        style="width: 370px"
-      />
+    <div style="display: flex; gap: 10px">
+      <div class="name" style="display: flex; gap: 10px">
+        <input
+          type="text"
+          [(ngModel)]="searchReq.name"
+          placeholder="請輸入問卷名稱"
+          style="width: 280px"
+        />
+      </div>
+      <button class="search-clear-button"
+        (click)="searchClear()"
+        style="width: 80px; height: 30px; font-size: 16px"
+      >
+        清空
+      </button>
     </div>
 
     <div class="date" style="display: flex; gap: 10px">
@@ -26,9 +33,8 @@
         [(ngModel)]="searchReq.endDate"
         [min]="startDate"
       />
-      <button
+      <button class="search-button"
         (click)="search()"
-        style="width: 80px; height: 30px; font-size: 16px"
       >
         搜尋
       </button>
@@ -53,32 +59,34 @@
       <span class="material-symbols-outlined"> add </span>
     </button>
     <button
-    (click)="toEdit(survey)"
-    style="background: none; border: none; padding: 0"
-  >
-    <span class="material-symbols-outlined"> edit </span>
-  </button>
+      (click)="toEdit(survey)"
+      style="background: none; border: none; padding: 0"
+    >
+      <span class="material-symbols-outlined"> edit </span>
+    </button>
   </div>
 
   <!------------------- 以下是表格 ------------------->
 
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource">
-
+      <!-- checkbox -->
       <ng-container matColumnDef="checkbox">
-        <th mat-header-cell *matHeaderCellDef style="width: 80px">選項</th>
+        <th mat-header-cell *matHeaderCellDef style="width: 65px">選項</th>
         <td mat-cell *matCellDef="let element">
           <input
             class="checkBox"
             type="checkbox"
+            style="cursor: pointer;"
             [(ngModel)]="element.checkbox"
+            [ngClass]="{ hidden: element.status === '進行中' }"
           />
         </td>
       </ng-container>
 
       <!-- ID Column -->
       <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef style="width: 70px">編號</th>
+        <th mat-header-cell *matHeaderCellDef style="width: 65px">編號</th>
         <td mat-cell *matCellDef="let element">{{ element.id }}</td>
       </ng-container>
 

@@ -1,7 +1,7 @@
 <div class="container">
   <!--------------------- 左側 --------------------->
   <aside class="sidebar">
-    <button routerLink="/question-settings">設定問卷</button>
+    <button (click)="toQuestionSettings(transferData.quizId)">設定問卷</button>
     <button
       routerLink="/check"
       style="background-color: rgb(230, 130, 87); color: white"
@@ -130,7 +130,7 @@
             *ngSwitchCase="'T'"
             type="text"
             placeholder="請輸入答案"
-            style="width: 400px; height: 80px; resize: vertical"
+            style="width: 400px; height: 80px; resize: vertical;text-align: center;"
           ></textarea>
         </ng-container>
       </div>

@@ -1,5 +1,4 @@
-<div style="height: 100%;">
-
+<div style="width: 100%;">
   <aside class="sidebar">
     <button
       style="background-color: rgb(230, 130, 87); color: white"
@@ -12,7 +11,7 @@
   @if(questData){
     @for (quest of questData.quest; track $index) {
       <app-chart
-        class="chartCSS"
+        class="chart-container"
         [dataId]="quest.id"
         [questData]="quest"
         >
@@ -25,4 +24,5 @@
   }
 
 </div>
+
 

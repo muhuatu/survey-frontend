@@ -79,12 +79,41 @@ export class FrontHomeComponent {
     this.loadAllData();
 
     // 前台顯示的表格內容
-    this.displayedColumns = ['name', 'status', 'startDate', 'endDate'];
+    this.displayedColumns = ['name', 'status', 'startDate', 'endDate', 'url'];
   }
 
   // 判斷值變更(生命週期)
   ngDoCheck(): void {
     this.isAdmin = this.userService.isAdmin;
+  }
+
+  toStatistics(element: any) {
+    this.questService.questData = { quizId: 0 };
+      this.questService.questData.quizId = element.id;
+    this.router.navigate(['/statistics-list', element.id]);
+  }
+
+
+  // 路徑：填寫問卷
+  toFillIn(element: SurveyList) {
+    // 確認問卷狀態是否為 IN_PROGRESS
+    if (element.status === StatusCode.IN_PROGRESS) {
+      // 導航到 fill-in 組件，並傳遞問卷 ID
+      this.questService.questData = { quizId: 0 };
+      this.questService.questData.quizId = element.id;
+      this.router.navigate(['/fill-in', element.id]);
+    } else {
+      // 顯示提示訊息
+      this.dialogService.showAlert('僅進行中的問卷可以填寫');
+    }
+  }
+
+  // 清空搜尋
+  searchClear() {
+    this.searchReq.name = '';
+    this.searchReq.startDate = '';
+    this.searchReq.endDate = '';
+    this.loadAllData();
   }
 
   // 搜尋
@@ -207,20 +236,6 @@ export class FrontHomeComponent {
     return StatusCode.NOT_STARTED;
   }
 
-  // 路徑：填寫問卷
-  toFillIn(element: SurveyList) {
-    // 確認問卷狀態是否為 IN_PROGRESS
-    if (element.status === StatusCode.IN_PROGRESS) {
-      // 導航到 fill-in 組件，並傳遞問卷 ID
-      this.questService.questData = { quizId: 0 };
-      this.questService.questData.quizId = element.id;
-      this.router.navigate(['/fill-in', element.id]);
-    } else {
-      // 顯示提示訊息
-      this.dialogService.showAlert('僅進行中的問卷可以填寫');
-    }
-  }
-
   // 判斷"結束日期"不可小於"開始日期"
   checkEndDate(startDate: string): void {
     // 1. 賦值給開始日期
@@ -256,7 +271,6 @@ export class FrontHomeComponent {
   //   });
   //   this.dataSource.data = tidyData;
   // }
-
 }
 
 const ELEMENT_DATA: SurveyList[] = [];

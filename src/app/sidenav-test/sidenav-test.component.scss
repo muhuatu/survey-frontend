@@ -2,6 +2,12 @@
   background: transparent;
 }
 
+.mat-sidenav-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .menu {
   position: sticky;
   top: 0;
