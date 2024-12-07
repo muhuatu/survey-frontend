@@ -207,12 +207,26 @@
         <ng-container matColumnDef="options">
           <th mat-header-cell *matHeaderCellDef style="width: 350px">選項</th>
           <td mat-cell *matCellDef="let question">
-            @for(item of question.options; track $index){ 選項&nbsp;{{
-              $index + 1
-            }}：
-            {{ item.option }}
-            <br />
+
+            @for(item of question.options; track $index){
+              @if(question.type==='S'){
+                <div style="display: flex; align-items: center; gap: 10px">
+                  <input type="radio" style="width: 14px;margin: 0;" disabled="disabled" />
+                  <span>{{ item.option }}</span>
+                </div>
+              }
+              @if(question.type==='M'){
+                <div style="display: flex; align-items: center; gap: 10px">
+                <input type="checkbox" style="width: 14px;margin: 0;" disabled="disabled" />
+                {{ item.option }}
+                <br>
+              </div>
+              }
+              @if(question.type==='T'){
+                {{ item.option }}
+              }
             }
+
           </td>
         </ng-container>
 

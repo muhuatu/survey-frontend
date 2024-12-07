@@ -86,40 +86,35 @@
         @if (question.type=='S') { @if (question.radioAnswer) { @for (option of
         question.options; track $index) { @if (question.radioAnswer ==
         option.optionNumber) {
-        <span style="color: rgb(92, 76, 76)">{{ option.option }}</span>
+        <label style="color: rgb(92, 76, 76)">{{ option.option }}</label>
         } } } @else {
-        <span>無</span>
+        <label>無</label>
         } }
 
         <!-- 3-2. M(多選)：filter 篩選 boxBoolean 為 true ，則加入選項 -->
         @if (question.type=='M') { @for(opt of question.options; track $index){
         @if(opt.boxBoolean === true){
-        <span style="color: rgb(92, 76, 76)">
+        <label style="color: rgb(92, 76, 76)">
           {{ getMultiIndex(question.options, opt) + 1 }}.&nbsp;{{
             opt.option
-          }}</span
+          }}</label
         >
         } } }
 
         <!-- 3-3. T(簡答)：for遍歷選項，直接代入答案 -->
         @if (question.type=='T') { @if (question.answer) {
-        <textarea
-          [disabled]="true"
+        <label
           style="
             color: rgb(92, 76, 76);
             font-size: 15px;
-            margin-bottom: 15px;
-            width: 400px;
-            height: 80px;
-            resize: vertical;
-            text-align: center;
+            width: 580px;
           "
-          >{{ question.answer }}</textarea
+          >{{ question.answer }}</label
         >
         } @else {
-        <span
-          style="color: rgb(92, 76, 76); font-size: 15px; margin-bottom: 15px"
-          >無</span
+        <label
+          style="color: rgb(92, 76, 76); font-size: 15px"
+          >無</label
         >
         } }
       </div>

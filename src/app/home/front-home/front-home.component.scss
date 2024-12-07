@@ -7,7 +7,8 @@
   color: rgb(100, 100, 100);
 }
 
-input,select {
+input,
+select {
   border: none;
   border-bottom: 2px solid #ccc;
   background: transparent;
@@ -17,15 +18,21 @@ input,select {
   font-family: 'Noto Sans TC Medium';
 }
 
-select:focus, input:focus {
+select:focus,
+input:focus {
   border-bottom: 2px solid rgb(230, 130, 87);
 }
 
-select::placeholder, input::placeholder {
+select::placeholder,
+input::placeholder {
   color: #aaa;
 }
 
-.search-clear-button{
+.search-clear-button {
+  width: 80px;
+  height: 30px;
+  font-size: 16px;
+
   &:hover {
     background-color: rgb(230, 130, 87);
     color: white;
@@ -45,6 +52,7 @@ select::placeholder, input::placeholder {
   background-color: rgb(230, 130, 87);
   color: white;
   box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+
   &:hover {
     background-color: rgb(230, 130, 87);
     color: white;
@@ -87,7 +95,7 @@ select::placeholder, input::placeholder {
   color: rgb(100, 100, 100);
   border: 1px solid #eaeaea !important;
   font-size: 16px;
-  //background-color: white;
+  font-family: 'Noto Sans TC Medium';
 }
 
 // 標題

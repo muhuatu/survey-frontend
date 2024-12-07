@@ -21,7 +21,7 @@
           {{ survey.name }}
         </h2>
         <span style="font-size: 15px">{{ survey.description }}</span>
-        <span style="font-size: 14px; color: rgb(230, 130, 87);"
+        <span style="font-size: 14px; color: rgb(230, 130, 87)"
           >開始時間：{{ survey.startDate }}　|　結束時間：{{
             survey.endDate
           }}</span
@@ -32,7 +32,7 @@
       <div class="personInfo">
         <div>
           <input
-            style="width: 200px;"
+            style="width: 200px"
             placeholder="請輸入名稱"
             [(ngModel)]="userName"
           />
@@ -93,7 +93,7 @@
           <!-- 單選題 -->
           <div *ngSwitchCase="'S'">
             <label
-              style="position: relative; z-index: 1;"
+              style="position: relative; z-index: 1"
               *ngFor="let option of surveyItem.options; let j = index"
             >
               <input
@@ -101,9 +101,10 @@
                 name="{{ surveyItem.questionId }}"
                 value="{{ option.optionNumber }}"
                 [(ngModel)]="surveyItem.radioAnswer"
-                style="margin-bottom: 10px;"/>
+                style="margin-bottom: 10px"
+              />
               {{ option.option }}
-              <br>
+              <br />
             </label>
           </div>
 
@@ -117,10 +118,10 @@
                 type="checkbox"
                 [name]="'question' + i + 'option' + j"
                 [(ngModel)]="option.boxBoolean"
-                style="margin-bottom: 10px;"
+                style="margin-bottom: 10px"
               />
               {{ option.option }}
-              <br>
+              <br />
             </label>
           </div>
 
@@ -132,11 +133,11 @@
             placeholder="請輸入答案"
             [(ngModel)]="surveyItem.answer"
             style="
+              color: rgb(92, 76, 76);
               width: 400px;
               height: 80px;
               resize: vertical;
               font-size: 15px;
-              text-align: center;
             "
           >
           </textarea>

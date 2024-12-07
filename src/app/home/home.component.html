@@ -9,13 +9,7 @@
           style="width: 280px"
         />
       </div>
-      <button
-        class="search-clear-button"
-        (click)="searchClear()"
-        style="width: 80px; height: 30px; font-size: 16px"
-      >
-        清空
-      </button>
+      <button class="search-button" (click)="search()">搜尋</button>
     </div>
 
     <div class="date" style="display: flex; gap: 10px">
@@ -34,7 +28,7 @@
         [(ngModel)]="searchReq.endDate"
         [min]="startDate"
       />
-      <button class="search-button" (click)="search()">搜尋</button>
+      <button class="search-clear-button" (click)="searchClear()">清空</button>
     </div>
   </div>
 
