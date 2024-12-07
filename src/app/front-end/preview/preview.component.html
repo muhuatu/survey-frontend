@@ -1,7 +1,7 @@
 <div class="container">
   <aside class="sidebar">
     <!--------------------- 左側功能表 --------------------->
-    <button routerLink="/fill-in">填寫問卷</button>
+    <button disabled class="locked-button">填寫問卷</button>
     <button
       routerLink="/preview"
       style="background-color: rgb(230, 130, 87); color: white"
@@ -124,10 +124,10 @@
         } }
       </div>
     </div>
+    <!-- 上一步＆下一步 -->
+    <div class="step">
+      <button (click)="toFillIn()" class="step-btn">更改</button>
+      <button (click)="toSubmit(quizId)" class="step-btn">送出</button>
+    </div>
   </main>
-  <!-- 上一步＆下一步 -->
-  <div class="step">
-    <button (click)="toFillIn()">更改</button>
-    <button (click)="toSubmit(quizId)">送出</button>
-  </div>
 </div>

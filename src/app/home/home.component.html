@@ -9,7 +9,8 @@
           style="width: 280px"
         />
       </div>
-      <button class="search-clear-button"
+      <button
+        class="search-clear-button"
         (click)="searchClear()"
         style="width: 80px; height: 30px; font-size: 16px"
       >
@@ -33,11 +34,7 @@
         [(ngModel)]="searchReq.endDate"
         [min]="startDate"
       />
-      <button class="search-button"
-        (click)="search()"
-      >
-        搜尋
-      </button>
+      <button class="search-button" (click)="search()">搜尋</button>
     </div>
   </div>
 
@@ -77,9 +74,11 @@
           <input
             class="checkBox"
             type="checkbox"
-            style="cursor: pointer;"
+            style="cursor: pointer"
             [(ngModel)]="element.checkbox"
-            [ngClass]="{ hidden: element.status === '進行中' }"
+            [ngClass]="{
+              hidden: element.status === '進行中' || element.status === '已結束'
+            }"
           />
         </td>
       </ng-container>

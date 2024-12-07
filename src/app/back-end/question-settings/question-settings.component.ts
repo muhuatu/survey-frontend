@@ -58,7 +58,6 @@ export class QuestionSettingsComponent {
   editId: number | null = null; // 用來儲存當前正在編輯的問題 ID
   private nextID = 1; // 用來自增編號的問題變數
   isEditing = false; // 旗標變數：判斷是否處於編輯狀態
-  isNew = true;
   defaultDate = ''; // 預設日期(今日)
 
   constructor(
@@ -91,7 +90,8 @@ export class QuestionSettingsComponent {
 
     // 如果不加這段，新增選項的功能無法使用
     if (!this.questService.questData) {
-      this.isNewSurvey();
+      //this.questService.questData = { questionArray: [] };
+      this.saveSurveyData();
     } else {
       // 確保 questionArray 是陣列
       if (!Array.isArray(this.questService.questData.questionArray)) {
@@ -99,21 +99,23 @@ export class QuestionSettingsComponent {
       }
     }
 
-    // 1.從預覽頁回來(前端有資料,ID=0) 2.從首頁進來編輯(後端有資料,有ID) 3. 新增問卷
-    if (
-      this.questService.questData.quizId === 0 &&
-      !this.questService.questData.name
-    ) {
-      this.isNewSurvey();
-    } else {
-      this.quizId = this.questService.questData.quizId;
+    // 1.從預覽頁回來(前端有資料,ID=0) 2.從首頁進來編輯(後端有資料,有ID)
+    if (this.questService.questData) {
+      this.quizId = this.questService.questData.quizId || 0;
+      //console.log(this.questService.questData.quizId);
+      //console.log('問卷ID：' + this.quizId);
       this.isExistingSurvey();
+    } else {
+      // 3.新增問卷(無資料,ID=0)
+      this.isNewSurvey();
     }
   }
 
   // 判斷"結束日期"不可小於"開始日期"
   checkEndDate(startDate: string): void {
+    // 1. 賦值給開始日期
     this.startDate = startDate;
+    // 2. 判斷
     if (this.endDate < this.startDate) {
       this.endDate = this.startDate; // 如果END小於START就讓它們相等囉!!
     }
@@ -122,9 +124,9 @@ export class QuestionSettingsComponent {
   // 編輯問卷
   isExistingSurvey() {
     const q = this.questService.questData;
-    if (q.id > 0) {
+    if (q.quizId > 0) {
       // 從首頁進來編輯(後端有資料, 有ID)
-      this.loadFromBackend(q.id);
+      this.loadFromBackend(q.quizId);
     } else {
       // 從預覽頁回來(前端有資料, ID=0)
       this.loadFromCheck(q);
@@ -143,7 +145,6 @@ export class QuestionSettingsComponent {
       questionArray: [],
     };
     this.questService.questData = newSurvey;
-    console.log(newSurvey);
     this.saveSurveyData();
   }
 
@@ -225,9 +226,6 @@ export class QuestionSettingsComponent {
     if (!Array.isArray(this.questionArray)) {
       this.questionArray = [];
     }
-    if (!this.type) {
-      this.type = 'S'; // 默認單選
-    }
     if (this.type === 'S' || this.type === 'M') {
       this.options.push({ answer: '' });
     }
@@ -258,6 +256,10 @@ export class QuestionSettingsComponent {
     for (let option of this.options) {
       if (option.answer === '') {
         this.dialogService.showAlert('⚠️ 選項答案不能為空白');
+        return false;
+      }
+      if (option.answer.length > 15) {
+        this.dialogService.showAlert('⚠️ 選項答案需 15 字以內');
         return false;
       }
     }

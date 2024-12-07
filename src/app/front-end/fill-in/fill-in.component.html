@@ -7,7 +7,7 @@
     >
       填寫問卷
     </button>
-    <button (click)="submitToPreview()">預覽問卷</button>
+    <button disabled class="locked-button">預覽問卷</button>
   </aside>
 
   <main class="content">
@@ -135,7 +135,7 @@
               width: 400px;
               height: 80px;
               resize: vertical;
-              font-size: 14px;
+              font-size: 15px;
               text-align: center;
             "
           >
@@ -144,7 +144,7 @@
       </div>
       <!-- 下一步 -->
       <div class="step">
-        <button (click)="submitToPreview()">送出</button>
+        <button (click)="submitToPreview()" class="step-btn">送出</button>
       </div>
     </div>
   </main>

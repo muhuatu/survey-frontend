@@ -1,14 +1,14 @@
 <div class="container">
   <!--------------------- 左側 --------------------->
   <aside class="sidebar">
-    <button (click)="toQuestionSettings(transferData.quizId)">設定問卷</button>
+    <button disabled class="locked-button">設定問卷</button>
     <button
       routerLink="/check"
       style="background-color: rgb(230, 130, 87); color: white"
     >
       確認問卷
     </button>
-    <button routerLink="/publish">發布問卷</button>
+    <button disabled class="locked-button">發布問卷</button>
   </aside>
 
   <!--------------------- 右側 --------------------->
@@ -16,7 +16,7 @@
     <div class="survey-preview">
       <!-- 問卷資料 -->
       <div class="surveyInfo">
-        <h2 style="margin: 10px 0 0 0">{{ transferData.name }}</h2>
+        <h2 style="margin: 20px 0 0 0">{{ transferData.name }}</h2>
         <span style="width: 800px">{{ transferData.description }}</span>
         <span style="font-size: 14px; color: rgb(230, 130, 87)"
           >開始時間：{{ transferData.startDate }}　|　結束時間：{{
@@ -140,7 +140,7 @@
     <div class="step">
       <button (click)="toQuestionSettings(transferData.quizId)">編輯</button>
       <button (click)="toSave()">儲存</button>
-      <button (click)="toPublish()">發布</button>
+      <button (click)="toPublish()" class="step-btn">發布</button>
     </div>
   </main>
 </div>

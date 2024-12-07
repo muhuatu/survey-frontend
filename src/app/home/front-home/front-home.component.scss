@@ -57,16 +57,18 @@ select::placeholder, input::placeholder {
   }
 }
 
-
 // -------------------- 以下是表格 -------------------- //
 
 ::ng-deep .mat-elevation-z8 {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  box-shadow: none; // 移除陰影
   width: 65%;
   margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 20px;
 }
 
 ::ng-deep .mat-mdc-table {
@@ -81,11 +83,11 @@ select::placeholder, input::placeholder {
 // td 資料單元格 & th 標題單元格
 ::ng-deep .mat-elevation-z8 td,
 ::ng-deep .mat-elevation-z8 th {
-  //font-family: 'Noto Sans TC';
   font-weight: 500;
   color: rgb(100, 100, 100);
   border: 1px solid #eaeaea !important;
-  font-size: 15px;
+  font-size: 16px;
+  //background-color: white;
 }
 
 // 標題

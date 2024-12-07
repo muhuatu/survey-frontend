@@ -7,8 +7,8 @@
     >
       設定問卷
     </button>
-    <button (click)="submitToCheck()">確認問卷</button>
-    <button (click)="ban()">發布問卷</button>
+    <button disabled class="locked-button">確認問卷</button>
+    <button disabled class="locked-button">發布問卷</button>
   </aside>
 
   <!--------------------------- 問卷基本資訊 --------------------------->
@@ -68,7 +68,6 @@
             <option value="M">多選</option>
             <option value="T">簡答</option>
           </select>
-
           <div class="necessary">
             <label class="switch">
               <input type="checkbox" [(ngModel)]="necessary" /><span
@@ -93,11 +92,10 @@
         @for (option of options; track $index) {
         <div style="display: flex; align-items: center; gap: 10px">
           <input type="radio" style="width: 14px" disabled="disabled" />
-          @if(isNew){
           <input
             type="text"
             [(ngModel)]="option.answer"
-            placeholder="輸入選項(最多15字)"
+            placeholder="輸入選項(15字以內)"
             style="width: 200px"
           />
           <div class="icon-delete-select">
@@ -112,26 +110,6 @@
               delete
             </span>
           </div>
-          } @else {
-          <input
-            type="text"
-            [(ngModel)]="option.optionName"
-            placeholder="輸入選項(最多15字)"
-            style="width: 200px"
-          />
-          <div class="icon-delete-select">
-            <link
-              href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-              rel="stylesheet"
-            />
-            <span
-              class="material-symbols-outlined"
-              (click)="removeOption($index)"
-            >
-              delete
-            </span>
-          </div>
-          }
         </div>
         }
       </div>
@@ -151,11 +129,11 @@
         @for(option of options; track $index){
         <div style="display: flex; align-items: center; gap: 10px">
           <input type="checkbox" style="width: 14px" disabled="disabled" />
-          @if(isNew){
+
           <input
             type="text"
             [(ngModel)]="option.answer"
-            placeholder="輸入選項(最多15字)"
+            placeholder="輸入選項(15字以內)"
             style="width: 200px"
           />
           <div class="icon-delete-select">
@@ -170,26 +148,6 @@
               delete
             </span>
           </div>
-          } @else {
-          <input
-            type="text"
-            [(ngModel)]="option.optionName"
-            placeholder="輸入選項(最多15字)"
-            style="width: 200px"
-          />
-          <div class="icon-delete-select">
-            <link
-              href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-              rel="stylesheet"
-            />
-            <span
-              class="material-symbols-outlined"
-              (click)="removeOption($index)"
-            >
-              delete
-            </span>
-          </div>
-          }
         </div>
         }
       </div>
@@ -312,7 +270,7 @@
 
     <!-- 下一步 -->
     <div class="step">
-      <button (click)="submitToCheck()">預覽</button>
+      <button (click)="submitToCheck()" class="step-btn">預覽</button>
     </div>
   </main>
 </div>

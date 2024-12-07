@@ -31,10 +31,20 @@ button {
   width: 100%;
   max-width: 800px;
   text-align: center;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 30px;
 }
 
+.locked-button {
+  pointer-events: none;  /* 禁用按鈕的點擊事件 */
+  background-color: #ccc;  /* 改變背景顏色，顯示禁用狀態 */
+  color: #666;  /* 改變文字顏色 */
+}
 
-// ------------------------ 右側問卷預覽 ------------------------ //
+// ------------------------ 問卷預覽 ------------------------ //
 .survey {
   display: flex;
   flex-direction: column;
@@ -43,6 +53,7 @@ button {
   width: 100%;
   max-width: 800px;
   gap: 10px;
+  margin-top: 30px;
 }
 
 .surveyInfo,
@@ -53,16 +64,21 @@ button {
   justify-content: center;
   align-items: center;
   gap: 15px;
-  margin: 10px 0;
+  margin: 0 20px;
+}
+
+.personInfo{
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.question{
+  margin: 10px 20px;
 }
 
 .shortAnswer, .personInfo input {
   width: 300px;
   height: 25px;
-  // border: 1px solid #eaeaea;
-  // border-radius: 5px;
-  // font-family: 'Noto Sans TC Medium';
-  // color: rgb(100, 100, 100);
 }
 
 textarea,
@@ -94,4 +110,23 @@ input::placeholder {
   flex-direction: row;
   justify-content: center;
   margin: 10px 0 30px 0;
+}
+
+.step-btn{
+  background-color: rgb(230, 130, 87);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+  &:active {
+    background-color: rgba(230, 130, 87);
+    color: white;
+    transform: scale(0.97);
+  }
+  &:hover {
+    background-color: rgba(230, 130, 87, 0.9);
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+  }
 }

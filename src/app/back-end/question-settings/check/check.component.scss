@@ -32,6 +32,16 @@
   width: 100%;
   max-width: 800px;
   text-align: center;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.locked-button {
+  pointer-events: none;  /* 禁用按鈕的點擊事件 */
+  background-color: #ccc;  /* 改變背景顏色，顯示禁用狀態 */
+  color: #666;  /* 改變文字顏色 */
 }
 
 // ------------------------ 問卷預覽 ------------------------ //
@@ -96,4 +106,23 @@ input:focus {
 
 input::placeholder {
   color: #aaa;
+}
+
+.step-btn{
+  background-color: rgb(230, 130, 87);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+  &:active {
+    background-color: rgba(230, 130, 87);
+    color: white;
+    transform: scale(0.97);
+  }
+  &:hover {
+    background-color: rgba(230, 130, 87, 0.9);
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+  }
 }

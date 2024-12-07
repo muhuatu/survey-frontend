@@ -10,28 +10,29 @@
     <!-- 題目 -->
     <div
       style="
-        color: rgb(230, 130, 87);
-        font-weight: 600;
+        color: rgb(100, 100, 100);
+        font-weight:bolder;
+        font-family: '微軟正黑體';
         font-size: 16px;
         margin-bottom: 15px;
       "
     >
-      題目{{ questData.id }}：{{ questData.name }}
+      Ｑ{{ questData.id }}：{{ questData.name }}
     </div>
 
     <!-- 表格顯示 -->
-    <table style="width: 100%;border-collapse: collapse;">
+    <table>
       <thead>
         <tr>
-          <th style="text-align: left; padding: 5px; border: 1px solid #ddd;">選項</th>
-          <th style="text-align: left; padding: 5px; border: 1px solid #ddd;">統計數量</th>
+          <th>選項</th>
+          <th>統計數量</th>
         </tr>
       </thead>
       <tbody>
         @for(label of questData.labels; track $index){
           <tr>
-            <td style="padding: 5px; border: 1px solid #ddd;">{{ label }}</td>
-            <td style="padding: 5px; border: 1px solid #ddd;">{{ questData.data[$index] }}</td>
+            <td>{{ label }}</td>
+            <td>{{ questData.data[$index] }}</td>
           </tr>
         }
       </tbody>

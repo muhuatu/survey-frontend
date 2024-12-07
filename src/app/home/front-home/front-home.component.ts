@@ -102,9 +102,6 @@ export class FrontHomeComponent {
       this.questService.questData = { quizId: 0 };
       this.questService.questData.quizId = element.id;
       this.router.navigate(['/fill-in', element.id]);
-    } else {
-      // 顯示提示訊息
-      this.dialogService.showAlert('僅進行中的問卷可以填寫');
     }
   }
 
