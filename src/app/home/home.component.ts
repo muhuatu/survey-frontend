@@ -199,10 +199,6 @@ export class HomeComponent implements AfterViewInit {
       this.questService.questData.quizId = element.id;
       this.router.navigate(['/fill-in', element.id]);
     }
-    // else {
-    //   // 顯示提示訊息
-    //   this.dialogService.showAlert('僅進行中的問卷可以填寫');
-    // }
   }
 
   // 路徑：編輯問卷
@@ -233,7 +229,7 @@ export class HomeComponent implements AfterViewInit {
       status === StatusCode.NOT_PUBLISHED ||
       status === StatusCode.NOT_STARTED
     ) {
-      this.questService.questData.id = editQuiz.id;
+      this.questService.questData.quizId = editQuiz.id;
       this.router.navigate(['/question-settings', editQuiz.id], {
         state: { data: survey },
       });

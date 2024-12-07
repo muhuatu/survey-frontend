@@ -91,8 +91,7 @@ export class QuestionSettingsComponent {
 
     // 如果不加這段，新增選項的功能無法使用
     if (!this.questService.questData) {
-      //this.questService.questData = { questionArray: [] };
-      this.saveSurveyData();
+      this.isNewSurvey();
     } else {
       // 確保 questionArray 是陣列
       if (!Array.isArray(this.questService.questData.questionArray)) {
@@ -100,22 +99,21 @@ export class QuestionSettingsComponent {
       }
     }
 
-    // 1.從預覽頁回來(前端有資料,ID=0) 2.從首頁進來編輯(後端有資料,有ID)
-    if (this.questService.questData) {
-      this.quizId = this.questService.questData.id || 0;
-      //console.log('問卷ID：' + this.quizId);
-      this.isExistingSurvey();
-    } else {
-      // 3.新增問卷(無資料,ID=0)
+    // 1.從預覽頁回來(前端有資料,ID=0) 2.從首頁進來編輯(後端有資料,有ID) 3. 新增問卷
+    if (
+      this.questService.questData.quizId === 0 &&
+      !this.questService.questData.name
+    ) {
       this.isNewSurvey();
+    } else {
+      this.quizId = this.questService.questData.quizId;
+      this.isExistingSurvey();
     }
   }
 
   // 判斷"結束日期"不可小於"開始日期"
   checkEndDate(startDate: string): void {
-    // 1. 賦值給開始日期
     this.startDate = startDate;
-    // 2. 判斷
     if (this.endDate < this.startDate) {
       this.endDate = this.startDate; // 如果END小於START就讓它們相等囉!!
     }
@@ -145,6 +143,7 @@ export class QuestionSettingsComponent {
       questionArray: [],
     };
     this.questService.questData = newSurvey;
+    console.log(newSurvey);
     this.saveSurveyData();
   }
 

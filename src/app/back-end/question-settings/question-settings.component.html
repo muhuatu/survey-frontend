@@ -29,11 +29,11 @@
       </div>
 
       <div class="date" style="display: flex; gap: 10px">
-        @if(quizId===0){
+        @if(!name){
         <input
           type="date"
           [min]="defaultDate"
-          [(ngModel)]="defaultDate"
+          [(ngModel)]="startDate"
           (ngModelChange)="checkEndDate($event)"
           style="width: 235px"
         />
@@ -97,7 +97,7 @@
           <input
             type="text"
             [(ngModel)]="option.answer"
-            placeholder="輸入選項"
+            placeholder="輸入選項(最多15字)"
             style="width: 200px"
           />
           <div class="icon-delete-select">
@@ -116,7 +116,7 @@
           <input
             type="text"
             [(ngModel)]="option.optionName"
-            placeholder="輸入選項"
+            placeholder="輸入選項(最多15字)"
             style="width: 200px"
           />
           <div class="icon-delete-select">
@@ -155,7 +155,7 @@
           <input
             type="text"
             [(ngModel)]="option.answer"
-            placeholder="輸入選項"
+            placeholder="輸入選項(最多15字)"
             style="width: 200px"
           />
           <div class="icon-delete-select">
@@ -174,7 +174,7 @@
           <input
             type="text"
             [(ngModel)]="option.optionName"
-            placeholder="輸入選項"
+            placeholder="輸入選項(最多15字)"
             style="width: 200px"
           />
           <div class="icon-delete-select">
