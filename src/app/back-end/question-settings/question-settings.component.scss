@@ -35,9 +35,12 @@
 }
 
 .locked-button {
-  pointer-events: none;  /* 禁用按鈕的點擊事件 */
-  background-color: #ccc;  /* 改變背景顏色，顯示禁用狀態 */
-  color: #666;  /* 改變文字顏色 */
+  pointer-events: none;
+  /* 禁用按鈕的點擊事件 */
+  background-color: #ccc;
+  /* 改變背景顏色，顯示禁用狀態 */
+  color: #666;
+  /* 改變文字顏色 */
 }
 
 // ------------------------ 問卷表 ------------------------ //
@@ -240,9 +243,11 @@ input:checked+.slider:before {
 }
 
 .add-question {
-  width: 350px;
-  height: 30px;
-  margin: 10px auto 0;
+  //width: 500px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 10px;
 }
 
 .icon-delete,
@@ -255,6 +260,7 @@ input:checked+.slider:before {
     border-radius: 20px;
     padding: 3px;
     color: white;
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -262,7 +268,7 @@ input:checked+.slider:before {
   margin: 5px 930px 5px 0px;
 }
 
-.add-question,
+.add-question-btn,
 .add-option {
   font-family: 'Noto Sans TC Medium';
   transform: scale(1);
@@ -270,13 +276,16 @@ input:checked+.slider:before {
   border-radius: 20px;
   padding: 3px;
   color: rba(100, 100, 100);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 
   &:hover {
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
     background-color: rgb(230, 130, 87);
     color: white;
   }
 
   &:active {
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
     background-color: rgba(230, 130, 87);
     transform: scale(0.99);
     color: white;
@@ -287,7 +296,7 @@ input:checked+.slider:before {
   margin: 30px auto;
 }
 
-.step-btn{
+.step-btn {
   background-color: rgb(230, 130, 87);
   color: white;
   border: none;
@@ -295,11 +304,13 @@ input:checked+.slider:before {
   font-size: 16px;
   cursor: pointer;
   box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+
   &:active {
     background-color: rgba(230, 130, 87);
     color: white;
     transform: scale(0.97);
   }
+
   &:hover {
     background-color: rgba(230, 130, 87, 0.9);
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);

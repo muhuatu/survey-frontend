@@ -1,6 +1,7 @@
 .search {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
   margin: 0 auto 20px;
   gap: 10px;
@@ -29,23 +30,54 @@ input::placeholder {
 }
 
 .icon {
-  margin: 0 0 10px 240px;
+  //margin: 0 0 10px 240px;
+  position: fixed;
+  left: 160px;
+  top: 50%; // 垂直置中
+  transform: translateY(-130%); // 修正垂直置中
+  display: flex;
+  flex-direction: column; // 垂直排列
+  gap: 20px; // 按鈕間距
 
   .material-symbols-outlined {
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
     cursor: pointer;
-    margin-right: 10px;
+    font-size: 30px;
     transform: scale(1);
+    transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
     background-color: rgb(230, 130, 87);
-    border-radius: 20px;
-    padding: 3px;
+    border-radius: 30px;
+    padding: 7px;
     color: white;
+
+    &:hover {
+      background-color: rgb(255, 145, 100);
+      box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+      transform: scale(1.1);
+    }
 
     &:active {
       background-color: rgba(230, 130, 87);
       transform: scale(0.95);
-      color: white;
+      //color: white;
     }
+  }
+}
+
+/* 滑鼠經過時旋轉效果 */
+.icon .material-symbols-outlined:hover {
+  animation: rotateIcon 0.3s ease-out;
+}
+
+@keyframes rotateIcon {
+  0% {
+    transform: rotate(0deg) scale(1.1);
+  }
+  50% {
+    transform: rotate(15deg) scale(1.15);
+  }
+  100% {
+    transform: rotate(0deg) scale(1.1);
   }
 }
 
@@ -75,8 +107,8 @@ input::placeholder {
   box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
 
   &:hover {
-    background-color: rgb(230, 130, 87);
-    color: white;
+    background-color: rgba(230, 130, 87, 0.9);
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
   }
 
   &:active {
@@ -157,6 +189,6 @@ input::placeholder {
   display: flex;
   justify-content: center;
   margin-top: 5px;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   padding: 10px 0;
 }

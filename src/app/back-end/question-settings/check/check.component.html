@@ -17,7 +17,7 @@
       <!-- 問卷資料 -->
       <div class="surveyInfo">
         <h2 style="margin: 20px 0 0 0">{{ transferData.name }}</h2>
-        <span style="width: 800px">{{ transferData.description }}</span>
+        <span>{{ transferData.description }}</span>
         <span style="font-size: 14px; color: rgb(230, 130, 87)"
           >開始時間：{{ transferData.startDate }}　|　結束時間：{{
             transferData.endDate
@@ -130,13 +130,12 @@
           ></textarea>
         </ng-container>
       </div>
-    </div>
-
-    <!-- 上一步＆下一步 -->
-    <div class="step">
-      <button (click)="toQuestionSettings(transferData.quizId)">編輯</button>
-      <button (click)="toSave()">儲存</button>
-      <button (click)="toPublish()" class="step-btn">發布</button>
+      <!-- 上一步＆下一步 -->
+      <div class="step">
+        <button (click)="toQuestionSettings(transferData.quizId)">編輯</button>
+        <button (click)="toSave()">儲存</button>
+        <button (click)="toPublish()" class="step-btn">發布</button>
+      </div>
     </div>
   </main>
 </div>

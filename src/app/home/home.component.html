@@ -1,6 +1,7 @@
 <div class="content">
-  <div class="search">
-    <div style="display: flex; gap: 10px">
+
+  <div class="search" style="display: flex; gap: 10px">
+    <!-- <div style="display: flex; gap: 10px"> -->
       <div class="name" style="display: flex; gap: 10px">
         <input
           type="text"
@@ -9,10 +10,9 @@
           style="width: 280px"
         />
       </div>
-      <button class="search-button" (click)="search()">搜尋</button>
-    </div>
+    <!-- </div> -->
 
-    <div class="date" style="display: flex; gap: 10px">
+    <!-- <div class="date" style="display: flex; gap: 10px"> -->
       <input
         style="width: 123px"
         type="date"
@@ -28,8 +28,9 @@
         [(ngModel)]="searchReq.endDate"
         [min]="startDate"
       />
+      <button class="search-button" (click)="search()">搜尋</button>
       <button class="search-clear-button" (click)="searchClear()">清空</button>
-    </div>
+    <!-- </div> -->
   </div>
 
   <link

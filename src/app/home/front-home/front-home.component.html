@@ -1,33 +1,33 @@
 <div class="content" style="height: 100%">
   <div class="search">
-    <div style="display: flex; gap: 10px">
-      <div class="name" style="display: flex; gap: 10px">
-        <input
-          type="text"
-          [(ngModel)]="searchReq.name"
-          placeholder="請輸入問卷名稱"
-          style="width: 280px"
-        />
-      </div>
-      <button class="search-button" (click)="search()">搜尋</button>
+    <!-- <div style="display: flex; gap: 10px"> -->
+    <div class="name" style="display: flex; gap: 10px">
+      <input
+        type="text"
+        [(ngModel)]="searchReq.name"
+        placeholder="請輸入問卷名稱"
+        style="width: 280px"
+      />
     </div>
+    <!-- </div> -->
 
-    <div class="date" style="display: flex; gap: 10px">
-      <input
-        style="width: 123px"
-        type="date"
-        [(ngModel)]="searchReq.startDate"
-        (ngModelChange)="checkEndDate($event)"
-      />
-      到
-      <input
-        style="width: 123px"
-        type="date"
-        [(ngModel)]="searchReq.endDate"
-        [min]="startDate"
-      />
-      <button class="search-clear-button" (click)="searchClear()">清空</button>
-    </div>
+    <!-- <div class="date" style="display: flex; gap: 10px"> -->
+    <input
+      style="width: 123px"
+      type="date"
+      [(ngModel)]="searchReq.startDate"
+      (ngModelChange)="checkEndDate($event)"
+    />
+    到
+    <input
+      style="width: 123px"
+      type="date"
+      [(ngModel)]="searchReq.endDate"
+      [min]="startDate"
+    />
+    <button class="search-button" (click)="search()">搜尋</button>
+    <button class="search-clear-button" (click)="searchClear()">清空</button>
+    <!-- </div> -->
   </div>
 
   <!------------------- 以下是表格 ------------------->
@@ -94,9 +94,6 @@
           前往
         </td>
       </ng-container>
-
-
-
     </table>
 
     <!-- 分頁選擇器：可選5,10,20筆顯示 -->

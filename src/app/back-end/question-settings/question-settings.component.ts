@@ -226,7 +226,16 @@ export class QuestionSettingsComponent {
     if (!Array.isArray(this.questionArray)) {
       this.questionArray = [];
     }
+    if (!this.type) {
+      this.changeSelect();
+    }
     if (this.type === 'S' || this.type === 'M') {
+      this.options.push({ answer: '' });
+    }
+  }
+
+  changeSelect() {
+    if (this.type != 'T') {
       this.options.push({ answer: '' });
     }
   }
@@ -244,22 +253,22 @@ export class QuestionSettingsComponent {
     }
 
     if ((this.type === 'S' || this.type === 'M') && this.options.length === 0) {
-      this.dialogService.showAlert('✍️ 單選或多選必須輸入選項');
+      this.dialogService.showAlert('✍️ 單選或多選必須輸入選項內容');
       return false;
     }
 
     if (this.type === 'M' && this.options.length < 2) {
-      this.dialogService.showAlert('✍️ 多選題選項必須填入兩個以上');
+      this.dialogService.showAlert('✍️ 多選題必須填入兩個以上的選項');
       return false;
     }
 
     for (let option of this.options) {
       if (option.answer === '') {
-        this.dialogService.showAlert('⚠️ 選項答案不能為空白');
+        this.dialogService.showAlert('⚠️ 選項不能為空白');
         return false;
       }
-      if (option.answer.length > 15) {
-        this.dialogService.showAlert('⚠️ 選項答案需 15 字以內');
+      if (this.type !== 'T' && option.answer.length > 30) {
+        this.dialogService.showAlert('⚠️ 選項需在 30 字以內');
         return false;
       }
     }
@@ -430,21 +439,13 @@ export class QuestionSettingsComponent {
   // 檢查必填邏輯
   checkNecessary(): boolean {
     if (!this.name || !this.description || !this.startDate || !this.endDate) {
-      this.dialogService.showAlert('✍️ 問卷欄位皆為必填');
+      this.dialogService.showAlert('✍️ 【新增問卷】欄位皆為必填');
       return false;
     }
     if (!this.questionArray || this.questionArray.length === 0) {
-      this.dialogService.showAlert('⚠️ 請設定問題');
+      this.dialogService.showAlert('⚠️ 請新增【問題】');
       return false;
     }
     return true;
-  }
-
-  // 禁止通行!!
-  ban() {
-    this.dialogService.showAlert(
-      '⚠️ 請注意：問卷設定尚未完成，無法訪問此連結。'
-    );
-    return;
   }
 }
