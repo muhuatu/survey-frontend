@@ -3,7 +3,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin: 0 auto 20px;
+  margin: 0 auto 25px;
   gap: 10px;
   color: rgb(100, 100, 100);
 }
@@ -34,7 +34,7 @@ input::placeholder {
   position: fixed;
   left: 160px;
   top: 50%; // 垂直置中
-  transform: translateY(-130%); // 修正垂直置中
+  transform: translateY(-120%); // 修正垂直置中
   display: flex;
   flex-direction: column; // 垂直排列
   gap: 20px; // 按鈕間距
@@ -104,11 +104,12 @@ input::placeholder {
   font-size: 16px;
   background-color: rgb(230, 130, 87);
   color: white;
-  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  //box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
 
   &:hover {
     background-color: rgba(230, 130, 87, 0.9);
-    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+    //box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
   }
 
   &:active {
@@ -162,10 +163,10 @@ input::placeholder {
 
 // 選擇方框
 .checkBox {
-  border-radius: 3px;
-  border: 1px solid #eaeaea;
-  box-sizing: border-box;
-  transform: scale(1.2);
+  // border-radius: 3px;
+  // border: 1px solid #eaeaea;
+  // box-sizing: border-box;
+  transform: scale(1.5);
 }
 
 .hidden {

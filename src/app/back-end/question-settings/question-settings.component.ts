@@ -267,8 +267,8 @@ export class QuestionSettingsComponent {
         this.dialogService.showAlert('⚠️ 選項不能為空白');
         return false;
       }
-      if (this.type !== 'T' && option.answer.length > 30) {
-        this.dialogService.showAlert('⚠️ 選項需在 30 字以內');
+      if (this.type !== 'T' && option.answer.length > 25) {
+        this.dialogService.showAlert('⚠️ 選項需在 25 字以內');
         return false;
       }
     }

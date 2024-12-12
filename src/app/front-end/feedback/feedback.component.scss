@@ -21,25 +21,21 @@
   overflow: hidden;
   margin-bottom: 30px;
   padding: 10px;
-  box-shadow: inset 0 0 0 3px rgb(230, 130, 87); // 內邊框
+  box-shadow: 1px 1px 6px rgb(0, 0, 0, 0.1);
+  border-top: 30px solid rgb(230, 130, 87);
 }
 
 .survey {
   display: flex;
   flex-direction: column;
-  // align-items: center;
-  // justify-content: center;
   width: 100%;
   gap: 10px;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .surveyInfo {
   display: flex;
   flex-direction: column;
-  // justify-content: center;
-  // align-items: center;
-  // text-align: center;
   gap: 15px;
   margin: 0 30px;
 }
@@ -48,7 +44,6 @@
   width: 400px;
   display: flex;
   flex-direction: column;
-  // text-align: center;
   gap: 10px;
   padding: 16px;
   border: 1px solid #eaeaea;
@@ -61,15 +56,8 @@
   width: 600px;
   display: flex;
   flex-direction: column;
-  // text-align: center;
-  // align-items: center;
   margin: 10px 30px;
 }
-
-// .question label {
-//   display: block;
-//   margin-bottom: 5px; /* 每個問題選項之間的距離 */
-// }
 
 pre {
   line-height: 1.6; /* 調整行間距 */

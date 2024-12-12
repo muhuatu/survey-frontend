@@ -27,19 +27,6 @@ button {
   font-size: 16px;
 }
 
-.content {
-  width: 100%;
-  max-width: 640px;
-  //text-align: center;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  margin-bottom: 30px;
-  padding: 10px;
-  box-shadow: inset 0 0 0 3px rgb(230, 130, 87); // 內邊框
-}
-
 .locked-button {
   pointer-events: none; // 禁用按鈕的點擊事件
   background-color: #ccc; // 改變背景顏色，顯示禁用狀態
@@ -47,15 +34,28 @@ button {
 }
 
 // ------------------------ 問卷預覽 ------------------------ //
+
+.content {
+  width: 100%;
+  max-width: 640px;
+  //text-align: center;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 30px;
+  padding: 10px;
+  //box-shadow: inset 0 0 0 3px rgb(230, 130, 87);
+  box-shadow: 1px 1px 6px rgb(0, 0, 0, 0.1);
+  border-top: 30px solid rgb(230, 130, 87);
+}
+
 .survey {
   display: flex;
   flex-direction: column;
-  // align-items: center;
-  // justify-content: center;
   width: 100%;
   max-width: 800px;
   gap: 10px;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .surveyInfo,

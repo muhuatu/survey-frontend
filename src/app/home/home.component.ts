@@ -284,7 +284,7 @@ export class HomeComponent implements AfterViewInit {
     this.http
       .postApi('http://localhost:8080/admin/search', req)
       .subscribe((res: any) => {
-        console.log('後端搜尋結果:', res);
+        //console.log('後端搜尋結果:', res);
         const result: SurveyList[] = res.quizList.map((item: any) => ({
           checkbox: false,
           id: item.id,
@@ -317,7 +317,7 @@ export class HomeComponent implements AfterViewInit {
 
     this.http.postApi('http://localhost:8080/admin/search', {}).subscribe({
       next: (res: any) => {
-        console.log('所有資料:', res);
+        //console.log('所有資料:', res);
         this.allData = res.quizList.map((item: any) => ({
           checkbox: false,
           id: item.id,
