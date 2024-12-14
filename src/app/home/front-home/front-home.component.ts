@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { StatusCode, Survey, SurveyList } from '../../@interface/SurveyList';
@@ -33,6 +33,26 @@ import { DialogService } from '../../@service/dialog.service';
   ],
   templateUrl: './front-home.component.html',
   styleUrl: './front-home.component.scss',
+  providers: [
+      {
+        provide: MatPaginatorIntl,
+        useFactory: () => {
+          const customPaginatorIntl = new MatPaginatorIntl();
+          customPaginatorIntl.itemsPerPageLabel = '每頁顯示：';
+          customPaginatorIntl.nextPageLabel = '下一頁';
+          customPaginatorIntl.previousPageLabel = '上一頁';
+          customPaginatorIntl.getRangeLabel = (page: number, pageSize: number, length: number): string => {
+            if (length === 0 || pageSize === 0) {
+              return `第 0 筆共 ${length} 筆`;
+            }
+            const startIndex = page * pageSize;
+            const endIndex = Math.min(startIndex + pageSize, length);
+            return `第 ${startIndex + 1} - ${endIndex} 筆，共 ${length} 筆`;
+          };
+          return customPaginatorIntl;
+        }
+      }
+    ],
 })
 export class FrontHomeComponent {
   constructor(

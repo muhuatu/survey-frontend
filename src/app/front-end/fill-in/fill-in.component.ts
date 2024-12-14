@@ -214,7 +214,7 @@ export class FillInComponent {
     try {
       const result = await firstValueFrom(
         this.http.getApi(
-          `http://localhost:8080/check_email?email=${this.userEmail}`
+          `http://localhost:8080/check_email?email=${this.userEmail}&quizId=${this.quizId}`
         )
       );
       if (result) {

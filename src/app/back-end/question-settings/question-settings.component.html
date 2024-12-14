@@ -228,6 +228,7 @@
           <th mat-header-cell *matHeaderCellDef style="width: 350px">選項</th>
           <td mat-cell *matCellDef="let question">
             @for(item of question.options; track $index){
+            <!-- 單選 -->
             @if(question.type==='S'){
             <div style="display: flex; align-items: center; gap: 10px">
               <input
@@ -237,7 +238,9 @@
               />
               <span>{{ item.option }}</span>
             </div>
-            } @if(question.type==='M'){
+            }
+            <!-- 多選 -->
+            @if(question.type==='M'){
             <div style="display: flex; align-items: center; gap: 10px">
               <input
                 type="checkbox"
@@ -245,9 +248,10 @@
                 disabled="disabled"
               />
               {{ item.option }}
-              <br />
             </div>
-            } @if(question.type==='T'){
+            }
+            <!-- 簡答 -->
+            @if(question.type==='T'){
             {{ item.option }}
             } }
           </td>

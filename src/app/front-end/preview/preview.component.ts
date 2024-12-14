@@ -148,7 +148,7 @@ export class PreviewComponent {
         if (res.code === 200) {
           this.questService.questData = ''; // 清空資料
           this.dialogService.showAlert(
-            '問卷已填寫完畢，點擊確定後將跳轉至首頁'
+            '問卷已填寫完畢，將跳轉至首頁'
           );
           this.router.navigate(['/front-home']);
         }

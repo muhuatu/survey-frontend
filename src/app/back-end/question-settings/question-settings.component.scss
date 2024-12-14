@@ -173,10 +173,6 @@ input:checked+.slider:before {
   border-collapse: collapse; // 單元格邊框重疊顯示為單線
 }
 
-// ::ng-deep .mat-elevation-z8 tr:nth-child(even) {
-//   background-color: #f3f3f3; // 偶數行的背景色
-// }
-
 ::ng-deep .mat-elevation-z8 tr {
   height: 40px; // 調整每格高度
 }
@@ -195,6 +191,10 @@ input:checked+.slider:before {
   color: rgb(255, 255, 255);
   font-size: 14px;
   font-weight: bold;
+}
+
+::ng-deep .mat-elevation-z8 td{
+  font-size: 14px;
 }
 
 .checkbox1 {
@@ -316,3 +316,5 @@ input:checked+.slider:before {
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
   }
 }
+
+

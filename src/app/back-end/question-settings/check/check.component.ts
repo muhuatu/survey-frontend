@@ -52,7 +52,9 @@ export class CheckComponent {
   }
 
   toQuestionSettings(quizId: number) {
-    this.router.navigate(['/question-settings', quizId]);
+    const q = { ...this.transferData, isPreview: true };
+    this.questService.questData = q;
+    this.router.navigate(['/question-settings', quizId], { state: { q, quizId } });
   }
 
   // 發布問卷
@@ -82,29 +84,55 @@ export class CheckComponent {
     this.loading.show();
 
     // 判斷 id 為 0 就是新增
-    this.http
-      .postApi('http://localhost:8080/admin/create&update', frontendReq)
-      .subscribe({
-        next: (res: any) => {
-          if (res.code === 200) {
-            const transferQuizId = this.transferData.quizId;
-            this.questService.questData = null; // 發布後資料需清除
-            this.questService.questData = { quizId: transferQuizId }; // 更新結構
-            this.router.navigate(['/home']);
-            //this.router.navigate(['/publish', transferQuizId]);
-          } else {
-            console.error('發布失敗');
-          }
-        },
-        error: (err) => {
-          console.log(err.message);
-        },
-        complete: () => {
-          this.loading.hide();
-        },
-      });
-    this.dialogService.showAlert('問卷已發布，即將跳轉至首頁。');
-    this.userService.isAdmin = true;
+    if (this.transferData?.quizId === 0) {
+      this.http
+        .postApi('http://localhost:8080/admin/create', frontendReq)
+        .subscribe({
+          next: (res: any) => {
+            if (res.code === 200) {
+              const transferQuizId = this.transferData.quizId;
+              this.questService.questData = null; // 發布後資料需清除
+              this.questService.questData = { quizId: transferQuizId }; // 更新結構
+              this.dialogService.showAlert('問卷已發布。');
+              this.userService.isAdmin = true;
+              this.router.navigate(['/home']);
+              //this.router.navigate(['/publish', transferQuizId]);
+            } else {
+              console.error('發布失敗');
+            }
+          },
+          error: (err) => {
+            console.log(err.message);
+          },
+          complete: () => {
+            this.loading.hide();
+          },
+        });
+    } else {
+      this.http
+        .postApi('http://localhost:8080/admin/update', frontendReq)
+        .subscribe({
+          next: (res: any) => {
+            if (res.code === 200) {
+              const transferQuizId = this.transferData.quizId;
+              this.questService.questData = null; // 發布後資料需清除
+              this.questService.questData = { quizId: transferQuizId }; // 更新結構
+              this.dialogService.showAlert('問卷已發布。');
+              this.userService.isAdmin = true;
+              this.router.navigate(['/home']);
+              //this.router.navigate(['/publish', transferQuizId]);
+            } else {
+              console.error('發布失敗');
+            }
+          },
+          error: (err) => {
+            console.log(err.message);
+          },
+          complete: () => {
+            this.loading.hide();
+          },
+        });
+    }
   }
 
   // 儲存問卷：published 會是 false
@@ -131,28 +159,60 @@ export class CheckComponent {
       })),
     };
 
+    //console.log(frontendReq);
+    //console.log(this.transferData?.quizId);
+
     this.loading.show();
 
     // 判斷 id 為 0 就是新增
-    this.http
-      .postApi('http://localhost:8080/admin/create&update', frontendReq)
-      .subscribe({
-        next: (res: any) => {
-          if (res.code === 200) {
-            this.questService.questData = null; // 發布後資料需清除
-            this.router.navigate(['/home']);
-          } else {
-            console.error('發布失敗');
-          }
-        },
-        error: (err) => {
-          console.log(err.message);
-        },
-        complete: () => {
-          this.loading.hide();
-        },
-      });
-    this.dialogService.showAlert('問卷已儲存。');
-    this.userService.isAdmin = true;
+    if (this.transferData?.quizId === 0) {
+      this.http
+        .postApi('http://localhost:8080/admin/create', frontendReq)
+        .subscribe({
+          next: (res: any) => {
+            if (res.code === 200) {
+              //const transferQuizId = this.transferData.quizId;
+              this.questService.questData = null; // 發布後資料需清除
+              //this.questService.questData = { quizId: transferQuizId }; // 更新結構
+              this.dialogService.showAlert('問卷已儲存。');
+              this.userService.isAdmin = true;
+              this.router.navigate(['/home']);
+            } else {
+              console.error('發布失敗');
+            }
+          },
+          error: (err) => {
+            console.log(err.message);
+          },
+          complete: () => {
+            this.loading.hide();
+          },
+        });
+    } else {
+      this.http
+        .postApi('http://localhost:8080/admin/update', frontendReq)
+        .subscribe({
+          next: (res: any) => {
+            console.log('frontendReq', frontendReq);
+            if (res.code === 200) {
+              //const transferQuizId = this.transferData.quizId;
+              this.questService.questData = null; // 發布後資料需清除
+              //this.questService.questData = { quizId: transferQuizId }; // 更新結構
+              this.dialogService.showAlert('問卷已儲存。');
+              this.userService.isAdmin = true;
+              this.router.navigate(['/home']);
+            } else {
+              console.error('發布失敗');
+            }
+          },
+          error: (err) => {
+            console.log(err.message);
+          },
+          complete: () => {
+            this.loading.hide();
+          },
+        });
+    }
+
   }
 }

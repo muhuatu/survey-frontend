@@ -2,7 +2,11 @@ import { Survey } from './../@interface/SurveyList';
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import {
+  MatPaginator,
+  MatPaginatorIntl,
+  MatPaginatorModule,
+} from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { SurveyList } from '../@interface/SurveyList';
 import { Router } from '@angular/router';
@@ -20,6 +24,7 @@ import { LoadingService } from '../@service/loading-service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { DialogService } from '../@service/dialog.service';
+import { CustomMatPaginatorIntl } from '../@service/CustomMatPaginatorIntl';
 
 @Component({
   selector: 'app-home',
@@ -37,8 +42,34 @@ import { DialogService } from '../@service/dialog.service';
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
+  providers: [
+    {
+      provide: MatPaginatorIntl,
+      useFactory: () => {
+        const customPaginatorIntl = new MatPaginatorIntl();
+        customPaginatorIntl.itemsPerPageLabel = '每頁顯示：';
+        customPaginatorIntl.nextPageLabel = '下一頁';
+        customPaginatorIntl.previousPageLabel = '上一頁';
+        customPaginatorIntl.getRangeLabel = (
+          page: number,
+          pageSize: number,
+          length: number
+        ): string => {
+          if (length === 0 || pageSize === 0) {
+            return `第 0 筆共 ${length} 筆`;
+          }
+          const startIndex = page * pageSize;
+          const endIndex = Math.min(startIndex + pageSize, length);
+          return `第 ${startIndex + 1} - ${endIndex} 筆，共 ${length} 筆`;
+        };
+        return customPaginatorIntl;
+      },
+    },
+  ],
 })
 export class HomeComponent implements AfterViewInit {
+  description: any;
+  questionArray: any;
   constructor(
     private router: Router,
     private dateService: DateService,
@@ -79,6 +110,7 @@ export class HomeComponent implements AfterViewInit {
     'startDate',
     'endDate',
     'url',
+    'edit',
   ];
 
   // 分頁查詢
@@ -100,6 +132,7 @@ export class HomeComponent implements AfterViewInit {
       'startDate',
       'endDate',
       'url',
+      'edit',
     ];
   }
 
@@ -202,40 +235,69 @@ export class HomeComponent implements AfterViewInit {
   }
 
   // 路徑：編輯問卷
-  toEdit(survey: Survey): void {
-    // 找出勾選的問卷
-    const selectedQuiz = this.dataSource.data.filter((quiz) => quiz.checkbox);
-
-    // 驗證是否有選中問卷
-    if (selectedQuiz.length === 0) {
-      this.dialogService.showAlert('請選擇問卷進行編輯');
-      return;
-    }
-    if (selectedQuiz.length > 1) {
-      this.dialogService.showAlert('只能選擇一筆問卷進行編輯');
-      return;
-    }
-
-    const editQuiz = selectedQuiz[0]; // 獲取選中的問卷
-    const status = editQuiz.status;
-
+  toEdit(element: SurveyList): void {
     // 初始化 questData
     if (!this.questService.questData) {
-      this.questService.questData = {}; // 防止 questData 為 undefined
+      this.questService.questData = { quizId: element.id }; // 防止 questData 為 undefined
     }
+    this.questService.questData.quizId = element.id;
+    this.router.navigate(['/question-settings', element.id]);
+    this.loadFromBackend(element.id);
+  }
 
-    // 只允許未發布或未開始的問卷進行編輯
-    if (
-      status === StatusCode.NOT_PUBLISHED ||
-      status === StatusCode.NOT_STARTED
-    ) {
-      this.questService.questData.quizId = editQuiz.id;
-      this.router.navigate(['/question-settings', editQuiz.id], {
-        state: { data: survey },
+  // 從後端載入問卷資料
+  loadFromBackend(quizId: number): void {
+    // 獲取問卷ID
+    const req = {
+      id: quizId,
+    };
+    // 用API獲取問卷資料
+    this.loading.show();
+    this.http
+      .postApi('http://localhost:8080/admin/search_quiz', req)
+      .subscribe({
+        next: (res: any) => {
+          //console.log('後端回傳資料:', res);
+          if (res.code === 200) {
+            this.questService.questData = {
+              quizId: res.id,
+              name: res.name,
+              description: res.description,
+              startDate: res.start_date,
+              endDate: res.end_date,
+              published: res.published,
+              questionArray: res.question_list.map((q: any) => ({
+                questionId: q.question_id,
+                title: q.title,
+                type: q.type,
+                necessary: q.necessary,
+                options: JSON.parse(q.option_list).map(
+                  (item: { option: any; optionNumber: any }) => ({
+                    option: item.option,
+                    optionNumber: Number(item.optionNumber), // 轉回數字
+                  })
+                ),
+              })),
+            };
+            //console.log('我是來自後端的資料：', this.questService.questData);
+            this.refreshFormData(); // 資料載入後刷新表單
+          }
+          this.loading.hide();
+        },
+        error: (err) => {
+          console.error('問卷載入錯誤', err);
+          this.loading.hide();
+        },
       });
-    } else {
-      this.dialogService.showAlert('此問卷無法編輯');
-    }
+  }
+
+  refreshFormData(): void {
+    const q = this.questService.questData;
+    this.name = q.name;
+    this.description = q.description;
+    this.startDate = q.startDate;
+    this.endDate = q.endDate;
+    this.questionArray = q.questionArray;
   }
 
   // 判斷"結束日期"不可小於"開始日期"

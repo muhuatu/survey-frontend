@@ -1,10 +1,15 @@
-import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationStart, Router, RouterModule } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Question } from '../../@interface/Question';
 import { DateService } from '../../@service/date-service';
@@ -88,26 +93,35 @@ export class QuestionSettingsComponent {
     // 日期設定
     this.defaultDate = this.dateService.changeDateFormat();
 
+    const q = this.questService.questData;
+    this.quizId = q.quizId;
+
     // 如果不加這段，新增選項的功能無法使用
-    if (!this.questService.questData) {
-      //this.questService.questData = { questionArray: [] };
-      this.saveSurveyData();
-    } else {
+    if (q) {
       // 確保 questionArray 是陣列
-      if (!Array.isArray(this.questService.questData.questionArray)) {
-        this.questService.questData.questionArray = [];
+      if (!Array.isArray(q.questionArray)) {
+        q.questionArray = [];
       }
     }
 
-    // 1.從預覽頁回來(前端有資料,ID=0) 2.從首頁進來編輯(後端有資料,有ID)
-    if (this.questService.questData) {
-      this.quizId = this.questService.questData.quizId || 0;
-      //console.log(this.questService.questData.quizId);
-      //console.log('問卷ID：' + this.quizId);
-      this.isExistingSurvey();
-    } else {
-      // 3.新增問卷(無資料,ID=0)
+    if (q && q.isPreview && this.quizId > 0) {
+      // 從預覽回來，q 是來自預覽頁的暫存數據
+      console.log('preview', q);
+      this.loadFromCheck(q);
+      return;
+    }
+
+    if (q && this.quizId > 0) {
+      // 從首頁進來，q 是來自首頁載入的資料
+      console.log('從首頁進來', q);
+      this.loadFromBackend(this.quizId);
+      return;
+    }
+
+    // 新增問卷
+    if (this.quizId === 0) {
       this.isNewSurvey();
+      return;
     }
   }
 
@@ -128,7 +142,7 @@ export class QuestionSettingsComponent {
       // 從首頁進來編輯(後端有資料, 有ID)
       this.loadFromBackend(q.quizId);
     } else {
-      // 從預覽頁回來(前端有資料, ID=0)
+      // 從預覽頁回來(前端有資料, 有ID)
       this.loadFromCheck(q);
     }
   }
@@ -196,8 +210,8 @@ export class QuestionSettingsComponent {
 
   // 從預覽頁載入問卷資料
   loadFromCheck(q: any): void {
-    q = this.questService.questData;
-    this.quizId = 0;
+    //q = this.questService.questData;
+    this.quizId = q.quizId;
     this.name = q.name;
     this.description = q.description;
     this.startDate = q.startDate;
@@ -222,6 +236,7 @@ export class QuestionSettingsComponent {
   // --------------------------- 問題 --------------------------- //
 
   // 添加選項
+  // BUG : 選擇單選後，會有一個input框出來。再選多選後，會變成兩個input框。
   addOption() {
     if (!Array.isArray(this.questionArray)) {
       this.questionArray = [];
