@@ -22,7 +22,7 @@ export class LoginComponent {
     private http: HttpClientService,
     private loading: LoadingService,
     private dialogService: DialogService
-  ) {}
+  ) { }
 
   email!: string;
   password!: string;
@@ -53,6 +53,7 @@ export class LoginComponent {
           console.log(res);
           this.dialogService.showAlert('登錄成功');
           this.userService.isAdmin = true;
+          sessionStorage.setItem('user', JSON.stringify(res.user));
           this.router.navigate(['/home']);
         } else {
           this.dialogService.showAlert('帳號或密碼錯誤');
